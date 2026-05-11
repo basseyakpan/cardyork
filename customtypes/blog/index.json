@@ -1,0 +1,23 @@
+{
+  "id": "blog",
+  "label": "Blog",
+  "repeatable": true,
+  "json": {
+    "Main": {
+      "uid": {
+        "type": "UID",
+        "config": {
+          "label": "UID"
+        }
+      },
+      "slices": {
+        "type": "Slices",
+        "config": {
+          "choices": {}
+        }
+      }
+    }
+  },
+  "status": true,
+  "format": "custom"
+}
