@@ -46,9 +46,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <nav className="flex-1 py-6 px-3 flex flex-col gap-1 overflow-y-auto">
           {SIDEBAR_LINKS.map(link => (
-            <Link 
-              key={link.href} 
-              href={link.href} 
+            <Link
+              key={link.href}
+              href={link.href}
               className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all no-underline group"
               title={!sidebarOpen ? link.label : ''}
             >
@@ -85,7 +85,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">Available Balance</span>
               <span className="text-lg font-extrabold text-secondary">₦{user.balance.toLocaleString()}.00</span>
             </div>
-            <button className="btn btn-primary btn-sm px-4">+ Fund Vault</button>
+            {/* <button className="btn btn-primary btn-sm px-4">+ Fund Vault</button> */}
           </div>
         </header>
 
@@ -98,7 +98,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Mobile Overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => dispatch(toggleSidebar())}
         />

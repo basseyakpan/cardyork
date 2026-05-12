@@ -37,9 +37,12 @@ export default async function BlogPost({
     );
   }
 
+  const firstSlice = page.data.slices?.[0];
+  const primary = firstSlice?.primary as any;
+
   const title = 
     page.data.meta_title || 
-    page.data.slices?.[0]?.primary?.title?.[0]?.text || 
+    (primary && "title" in primary ? primary.title?.[0]?.text : null) || 
     page.slugs[0]?.replace(/-/g, ' ') || 
     page.uid;
     
@@ -54,7 +57,7 @@ export default async function BlogPost({
     },
   );
 
-  const imageUrl = page.data.meta_image?.url || page.data.slices?.[0]?.primary?.image?.url;
+  const imageUrl = page.data.meta_image?.url || (primary && "image" in primary ? primary.image?.url : null);
 
   return (
     <main className="bg-background min-h-screen flex flex-col">

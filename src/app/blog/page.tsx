@@ -55,15 +55,18 @@ export default async function BlogPage() {
               ) : (
                 posts.map((post: any) => {
                   // Extract fields from Slice Machine structure
+                  const firstSlice = post.data.slices?.[0];
+                  const primary = firstSlice?.primary as any;
+
                   const title = 
                     post.data.meta_title || 
-                    post.data.slices?.[0]?.primary?.title?.[0]?.text || 
+                    (primary && "title" in primary ? primary.title?.[0]?.text : null) || 
                     post.slugs[0]?.replace(/-/g, ' ') || 
                     post.uid;
                     
                   const excerpt =
                     post.data.meta_description ||
-                    post.data.slices?.[0]?.primary?.description?.[0]?.text ||
+                    (primary && "description" in primary ? primary.description?.[0]?.text : null) ||
                     "Click to read more...";
                     
                   const category = post.tags?.[0] || "Article";
@@ -71,7 +74,7 @@ export default async function BlogPage() {
                   
                   const imageUrl = 
                     post.data.meta_image?.url || 
-                    post.data.slices?.[0]?.primary?.image?.url;
+                    (primary && "image" in primary ? primary.image?.url : null);
 
                   const date = new Date(
                     post.first_publication_date,
@@ -134,9 +137,11 @@ export default async function BlogPage() {
                 </h3>
                 <div className="flex flex-col gap-6">
                   {posts.slice(0, 3).map((post: any) => {
+                    const firstSlice = post.data.slices?.[0];
+                    const primary = firstSlice?.primary as any;
                     const title = 
                       post.data.meta_title || 
-                      post.data.slices?.[0]?.primary?.title?.[0]?.text || 
+                      (primary && "title" in primary ? primary.title?.[0]?.text : null) || 
                       post.slugs[0]?.replace(/-/g, ' ') || 
                       post.uid;
                     const category = post.tags?.[0] || "Article";
