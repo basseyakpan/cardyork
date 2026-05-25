@@ -33,7 +33,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
-      <aside className={`fixed lg:static top-0 left-0 bottom-0 z-50 bg-surface-container-low border-r border-primary/5 transition-all duration-300 flex flex-col ${sidebarOpen ? 'w-64' : 'w-20'}`}>
+      <aside className={`fixed lg:sticky top-0 left-0 h-screen z-50 bg-surface-container-low border-r border-primary/5 transition-all duration-300 flex flex-col ${sidebarOpen ? 'w-64' : 'w-20'}`}>
         <div className="h-16 flex items-center justify-between px-6 border-b border-primary/5">
           <Link href="/" className="flex items-center gap-2.5 no-underline overflow-hidden">
             <span className="text-2xl bg-gradient-primary bg-clip-text text-transparent flex-shrink-0">⬡</span>
@@ -44,7 +44,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </button>
         </div>
 
-        <nav className="flex-1 py-6 px-3 flex flex-col gap-1 overflow-y-auto">
+        <nav className="flex-1 py-6 px-3 flex flex-col gap-1">
           {SIDEBAR_LINKS.map(link => (
             <Link
               key={link.href}
@@ -76,8 +76,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Header */}
         <header className="h-16 bg-surface-container-low border-b border-primary/5 flex items-center justify-between px-6 lg:px-8 flex-shrink-0">
           <div className="flex flex-col">
-            <h1 className="text-lg font-bold text-on-surface">The Trading Floor</h1>
-            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">Market Liquidity: <span className="text-secondary font-bold">Optimal</span></p>
+            <h1 className="text-lg font-bold text-on-surface">Dashboard</h1>
+            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">CardYork <span className="text-secondary font-bold">Gift Card Platform</span></p>
           </div>
 
           <div className="flex items-center gap-6">

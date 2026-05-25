@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { MOCK_GIFT_CARDS } from '@/store/slices/tradeSlice';
+import BrandLogo from '@/components/BrandLogo';
 
 export default function GiftCardsSection() {
   const popularCards = MOCK_GIFT_CARDS.filter(c => c.popular);
@@ -21,7 +22,9 @@ export default function GiftCardsSection() {
           {popularCards.map((card, i) => (
             <div key={card.id} className={`glass-card p-6 flex flex-col gap-8 animate-fade-in delay-${i * 100}`}>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-2xl border border-primary/10">{card.icon}</div>
+                <div className="w-14 h-14 rounded-2xl bg-surface-container-high flex items-center justify-center border border-primary/10 shadow-sm transition-transform duration-300 hover:scale-105">
+                  <BrandLogo id={card.id} fallback={card.icon} className="w-7 h-7" />
+                </div>
                 <div className="flex flex-col">
                   <h3 className="text-lg font-bold text-on-surface">{card.name}</h3>
                   <span className="text-xs uppercase tracking-widest text-on-surface-variant font-medium">{card.category}</span>

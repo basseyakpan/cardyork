@@ -5,6 +5,7 @@ import FeaturesSection from '@/components/landing/FeaturesSection';
 import GiftCardsSection from '@/components/landing/GiftCardsSection';
 import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import StatsSection from '@/components/landing/StatsSection';
+import AppDownloadSection from '@/components/landing/AppDownloadSection';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function HomePage() {
       <StatsSection />
       <FeaturesSection />
       <GiftCardsSection />
+      <AppDownloadSection />
       <TestimonialsSection />
       <Footer />
     </main>
