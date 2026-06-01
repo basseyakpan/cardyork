@@ -30,8 +30,8 @@ export default function GiftCardsSection() {
                   <span className="text-xs uppercase tracking-widest text-on-surface-variant font-medium">{card.category}</span>
                 </div>
               </div>
-              
-              <div className="flex items-end justify-between">
+
+              {/* <div className="flex items-end justify-between">
                 <div className="flex flex-col">
                   <span className="text-xs text-on-surface-variant font-medium uppercase mb-1">Current Rate</span>
                   <span className="text-xl font-extrabold text-secondary">₦{card.ratePerDollar.toLocaleString()} / $1</span>
@@ -40,7 +40,7 @@ export default function GiftCardsSection() {
                   <span className="text-lg leading-none">↗</span>
                   <span>+2.4%</span>
                 </div>
-              </div>
+              </div> */}
 
               <Link href={`/sell-gift-cards/${card.id}`} className="btn btn-outline-primary w-full group">
                 Trade {card.brand}

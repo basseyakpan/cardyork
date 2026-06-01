@@ -55,48 +55,48 @@
   }
 
   :root.dark, .dark {
-    /* Dark Theme (Deep Blue) */
-    --background: #0a1128;
-    --surface: #0a1128;
-    --surface-container-lowest: #050814;
-    --surface-container-low: #0d1736;
-    --surface-container: #111d44;
-    --surface-container-high: #152452;
-    --surface-container-highest: #1a2a60;
-    --surface-bright: #1c2e68;
-    --surface-variant: #111d44;
-    --primary: #97a9ff;
-    --primary-container: #3e65ff;
-    --primary-dim: #bac5ff;
-    --on-primary: #001f7a;
-    --on-primary-fixed: #ffffff;
-    --secondary: #3fff8b;
-    --secondary-container: #006d35;
-    --secondary-dim: #8affbb;
-    --on-secondary: #003d1c;
+    /* Dark Theme (Cardyork Brand Palette) */
+    --background: #000822;
+    --surface: #000822;
+    --surface-container-lowest: #00003A;
+    --surface-container-low: #00084F;
+    --surface-container: #001C57;
+    --surface-container-high: #021D8F;
+    --surface-container-highest: #1F4DFF;
+    --surface-bright: #1A4BFF;
+    --surface-variant: #001C57;
+    --primary: #1E5BFF;
+    --primary-container: #0099FF;
+    --primary-dim: #7FA6FF;
+    --on-primary: #FFFFFF;
+    --on-primary-fixed: #FFFFFF;
+    --secondary: #00E5FF;
+    --secondary-container: #26D2FF;
+    --secondary-dim: #7FA6FF;
+    --on-secondary: #000822;
     --tertiary: #ffa3e9;
     --error: #ff6e84;
-    --on-surface: #f1f5f9;
-    --on-surface-variant: #94a3b8;
-    --on-background: #f1f5f9;
-    --outline: #475569;
-    --outline-variant: #334155;
-    --gradient-primary: linear-gradient(135deg, #97a9ff 0%, #3e65ff 100%);
-    --gradient-secondary: linear-gradient(135deg, #3fff8b 0%, #006d35 100%);
+    --on-surface: #FFFFFF;
+    --on-surface-variant: #7FA6FF;
+    --on-background: #FFFFFF;
+    --outline: #1A4BFF;
+    --outline-variant: #001C57;
+    --gradient-primary: linear-gradient(135deg, #0099FF 0%, #1E5BFF 100%);
+    --gradient-secondary: linear-gradient(135deg, #00E5FF 0%, #26D2FF 100%);
     --gradient-hero:
       radial-gradient(
         ellipse at 60% 40%,
-        rgba(151, 169, 255, 0.12) 0%,
+        rgba(0, 153, 255, 0.15) 0%,
         transparent 60%
       ),
       radial-gradient(
         ellipse at 20% 80%,
-        rgba(63, 255, 139, 0.06) 0%,
+        rgba(0, 229, 255, 0.1) 0%,
         transparent 50%
       ),
-      #0a1128;
-    --glow-primary: 0 0 40px rgba(151, 169, 255, 0.18);
-    --ambient-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+      #000822;
+    --glow-primary: 0 0 40px rgba(0, 153, 255, 0.25);
+    --ambient-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
   }
 
   body {

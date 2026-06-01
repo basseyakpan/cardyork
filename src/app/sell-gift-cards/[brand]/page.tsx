@@ -10,7 +10,7 @@ import BrandLogo from '@/components/BrandLogo';
 export default function SellBrandPage() {
   const params = useParams();
   const brandSlug = params.brand as string;
-  
+
   // Find the card in our mock data
   const card = MOCK_GIFT_CARDS.find(c => c.id.includes(brandSlug)) || MOCK_GIFT_CARDS[0];
 
@@ -25,14 +25,14 @@ export default function SellBrandPage() {
   return (
     <main className="bg-background min-h-screen flex flex-col">
       <Navbar />
-      
+
       <div className="flex-1 py-20 px-6">
         <div className="max-w-[1000px] mx-auto">
           <div className="glass-card p-10 flex flex-col md:flex-row items-center gap-12 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
             <div className="w-40 h-40 rounded-3xl bg-surface-container-high flex items-center justify-center border border-primary/10 shadow-glow-primary animate-float">
               <BrandLogo id={card.id} fallback={card.icon} className="w-20 h-20" />
             </div>
-            
+
             <div className="flex-1 text-center md:text-left">
               <span className="chip chip-primary mb-4">Sell {card.brand}</span>
               <h1 className="display-sm mb-4">Trade Your <span className="gradient-text">{card.brand} Gift Cards</span></h1>
@@ -41,7 +41,7 @@ export default function SellBrandPage() {
               </p>
               <div className="flex flex-wrap justify-center md:justify-start gap-4">
                 <Link href="/login" className="btn btn-primary btn-lg px-10">Trade Now</Link>
-                <button className="btn btn-ghost btn-lg">View Today's Rate</button>
+                {/* <button className="btn btn-ghost btn-lg">View Today's Rate</button> */}
               </div>
             </div>
           </div>
@@ -89,13 +89,12 @@ export default function SellBrandPage() {
                     step="1"
                     value={amount}
                     onChange={e => setAmount(e.target.value)}
-                    className={`input-field pl-10 text-xl font-bold ${
-                      isBelow || isAbove
+                    className={`input-field pl-10 text-xl font-bold ${isBelow || isAbove
                         ? 'border-error/60 ring-2 ring-error/20'
                         : isValid
-                        ? 'border-secondary/40 ring-2 ring-secondary/10'
-                        : ''
-                    }`}
+                          ? 'border-secondary/40 ring-2 ring-secondary/10'
+                          : ''
+                      }`}
                     placeholder={String(card.minAmount)}
                   />
                 </div>
@@ -113,15 +112,13 @@ export default function SellBrandPage() {
               </div>
 
               {/* Live payout preview */}
-              <div className={`rounded-xl p-5 mb-6 text-center transition-all duration-300 ${
-                isValid
+              <div className={`rounded-xl p-5 mb-6 text-center transition-all duration-300 ${isValid
                   ? 'bg-gradient-to-br from-secondary/15 to-secondary/5 border border-secondary/20'
                   : 'bg-surface-container-high/50 border border-outline-variant'
-              }`}>
-                <span className="block text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-1">You Receive</span>
-                <span className={`block text-4xl font-black transition-colors duration-300 ${
-                  isValid ? 'text-secondary' : 'text-on-surface-variant'
                 }`}>
+                <span className="block text-[10px] uppercase tracking-widest font-bold text-on-surface-variant mb-1">You Receive</span>
+                <span className={`block text-4xl font-black transition-colors duration-300 ${isValid ? 'text-secondary' : 'text-on-surface-variant'
+                  }`}>
                   {isValid ? `₦${nairaValue.toLocaleString()}` : '—'}
                 </span>
               </div>
@@ -129,11 +126,10 @@ export default function SellBrandPage() {
               <Link
                 href={isValid ? '/register' : '#'}
                 aria-disabled={!isValid}
-                className={`btn w-full text-base ${
-                  isValid
+                className={`btn w-full text-base ${isValid
                     ? 'btn-secondary shadow-[0_4px_20px_rgba(63,255,139,0.3)]'
                     : 'btn-ghost opacity-50 cursor-not-allowed pointer-events-none'
-                }`}
+                  }`}
               >
                 {isValid ? `Sell $${numAmount} — Get ₦${nairaValue.toLocaleString()}` : 'Enter a valid amount'}
               </Link>

@@ -4,22 +4,22 @@ import Image from 'next/image';
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center pt-32 pb-16 overflow-hidden">
+    <section className="relative flex flex-col lg:min-h-screen lg:flex-row lg:items-center pt-32 pb-0 lg:pb-16 overflow-hidden">
 
-      {/* ── Full right-half background image ── */}
-      <div className="absolute inset-y-0 right-0 w-full lg:w-1/2 pointer-events-none select-none">
+      {/* ── Full right-half background image (stacked on mobile) ── */}
+      <div className="relative w-full h-[400px] sm:h-[500px] order-last lg:order-none lg:absolute lg:inset-y-0 lg:right-0 lg:h-full lg:w-1/2 pointer-events-none select-none">
         <Image
           src="/cardYorkHero.png"
           alt="CardYork Premium Gift Card Trading"
           fill
           priority
-          sizes="50vw"
-          className="object-cover object-center"
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          className="object-cover object-top lg:object-center"
         />
         {/* Soft left-edge fade — just enough to protect the text, image stays vivid */}
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/10 to-transparent lg:from-background lg:via-background/5 lg:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent lg:bg-gradient-to-r lg:from-background lg:via-background/10 lg:to-transparent" />
         {/* Gentle bottom vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent lg:from-background/20 lg:to-transparent" />
       </div>
 
       {/* ── Ambient glow orbs (left side) ── */}
@@ -27,7 +27,7 @@ export default function HeroSection() {
       <div className="absolute bottom-[-10%] left-[-10%] w-[30%] h-[40%] bg-secondary/5 blur-[100px] rounded-full pointer-events-none" />
 
       {/* ── Content ── */}
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6">
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 mb-8 lg:mb-0">
         <div className="flex flex-col items-start text-left max-w-[600px]">
 
           {/* Badge */}
