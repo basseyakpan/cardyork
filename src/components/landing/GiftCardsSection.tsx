@@ -1,10 +1,12 @@
 'use client';
 import Link from 'next/link';
-import { MOCK_GIFT_CARDS } from '@/store/slices/tradeSlice';
+import { useAppSelector } from '@/store/hooks';
+import { mapAssetsToCards } from '@/lib/assetMapper';
 import BrandLogo from '@/components/BrandLogo';
 
 export default function GiftCardsSection() {
-  const popularCards = MOCK_GIFT_CARDS.filter(c => c.popular);
+  const { assets, rates } = useAppSelector(s => s.assets);
+  const popularCards = mapAssetsToCards(assets, rates).slice(0, 6);
 
   return (
     <section className="section py-20">

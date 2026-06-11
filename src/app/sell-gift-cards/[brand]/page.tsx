@@ -4,15 +4,21 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { MOCK_GIFT_CARDS } from '@/store/slices/tradeSlice';
+import { useAppSelector } from '@/store/hooks';
+import { mapAssetsToCards } from '@/lib/assetMapper';
 import BrandLogo from '@/components/BrandLogo';
 
 export default function SellBrandPage() {
   const params = useParams();
   const brandSlug = params.brand as string;
 
-  // Find the card in our mock data
-  const card = MOCK_GIFT_CARDS.find(c => c.id.includes(brandSlug)) || MOCK_GIFT_CARDS[0];
+  const { assets, rates } = useAppSelector(s => s.assets);
+  const cards = mapAssetsToCards(assets, rates);
+
+  // Find the card in our api data
+  const card = cards.find(c => c.brand.toLowerCase().includes(brandSlug.toLowerCase())) || cards[0];
+
+  if (!card) return <div className="p-20 text-center">Loading or not found...</div>;
 
   // Calculator state
   const [amount, setAmount] = useState(String(card.minAmount));

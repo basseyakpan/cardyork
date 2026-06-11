@@ -1,110 +1,168 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
-export interface GiftCard {
-  id: string;
-  name: string;
-  brand: string;
-  icon: string;
-  ratePerDollar: number;
-  minAmount: number;
-  maxAmount: number;
-  category: 'retail' | 'gaming' | 'streaming' | 'finance';
-  popular: boolean;
-}
-
-export interface Trade {
-  id: string;
-  cardName: string;
-  cardBrand: string;
-  amount: number;
-  ratePerDollar: number;
-  nairaValue: number;
-  status: 'completed' | 'pending' | 'processing' | 'failed';
-  createdAt: string;
-  completedAt?: string;
+interface Trade {
+  _id: string;
+  id?: string;
+  cardName?: string;
+  nairaValue?: number;
+  amount?: number;
+  assetName: string;
+  assetImage: string[];
+  rate: number;
+  userAmount: number;
+  actualAmount: number;
+  cost: number;
+  quantity: number;
+  images: string[]; // User uploaded images
+  status: string;
+  createdAt: number; // Timestamp
+  rateInfo: {
+    _id: string;
+    currency: string;
+    rate: number;
+    asset: string; // Asset ID
+    // Add other rateInfo fields if needed
+  };
+  // Add other fields from API if needed
 }
 
 interface TradeState {
-  giftCards: GiftCard[];
   trades: Trade[];
-  selectedCard: GiftCard | null;
-  isSubmitting: boolean;
+  currentTrade: Trade | null;
+  isLoading: boolean;
+  isSubmitting?: boolean;
   error: string | null;
 }
 
-export const MOCK_GIFT_CARDS: GiftCard[] = [
-  { id: 'gc_amazon', name: 'Amazon Gift Card', brand: 'Amazon', icon: '🛒', ratePerDollar: 1580, minAmount: 10, maxAmount: 2000, category: 'retail', popular: true },
-  { id: 'gc_itunes', name: 'iTunes Gift Card', brand: 'Apple', icon: '🎵', ratePerDollar: 1620, minAmount: 10, maxAmount: 1000, category: 'streaming', popular: true },
-  { id: 'gc_steam', name: 'Steam Gift Card', brand: 'Steam', icon: '🎮', ratePerDollar: 1540, minAmount: 5, maxAmount: 500, category: 'gaming', popular: true },
-  { id: 'gc_google', name: 'Google Play Gift Card', brand: 'Google', icon: '▶️', ratePerDollar: 1560, minAmount: 10, maxAmount: 1000, category: 'streaming', popular: false },
-  { id: 'gc_apple', name: 'Apple Gift Card', brand: 'Apple', icon: '🍎', ratePerDollar: 1610, minAmount: 10, maxAmount: 1000, category: 'retail', popular: true },
-  { id: 'gc_ebay', name: 'eBay Gift Card', brand: 'eBay', icon: '🏷️', ratePerDollar: 1520, minAmount: 10, maxAmount: 500, category: 'retail', popular: false },
-  { id: 'gc_sephora', name: 'Sephora Gift Card', brand: 'Sephora', icon: '💄', ratePerDollar: 1490, minAmount: 10, maxAmount: 500, category: 'retail', popular: false },
-  { id: 'gc_nike', name: 'Nike Gift Card', brand: 'Nike', icon: '👟', ratePerDollar: 1510, minAmount: 10, maxAmount: 500, category: 'retail', popular: false },
-  { id: 'gc_razer', name: 'Razer Gold Gift Card', brand: 'Razer', icon: '🟢', ratePerDollar: 1470, minAmount: 5, maxAmount: 200, category: 'gaming', popular: false },
-  { id: 'gc_vanilla', name: 'Vanilla Gift Card', brand: 'Vanilla', icon: '💳', ratePerDollar: 1530, minAmount: 10, maxAmount: 500, category: 'finance', popular: false },
-  { id: 'gc_nordstrom', name: 'Nordstrom Gift Card', brand: 'Nordstrom', icon: '🛍️', ratePerDollar: 1500, minAmount: 10, maxAmount: 500, category: 'retail', popular: false },
-  { id: 'gc_amex', name: 'Amex Gift Card', brand: 'Amex', icon: '💰', ratePerDollar: 1550, minAmount: 25, maxAmount: 1000, category: 'finance', popular: false },
-];
-
-export const MOCK_TRADES: Trade[] = [
-  { id: 'tr_001', cardName: 'Amazon Gift Card', cardBrand: 'Amazon', amount: 200, ratePerDollar: 1580, nairaValue: 316000, status: 'completed', createdAt: '2024-12-10T09:23:00Z', completedAt: '2024-12-10T09:27:45Z' },
-  { id: 'tr_002', cardName: 'iTunes Gift Card', cardBrand: 'Apple', amount: 50, ratePerDollar: 1620, nairaValue: 81000, status: 'completed', createdAt: '2024-12-08T14:11:00Z', completedAt: '2024-12-08T14:15:12Z' },
-  { id: 'tr_003', cardName: 'Steam Gift Card', cardBrand: 'Steam', amount: 100, ratePerDollar: 1540, nairaValue: 154000, status: 'pending', createdAt: '2024-12-12T07:55:00Z' },
-  { id: 'tr_004', cardName: 'Apple Gift Card', cardBrand: 'Apple', amount: 150, ratePerDollar: 1610, nairaValue: 241500, status: 'completed', createdAt: '2024-12-05T16:40:00Z', completedAt: '2024-12-05T16:44:30Z' },
-  { id: 'tr_005', cardName: 'Google Play Gift Card', cardBrand: 'Google', amount: 25, ratePerDollar: 1560, nairaValue: 39000, status: 'processing', createdAt: '2024-12-12T10:30:00Z' },
-];
-
 const initialState: TradeState = {
-  giftCards: MOCK_GIFT_CARDS,
-  trades: MOCK_TRADES,
-  selectedCard: null,
-  isSubmitting: false,
+  trades: [],
+  currentTrade: null,
+  isLoading: false,
   error: null,
 };
 
+// const BASE_URL = 'http://localhost:7000/api';
+// const BASE_URL = 'https://legitcards.onrender.com/api';
+const BASE_URL = 'https://cardyork-server.onrender.com/api';
+
+interface StartTradePayload {
+  id: string;
+  data: {
+    rateSpec: string;
+    images: string[];
+    userAmount: number;
+    quantity: number;
+    comments?: string; 
+    cardType?: string;
+  }[];
+}
+
+interface FetchTradesPayload {
+  id: string;
+  start?: number;
+  sort?: "DESC" | "ASC";
+  filter?: {
+    status: string;
+  };
+}
+
+export const startTrade = createAsyncThunk(
+  'trades/start',
+  async (payload: StartTradePayload, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BASE_URL}/trade/users/start`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(payload),
+      });
+      
+      const data = await response.json();
+      if (!response.ok) {
+        return rejectWithValue(data.message || 'Failed to start trade');
+      }
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchTrades = createAsyncThunk(
+  'trades/fetchAll',
+  async (payload: FetchTradesPayload, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BASE_URL}/trade/users/get`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!response.ok) return rejectWithValue(data.message || 'Failed to fetch trades');
+      
+      // console.log(data);
+      // API returns data in `data` field based on user request example
+      return data.data || []; 
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const tradeSlice = createSlice({
-  name: 'trade',
+  name: 'trades',
   initialState,
   reducers: {
-    selectCard(state, action: PayloadAction<GiftCard | null>) {
-      state.selectedCard = action.payload;
-    },
-    submitTradeStart(state) {
-      state.isSubmitting = true;
+    clearTradeError: (state) => {
       state.error = null;
-    },
-    submitTradeSuccess(state, action: PayloadAction<Trade>) {
-      state.isSubmitting = false;
-      state.trades.unshift(action.payload);
-    },
-    submitTradeFail(state, action: PayloadAction<string>) {
-      state.isSubmitting = false;
-      state.error = action.payload;
-    },
-    clearTradeError(state) {
-      state.error = null;
-    },
+      state.isLoading = false;
+    }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(startTrade.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(startTrade.fulfilled, (state) => {
+        state.isLoading = false;
+        // Handle successful trade start
+      })
+      .addCase(startTrade.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchTrades.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchTrades.fulfilled, (state, action) => {
+        state.isLoading = false;
+        
+        // Check if we are appending (start > 0)
+        // We can check the action.meta.arg to see if start was passed
+        const { start } = action.meta.arg;
+        
+        if (start && start > 0) {
+            state.trades = [...state.trades, ...action.payload];
+        } else {
+            state.trades = action.payload;
+        }
+      })
+      .addCase(fetchTrades.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
-export const { selectCard, submitTradeStart, submitTradeSuccess, submitTradeFail, clearTradeError } = tradeSlice.actions;
+export const { clearTradeError } = tradeSlice.actions;
 
-export const submitMockTrade = (card: GiftCard, amount: number) => async (dispatch: any) => {
-  dispatch(submitTradeStart());
-  await new Promise(r => setTimeout(r, 1500));
-  const newTrade: Trade = {
-    id: `tr_${Date.now()}`,
-    cardName: card.name,
-    cardBrand: card.brand,
-    amount,
-    ratePerDollar: card.ratePerDollar,
-    nairaValue: amount * card.ratePerDollar,
-    status: 'pending',
-    createdAt: new Date().toISOString(),
-  };
-  dispatch(submitTradeSuccess(newTrade));
-  return { success: true, trade: newTrade };
-};
+export const submitMockTrade = createAsyncThunk<any, any>('trades/mockStart', async (data) => data);
 
 export default tradeSlice.reducer;

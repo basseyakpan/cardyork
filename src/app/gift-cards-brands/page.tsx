@@ -2,7 +2,8 @@
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { MOCK_GIFT_CARDS } from '@/store/slices/tradeSlice';
+import { useAppSelector } from '@/store/hooks';
+import { mapAssetsToCards } from '@/lib/assetMapper';
 
 const BRAND_DETAILS = {
   'iTunes/Apple': 'Apple and iTunes gift cards are consistently among the highest-paying cards on CardYork. Whether it’s a physical card or an E-code, you can trade them instantly for top Naira rates.',
@@ -14,6 +15,8 @@ const BRAND_DETAILS = {
 };
 
 export default function GiftCardBrandsPage() {
+  const { assets, rates } = useAppSelector(s => s.assets);
+  const cards = mapAssetsToCards(assets, rates);
   return (
     <main className="bg-background min-h-screen flex flex-col">
       <Navbar />
@@ -27,7 +30,7 @@ export default function GiftCardBrandsPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {MOCK_GIFT_CARDS.map((card) => (
+            {cards.map((card) => (
               <div key={card.id} className="glass-card p-8 flex flex-col gap-6 group hover:border-primary/30 transition-all">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-2xl bg-surface-container-high flex items-center justify-center text-3xl border border-primary/5 group-hover:scale-110 transition-transform">

@@ -30,6 +30,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (!isAuthenticated || !user) return null;
 
+  const displayName = user.fullName || [user.firstname, user.lastname].filter(Boolean).join(' ') || user.username || 'User';
+
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
@@ -60,11 +62,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <div className="p-4 mt-auto border-t border-primary/5 bg-black/10">
           <div className="flex items-center gap-4 px-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold flex-shrink-0">{user.fullName.charAt(0)}</div>
+            <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold flex-shrink-0">{displayName.charAt(0)}</div>
             {sidebarOpen && (
               <div className="flex flex-col min-w-0">
-                <span className="text-on-surface font-bold text-sm truncate">{user.fullName}</span>
-                <span className="text-primary text-[10px] uppercase font-bold tracking-widest">{user.accountTier} Tier</span>
+                <span className="text-on-surface font-bold text-sm truncate">{displayName}</span>
+                <span className="text-primary text-[10px] uppercase font-bold tracking-widest">{user.accountTier || 'Basic'} Tier</span>
               </div>
             )}
           </div>
@@ -83,7 +85,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="flex items-center gap-6">
             <div className="hidden sm:flex flex-col items-end">
               <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">Available Balance</span>
-              <span className="text-lg font-extrabold text-secondary">₦{user.balance.toLocaleString()}.00</span>
+              <span className="text-lg font-extrabold text-secondary">₦{user.balance?.toLocaleString() || 0}.00</span>
             </div>
             {/* <button className="btn btn-primary btn-sm px-4">+ Fund Vault</button> */}
           </div>

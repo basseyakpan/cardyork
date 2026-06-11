@@ -22,6 +22,7 @@ export default function Navbar() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { user, isAuthenticated } = useAppSelector(s => s.auth);
+  const displayName = user?.fullName || [user?.firstname, user?.lastname].filter(Boolean).join(' ') || user?.username || 'User';
   const { mobileMenuOpen } = useAppSelector(s => s.ui);
 
   useEffect(() => {
@@ -71,9 +72,13 @@ export default function Navbar() {
           {isAuthenticated && user ? (
             <>
               <Link href="/dashboard" className="btn btn-ghost btn-sm">Dashboard</Link>
-              <div className="flex items-center gap-2 bg-surface-container rounded-full p-1 pr-3 border border-primary/15">
-                <span className="w-7 h-7 rounded-full bg-gradient-primary flex items-center justify-center text-[0.8rem] font-bold text-white">{user.fullName.charAt(0)}</span>
-                <button onClick={handleLogout} className="bg-none border-none text-on-surface-variant cursor-pointer text-[0.9rem] p-0.5 transition-colors duration-200 hover:text-error" title="Sign out">↩</button>
+              <div className="flex items-center gap-2 bg-surface-container rounded-full p-1 pl-3 pr-2 border border-primary/15 ml-4">
+                <Link href="/dashboard" className="flex items-center gap-2 no-underline text-on-surface hover:text-primary transition-colors">
+                  <span className="text-sm font-bold">{displayName.split(' ')[0]}</span>
+                  <span className="w-7 h-7 rounded-full bg-gradient-primary flex items-center justify-center text-[0.8rem] font-bold text-white">{displayName.charAt(0)}</span>
+                </Link>
+                <div className="w-px h-4 bg-primary/20 mx-1"></div>
+                <button onClick={handleLogout} className="bg-none border-none text-on-surface-variant cursor-pointer text-[1rem] p-1 transition-colors duration-200 hover:text-error" title="Sign out">↩</button>
               </div>
             </>
           ) : (

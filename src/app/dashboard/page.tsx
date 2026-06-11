@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useAppSelector } from '@/store/hooks';
-import { MOCK_GIFT_CARDS } from '@/store/slices/tradeSlice';
+import { mapAssetsToCards } from '@/lib/assetMapper';
 import BrandLogo from '@/components/BrandLogo';
 
 export default function DashboardPage() {
@@ -10,7 +10,10 @@ export default function DashboardPage() {
 
   if (!user) return null;
 
-  const topCards = MOCK_GIFT_CARDS.slice(0, 4);
+  const displayName = user.fullName || [user.firstname, user.lastname].filter(Boolean).join(' ') || user.username || 'User';
+
+  const { assets, rates } = useAppSelector(s => s.assets);
+  const topCards = mapAssetsToCards(assets, rates).slice(0, 4);
 
   return (
     <div className="flex flex-col gap-8">
@@ -23,14 +26,14 @@ export default function DashboardPage() {
         <div className="flex flex-col items-start gap-3 relative z-10">
           <span className="chip chip-success">⚡ Platform Online</span>
           <h2 className="text-3xl font-extrabold text-on-surface leading-tight">
-            Welcome back, {user.fullName.split(' ')[0]} 👋
+            Welcome back, {displayName.split(' ')[0]} 👋
           </h2>
           <p className="text-on-surface-variant text-base max-w-[480px]">
             Your account is active and ready. Submit your gift cards and get paid in minutes.
           </p>
           {/* Available Balance inline */}
           <div className="flex items-center gap-2 mt-1 px-4 py-2.5 rounded-xl bg-secondary/10 border border-secondary/20">
-            <span className="text-xl font-black text-secondary">₦{user.balance.toLocaleString()}.00</span>
+            <span className="text-xl font-black text-secondary">₦{(user.balance || 0).toLocaleString()}.00</span>
           </div>
         </div>
 

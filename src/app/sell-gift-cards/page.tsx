@@ -2,9 +2,12 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { MOCK_GIFT_CARDS } from "@/store/slices/tradeSlice";
+import { useAppSelector } from '@/store/hooks';
+import { mapAssetsToCards } from '@/lib/assetMapper';
 
 export default function SellGiftCardsPage() {
+  const { assets, rates } = useAppSelector(s => s.assets);
+  const cards = mapAssetsToCards(assets, rates);
   return (
     <main className="bg-background min-h-screen flex flex-col">
       <Navbar />
@@ -96,7 +99,7 @@ export default function SellGiftCardsPage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {MOCK_GIFT_CARDS.map((card) => (
+            {cards.map((card) => (
               <Link
                 key={card.id}
                 href={`/login`}
