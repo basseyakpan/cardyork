@@ -13,7 +13,7 @@ export default function HistoryPage() {
 
   const displayTrades = activeTab === 'cards' ? trades : cryptoTrades;
   
-  const filteredTrades = displayTrades.filter(trade => {
+  const filteredTrades = displayTrades.filter((trade: any) => {
     if (!searchQuery) return true;
     const q = searchQuery.toLowerCase();
     const nameMatch = trade.cardName?.toLowerCase().includes(q) || trade.assetName?.toLowerCase().includes(q);
