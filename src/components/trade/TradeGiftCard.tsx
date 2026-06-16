@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FiUpload, FiCreditCard, FiArrowRight, FiArrowLeft, FiCheck, FiImage, FiX, FiLoader, FiAlertCircle } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { fetchAssets, fetchRates, recordGiftCardClick } from '@/store/slices/assetSlice';
+import { fetchAssets, fetchRates, fetchAssetRates, recordGiftCardClick } from '@/store/slices/assetSlice';
 import { startTrade } from '@/store/slices/tradeSlice';
 import { showToast } from '@/store/slices/uiSlice';
 import { compressAndUpload } from '@/lib/imageUtils';
@@ -336,11 +336,20 @@ ${cardCode ? `Card Code: ${cardCode}\n` : ''}${cardPin ? `Card PIN: ${cardPin}\n
                           setAmount('');
                           setUploadedImages([]);
                           setReceiptImages([]);
-                          if (hasRates) {
-                            setTimeout(() => setCurrentStep('details'), 300);
-                          } else {
-                            dispatch(showToast({ message: 'This card has no active rates at the moment.', type: 'error' }));
-                          }
+                          
+                          // Fetch rates specifically for this asset before proceeding
+                          dispatch(fetchAssetRates({ userId, assetId: asset._id }))
+                            .unwrap()
+                            .then((fetchedRates) => {
+                              if (fetchedRates && fetchedRates.length > 0) {
+                                setCurrentStep('details');
+                              } else {
+                                dispatch(showToast({ message: 'This card has no active rates at the moment.', type: 'error' }));
+                              }
+                            })
+                            .catch(() => {
+                              dispatch(showToast({ message: 'Failed to fetch rates for this card.', type: 'error' }));
+                            });
                         }}
                         className={`flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-300 text-left ${
                           selectedAsset?._id === asset._id
@@ -387,6 +396,17 @@ ${cardCode ? `Card Code: ${cardCode}\n` : ''}${cardPin ? `Card PIN: ${cardPin}\n
                       setAmount('');
                       setUploadedImages([]);
                       setReceiptImages([]);
+                      
+                      dispatch(fetchAssetRates({ userId, assetId: asset._id }))
+                        .unwrap()
+                        .then((fetchedRates) => {
+                          if (!fetchedRates || fetchedRates.length === 0) {
+                            dispatch(showToast({ message: 'This card has no active rates at the moment.', type: 'error' }));
+                          }
+                        })
+                        .catch(() => {
+                          dispatch(showToast({ message: 'Failed to fetch rates for this card.', type: 'error' }));
+                        });
                     }
                   }}
                 >

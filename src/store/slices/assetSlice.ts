@@ -7,6 +7,7 @@ interface Asset {
   trading_period_start: string;
   trading_period_stop: string;
   cardActive?: boolean;
+  vertical_image?: string;
   // Add other fields from API
 }
 
@@ -120,6 +121,26 @@ export const fetchRates = createAsyncThunk(
   }
 );
 
+export const fetchAssetRates = createAsyncThunk(
+  'assets/fetchAssetRates',
+  async ({ userId, assetId }: { userId: string; assetId: string }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BASE_URL}/rates/users/get/asset?id=${userId}&assetId=${assetId}&start=0`, {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+      });
+      const data = await response.json();
+      if (!response.ok) return rejectWithValue(data.message || 'Failed to fetch asset rates');
+      return data.data; 
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const assetSlice = createSlice({
   name: 'assets',
   initialState,
@@ -147,6 +168,17 @@ const assetSlice = createSlice({
         state.rates = action.payload;
       })
       .addCase(fetchRates.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchAssetRates.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchAssetRates.fulfilled, (state, action: PayloadAction<Rate[]>) => {
+        state.isLoading = false;
+        state.rates = action.payload;
+      })
+      .addCase(fetchAssetRates.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });

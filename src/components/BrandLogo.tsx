@@ -34,6 +34,16 @@ export default function BrandLogo({ id, fallback, className = "w-6 h-6" }: Brand
     case 'gc_nordstrom':
       return <FaShoppingBag className={`${className} text-[#1a1a1a] dark:text-white`} />;
     default:
+      if (fallback.startsWith('http') || fallback.startsWith('/')) {
+        return (
+          <img 
+            src={fallback} 
+            alt="Brand Logo" 
+            className={`${className} object-contain`} 
+            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+          />
+        );
+      }
       // Fallback to emoji if no icon matches
       return <span className="text-2xl select-none">{fallback}</span>;
   }

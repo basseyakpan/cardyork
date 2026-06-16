@@ -1,26 +1,58 @@
+'use client';
+import { useAppSelector } from '@/store/hooks';
+import { useState } from 'react';
+import { FiClock, FiCreditCard, FiDollarSign } from 'react-icons/fi';
+import BrandLogo from '@/components/BrandLogo';
+
 export default function HistoryPage() {
-  const mockTrades = [
-    { id: '#TRD-8392', asset: 'Amazon Gift Card', amount: '₦45,000', status: 'Completed', date: 'Oct 24, 2023', icon: '🛒' },
-    { id: '#TRD-8391', asset: 'Steam Wallet', amount: '₦12,500', status: 'Pending', date: 'Oct 23, 2023', icon: '🎮' },
-    { id: '#TRD-8390', asset: 'iTunes Gift Card', amount: '₦85,000', status: 'Completed', date: 'Oct 21, 2023', icon: '🎵' },
-    { id: '#TRD-8389', asset: 'Google Play', amount: '₦22,000', status: 'Failed', date: 'Oct 19, 2023', icon: '▶️' },
-  ];
+  const { trades, isLoading: tradesLoading } = useAppSelector(s => s.trade);
+  const { cryptoTrades, isLoading: cryptoLoading } = useAppSelector(s => s.crypto);
+  
+  const [activeTab, setActiveTab] = useState<'cards' | 'crypto'>('cards');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const displayTrades = activeTab === 'cards' ? trades : cryptoTrades;
+  
+  const filteredTrades = displayTrades.filter(trade => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    const nameMatch = trade.cardName?.toLowerCase().includes(q) || trade.assetName?.toLowerCase().includes(q);
+    const idMatch = trade._id?.toLowerCase().includes(q) || trade.id?.toLowerCase().includes(q);
+    return nameMatch || idMatch;
+  });
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto">
+    <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto">
       <div>
         <h2 className="text-3xl font-extrabold text-on-surface mb-2">Trade History</h2>
-        <p className="text-on-surface-variant">View and manage your recent gift card trades.</p>
+        <p className="text-on-surface-variant">View and manage your recent gift card and crypto trades.</p>
       </div>
 
       <div className="glass-card flex flex-col sm:flex-row gap-4 p-4 items-center justify-between">
-         <div className="input-group w-full sm:w-72">
-            <input type="text" placeholder="Search by ID or Asset..." className="input-field py-2.5 text-sm" />
-         </div>
-         <div className="flex items-center gap-2 w-full sm:w-auto">
-            <button className="btn btn-ghost py-2.5 px-4 text-sm w-full sm:w-auto">Filter</button>
-            <button className="btn btn-outline-primary py-2.5 px-4 text-sm w-full sm:w-auto">Export CSV</button>
-         </div>
+        <div className="flex bg-surface-container rounded-xl p-1 gap-1">
+          <button 
+            onClick={() => setActiveTab('cards')}
+            className={`px-6 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'cards' ? 'bg-primary text-white shadow-md' : 'text-on-surface-variant hover:bg-surface-container-high'}`}
+          >
+            <FiCreditCard className="w-4 h-4" /> Gift Cards
+          </button>
+          <button 
+            onClick={() => setActiveTab('crypto')}
+            className={`px-6 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'crypto' ? 'bg-primary text-white shadow-md' : 'text-on-surface-variant hover:bg-surface-container-high'}`}
+          >
+            <FiDollarSign className="w-4 h-4" /> Crypto
+          </button>
+        </div>
+
+        <div className="input-group w-full sm:w-72">
+          <input 
+            type="text" 
+            placeholder="Search by ID or Asset..." 
+            className="input-field py-2.5 text-sm"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="glass-card overflow-hidden">
@@ -30,34 +62,57 @@ export default function HistoryPage() {
               <tr className="border-b border-outline-variant bg-surface-container-low">
                 <th className="p-4 font-semibold text-on-surface-variant text-sm">Asset</th>
                 <th className="p-4 font-semibold text-on-surface-variant text-sm">Trade ID</th>
-                <th className="p-4 font-semibold text-on-surface-variant text-sm">Amount (₦)</th>
+                <th className="p-4 font-semibold text-on-surface-variant text-sm">Amount</th>
                 <th className="p-4 font-semibold text-on-surface-variant text-sm">Date</th>
                 <th className="p-4 font-semibold text-on-surface-variant text-sm">Status</th>
-                <th className="p-4 font-semibold text-on-surface-variant text-sm text-right">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant">
-              {mockTrades.map((trade) => (
-                <tr key={trade.id} className="hover:bg-surface-container-low/50 transition-colors">
-                  <td className="p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-lg">{trade.icon}</div>
-                      <span className="font-medium text-on-surface">{trade.asset}</span>
+              {filteredTrades.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="p-8 text-center text-on-surface-variant">
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center">
+                        <FiClock className="w-5 h-5 text-on-surface-variant" />
+                      </div>
+                      <p>No {activeTab} trades found.</p>
                     </div>
                   </td>
-                  <td className="p-4 text-on-surface-variant text-sm">{trade.id}</td>
-                  <td className="p-4 font-semibold text-on-surface">{trade.amount}</td>
-                  <td className="p-4 text-on-surface-variant text-sm">{trade.date}</td>
-                  <td className="p-4">
-                    <span className={`chip ${trade.status === 'Completed' ? 'chip-success' : trade.status === 'Pending' ? 'chip-pending' : 'chip-error'}`}>
-                      {trade.status}
-                    </span>
-                  </td>
-                  <td className="p-4 text-right">
-                    <button className="text-primary hover:text-primary-container text-sm font-medium transition-colors">View</button>
-                  </td>
                 </tr>
-              ))}
+              ) : (
+                filteredTrades.map((trade: any) => {
+                  const tradeId = trade.id || trade._id || '';
+                  const name = trade.cardName || trade.assetName || 'Unknown';
+                  const amount = trade.nairaValue || trade.actualAmount || trade.amount || 0;
+                  const date = trade.createdAt ? new Date(trade.createdAt).toLocaleDateString() : 'N/A';
+                  const icon = trade.assetImage?.[0] || trade.images?.[0] || '';
+
+                  return (
+                    <tr key={tradeId} className="hover:bg-surface-container-low/50 transition-colors">
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center overflow-hidden shrink-0">
+                            <BrandLogo id={name} fallback={icon} className="w-6 h-6" />
+                          </div>
+                          <span className="font-bold text-on-surface">{name}</span>
+                        </div>
+                      </td>
+                      <td className="p-4 text-on-surface-variant text-sm">
+                        {tradeId.substring(0, 8)}...
+                      </td>
+                      <td className="p-4 font-bold text-secondary">
+                        ₦{amount.toLocaleString()}
+                      </td>
+                      <td className="p-4 text-on-surface-variant text-sm">{date}</td>
+                      <td className="p-4">
+                        <span className={`chip chip-${trade.status} text-[10px] py-0.5 px-2`}>
+                          {trade.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
