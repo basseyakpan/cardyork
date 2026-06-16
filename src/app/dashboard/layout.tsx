@@ -1,26 +1,24 @@
 'use client';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAppSelector, useAppDispatch } from '@/store/hooks';
-import { toggleSidebar } from '@/store/slices/uiSlice';
+import { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { useAppSelector } from '@/store/hooks';
 import Link from 'next/link';
 import Toast from '@/components/Toast';
+import { FiMenu, FiX, FiLogOut, FiUser } from 'react-icons/fi';
 
-const SIDEBAR_LINKS = [
-  { icon: '📊', label: 'Dashboard', href: '/dashboard' },
-  { icon: '💳', label: 'Trade Cards', href: '/dashboard/trade' },
-  { icon: '🕒', label: 'Trade History', href: '/dashboard/history' },
-  { icon: '🏦', label: 'Withdrawal', href: '/dashboard/withdrawal' },
-  { icon: '👤', label: 'Profile', href: '/dashboard/profile' },
-  { icon: '🛡️', label: 'Security', href: '/dashboard/security' },
-  { icon: '💬', label: 'Support', href: '/dashboard/support' },
+const TOP_NAV_LINKS = [
+  { label: 'Dashboard', href: '/dashboard' },
+  { label: 'Trade History', href: '/dashboard/history' },
+  { label: 'Withdrawal', href: '/dashboard/withdrawal' },
+  { label: 'Support', href: '/dashboard/support' },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const dispatch = useAppDispatch();
+  const pathname = usePathname();
   const { user, isAuthenticated } = useAppSelector(s => s.auth);
-  const { sidebarOpen } = useAppSelector(s => s.ui);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -33,79 +31,126 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const displayName = user.fullName || [user.firstname, user.lastname].filter(Boolean).join(' ') || user.username || 'User';
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Sidebar */}
-      <aside className={`fixed lg:sticky top-0 left-0 h-screen z-50 bg-surface-container-low border-r border-primary/5 transition-all duration-300 flex flex-col ${sidebarOpen ? 'w-64' : 'w-20'}`}>
-        <div className="h-16 flex items-center justify-between px-6 border-b border-primary/5">
-          <Link href="/" className="flex items-center gap-2.5 no-underline overflow-hidden">
-            <span className="text-2xl bg-gradient-primary bg-clip-text text-transparent flex-shrink-0">⬡</span>
-            {sidebarOpen && <span className="text-on-surface font-extrabold tracking-tight whitespace-nowrap">Card<span className="bg-gradient-primary bg-clip-text text-transparent">York</span></span>}
-          </Link>
-          <button onClick={() => dispatch(toggleSidebar())} className="text-on-surface-variant hover:text-primary transition-colors">
-            {sidebarOpen ? '◀' : '▶'}
-          </button>
-        </div>
-
-        <nav className="flex-1 py-6 px-3 flex flex-col gap-1">
-          {SIDEBAR_LINKS.map(link => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-all no-underline group"
-              title={!sidebarOpen ? link.label : ''}
-            >
-              <span className="text-xl group-hover:scale-110 transition-transform">{link.icon}</span>
-              {sidebarOpen && <span className="font-medium whitespace-nowrap">{link.label}</span>}
+    <div className="flex flex-col min-h-screen bg-background">
+      {/* Top Navigation Bar */}
+      <header className="sticky top-0 z-50 w-full bg-surface-container-low/80 backdrop-blur-lg border-b border-primary/10">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+          
+          {/* Logo & Desktop Nav */}
+          <div className="flex items-center gap-12">
+            <Link href="/" className="flex items-center gap-2.5 no-underline">
+              <span className="text-3xl bg-gradient-primary bg-clip-text text-transparent flex-shrink-0">⬡</span>
+              <span className="text-xl text-on-surface font-extrabold tracking-tight hidden sm:block">Card<span className="bg-gradient-primary bg-clip-text text-transparent">York</span></span>
             </Link>
-          ))}
-        </nav>
 
-        <div className="p-4 mt-auto border-t border-primary/5 bg-black/10">
-          <div className="flex items-center gap-4 px-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold flex-shrink-0">{displayName.charAt(0)}</div>
-            {sidebarOpen && (
-              <div className="flex flex-col min-w-0">
-                <span className="text-on-surface font-bold text-sm truncate">{displayName}</span>
-                <span className="text-primary text-[10px] uppercase font-bold tracking-widest">{user.accountTier || 'Basic'} Tier</span>
-              </div>
-            )}
+            <nav className="hidden lg:flex items-center gap-1">
+              {TOP_NAV_LINKS.map(link => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                    pathname === link.href 
+                      ? 'bg-primary text-white shadow-lg shadow-primary/20' 
+                      : 'text-on-surface-variant hover:text-primary hover:bg-primary/5'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          {/* Right Side Info */}
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="hidden sm:flex flex-col items-end">
+              <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Wallet Balance</span>
+              <span className="text-lg font-black text-secondary">₦{(user.balance || 0).toLocaleString()}</span>
+            </div>
+
+            {/* Profile Dropdown */}
+            <div className="relative">
+              <button 
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                className="flex items-center gap-3 p-1.5 pr-4 rounded-full bg-surface-container border border-primary/10 hover:border-primary/30 transition-colors focus:outline-none"
+              >
+                <div className="w-9 h-9 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold flex-shrink-0">
+                  {displayName.charAt(0)}
+                </div>
+                <div className="hidden sm:flex flex-col items-start min-w-[80px]">
+                  <span className="text-on-surface font-bold text-sm truncate max-w-[100px] leading-tight">{displayName}</span>
+                  <span className="text-primary text-[10px] uppercase font-bold tracking-widest leading-tight">{user.accountTier || 'Basic'}</span>
+                </div>
+              </button>
+
+              {profileDropdownOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setProfileDropdownOpen(false)} />
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl glass-card border border-primary/10 p-2 z-50 shadow-xl animate-fade-in">
+                    <div className="p-3 mb-2 border-b border-primary/10">
+                      <p className="font-bold text-on-surface truncate">{displayName}</p>
+                      <p className="text-xs text-on-surface-variant truncate">{user.email}</p>
+                    </div>
+                    <Link href="/dashboard/profile" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors" onClick={() => setProfileDropdownOpen(false)}>
+                      <FiUser className="w-4 h-4" /> Profile Settings
+                    </Link>
+                    <Link href="/dashboard/security" className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-on-surface-variant hover:text-primary hover:bg-primary/5 transition-colors" onClick={() => setProfileDropdownOpen(false)}>
+                      <span className="w-4 h-4 text-center">🛡️</span> Security
+                    </Link>
+                    <div className="h-px w-full bg-primary/10 my-1" />
+                    <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-red-500 hover:bg-red-500/10 transition-colors">
+                      <FiLogOut className="w-4 h-4" /> Sign Out
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="lg:hidden p-2 text-on-surface hover:text-primary transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
-      </aside>
+      </header>
+
+      {/* Mobile Navigation */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-x-0 top-20 bottom-0 z-40 bg-background/95 backdrop-blur-xl border-t border-primary/10 animate-fade-in overflow-y-auto">
+          <nav className="p-6 flex flex-col gap-2">
+            <div className="p-4 mb-4 rounded-2xl bg-surface-container border border-primary/10 flex justify-between items-center">
+              <span className="text-xs uppercase tracking-widest text-on-surface-variant font-bold">Wallet Balance</span>
+              <span className="text-xl font-black text-secondary">₦{(user.balance || 0).toLocaleString()}</span>
+            </div>
+            
+            {TOP_NAV_LINKS.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`p-4 rounded-xl text-base font-bold transition-all ${
+                  pathname === link.href 
+                    ? 'bg-primary/10 text-primary border border-primary/20' 
+                    : 'text-on-surface hover:bg-surface-container'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="h-px w-full bg-primary/10 my-4" />
+            <Link href="/dashboard/profile" onClick={() => setMobileMenuOpen(false)} className="p-4 rounded-xl text-base font-bold text-on-surface hover:bg-surface-container">Profile Settings</Link>
+            <Link href="/dashboard/security" onClick={() => setMobileMenuOpen(false)} className="p-4 rounded-xl text-base font-bold text-on-surface hover:bg-surface-container">Security</Link>
+          </nav>
+        </div>
+      )}
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className="h-16 bg-surface-container-low border-b border-primary/5 flex items-center justify-between px-6 lg:px-8 flex-shrink-0">
-          <div className="flex flex-col">
-            <h1 className="text-lg font-bold text-on-surface">Dashboard</h1>
-            <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">CardYork <span className="text-secondary font-bold">Gift Card Platform</span></p>
-          </div>
-
-          <div className="flex items-center gap-6">
-            <div className="hidden sm:flex flex-col items-end">
-              <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">Available Balance</span>
-              <span className="text-lg font-extrabold text-secondary">₦{user.balance?.toLocaleString() || 0}.00</span>
-            </div>
-            {/* <button className="btn btn-primary btn-sm px-4">+ Fund Vault</button> */}
-          </div>
-        </header>
-
-        {/* Page Content */}
-        <div className="flex-1 overflow-y-auto p-6 lg:p-8">
-          {children}
-        </div>
+      <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10 min-w-0">
+        {children}
         <Toast />
       </main>
-
-      {/* Mobile Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
-          onClick={() => dispatch(toggleSidebar())}
-        />
-      )}
     </div>
   );
 }
-

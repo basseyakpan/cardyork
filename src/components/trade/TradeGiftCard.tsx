@@ -2,12 +2,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FiUpload, FiCreditCard, FiArrowRight, FiArrowLeft, FiCheck, FiImage, FiX, FiLoader } from 'react-icons/fi';
+import { FiUpload, FiCreditCard, FiArrowRight, FiArrowLeft, FiCheck, FiImage, FiX, FiLoader, FiAlertCircle } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { recordGiftCardClick } from '@/store/slices/assetSlice';
+import { fetchAssets, fetchRates, recordGiftCardClick } from '@/store/slices/assetSlice';
 import { startTrade } from '@/store/slices/tradeSlice';
 import { showToast } from '@/store/slices/uiSlice';
 import { compressAndUpload } from '@/lib/imageUtils';
+import { chatService } from '@/lib/chatService';
 
 type Step = 'select' | 'details' | 'review';
 
@@ -40,9 +41,20 @@ export function TradeGiftCard() {
 
   const currentStepIndex = steps.findIndex((s) => s.id === currentStep);
 
+  // ---- Data fetching ----
+  const userId = user?.userid || user?.id || '';
+
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchAssets(userId));
+      dispatch(fetchRates(userId));
+    }
+  }, [dispatch, userId]);
+
+  // ---- Rate computation ----
   const assetRates = useMemo(() => {
     if (!selectedAsset) return [];
-    return rates.filter((r) => r.asset?._id === selectedAsset._id);
+    return rates.filter((r) => r.asset?._id === selectedAsset._id || (r.asset as any) === selectedAsset._id);
   }, [rates, selectedAsset]);
 
   const availableCountries = useMemo(() => {
@@ -64,6 +76,7 @@ export function TradeGiftCard() {
     setSelectedRate(match || null);
   }, [cardType, country, assetRates]);
 
+  // ---- Amount validation ----
   const requiresReceipt = cardType
     ? /\breceipt\b/i.test(cardType) && !/\bno\s+receipt\b/i.test(cardType)
     : false;
@@ -99,13 +112,14 @@ export function TradeGiftCard() {
     }
   }
 
+  // ---- Image upload helpers ----
   const uploadFiles = async (files: FileList, setter: React.Dispatch<React.SetStateAction<string[]>>) => {
     setIsUploading(true);
     try {
       const urls = await Promise.all(Array.from(files).map((file) => compressAndUpload(file)));
       setter((prev) => [...prev, ...urls]);
     } catch {
-      dispatch(showToast({ message: 'Could not upload one or more images.', type: 'error' }));
+      dispatch(showToast({ message: 'Could not upload one or more images. Please try again.', type: 'error' }));
     } finally {
       setIsUploading(false);
     }
@@ -122,6 +136,7 @@ export function TradeGiftCard() {
   const removeImage = (index: number) => setUploadedImages(uploadedImages.filter((_, i) => i !== index));
   const removeReceipt = (index: number) => setReceiptImages(receiptImages.filter((_, i) => i !== index));
 
+  // ---- Navigation ----
   const handleNext = () => {
     if (currentStep === 'details') {
       if (!cardType || !country || !amount) {
@@ -129,7 +144,7 @@ export function TradeGiftCard() {
         return;
       }
       if (uploadedImages.length === 0 && !cardCode) {
-        dispatch(showToast({ message: 'Please upload at least one card image or provide code', type: 'error' }));
+        dispatch(showToast({ message: 'Please upload at least one card image or provide the card code', type: 'error' }));
         return;
       }
       if (requiresReceipt && receiptImages.length === 0) {
@@ -150,33 +165,75 @@ export function TradeGiftCard() {
     }
   };
 
+  // ---- Submit ----
   const handleSubmit = async () => {
-    if (!user?.userid) return;
+    if (!userId) return;
     try {
       const allImages = [...uploadedImages, ...receiptImages];
+      const tradeData = {
+        rateSpec: selectedRate?._id,
+        images: allImages,
+        userAmount: Number(amount),
+        quantity: 1,
+        comments,
+        cardType,
+        ...(cardCode && { cardCode }),
+        ...(cardPin && { cardPin }),
+      };
+
+      // Tremendous cards go to live chat instead of the standard trade API
+      if (selectedAsset?.name?.toLowerCase().includes('tremendous')) {
+        const nameParts = [user?.firstname, user?.firstName, user?.lastname, user?.lastName].filter(Boolean);
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts[1] || '';
+        const userName =
+          firstName && lastName
+            ? `${firstName} ${lastName}`
+            : firstName || user?.fullName || user?.username || user?.email?.split('@')[0] || 'User';
+
+        const chatId = await chatService.createOrGetChatSession(userId, userName, user?.email || '');
+
+        const messageDetails = `
+Card: ${selectedAsset.name}
+Country: ${country}
+Type: ${cardType}
+Rate: ₦${selectedRate?.rate || 0}/$
+Amount: $${amount}
+Quantity: 1
+Total Funds: ₦${calculatedAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+${cardCode ? `Card Code: ${cardCode}\n` : ''}${cardPin ? `Card PIN: ${cardPin}\n` : ''}${comments ? `Comments: ${comments}` : ''}
+        `.trim();
+
+        if (allImages.length > 0) {
+          await chatService.sendMessage(userId, chatId, userName, messageDetails, allImages[0]);
+          for (let i = 1; i < allImages.length; i++) {
+            await chatService.sendMessage(userId, chatId, userName, `Attached Image ${i + 1}`, allImages[i]);
+          }
+        } else {
+          await chatService.sendMessage(userId, chatId, userName, messageDetails);
+        }
+
+        dispatch(showToast({ message: 'Your Tremendous trade has been sent to the support chat!', type: 'success' }));
+        router.push('/dashboard/support');
+        return;
+      }
+
+      // Standard trade submission
       await dispatch(
         startTrade({
-          id: user.userid,
-          data: [
-            {
-              rateSpec: selectedRate?._id,
-              images: allImages,
-              userAmount: Number(amount),
-              quantity: 1,
-              comments,
-              cardType,
-            },
-          ],
+          id: userId,
+          data: [tradeData],
         }),
       ).unwrap();
 
-      dispatch(showToast({ message: 'Trade Submitted successfully!', type: 'success' }));
+      dispatch(showToast({ message: 'Trade submitted successfully! You\'ll be notified once it\'s processed.', type: 'success' }));
       router.push('/dashboard');
     } catch (error: any) {
-      dispatch(showToast({ message: error || 'Submission failed. Try again.', type: 'error' }));
+      dispatch(showToast({ message: error || 'Submission failed. Please try again.', type: 'error' }));
     }
   };
 
+  // ---- Reusable upload section ----
   const UploadSection = ({ label, description, images, onUpload, onRemove, inputId }: any) => (
     <div className="space-y-3">
       <label className="input-label mb-0">{label}</label>
@@ -254,8 +311,8 @@ export function TradeGiftCard() {
       {/* Content */}
       <div className="max-w-3xl mx-auto w-full">
         <div className="glass-card p-6 md:p-8">
-          
-          {/* Step 1: Select Card */}
+
+          {/* ── Step 1: Select Card ── */}
           {currentStep === 'select' && (
             <div className="animate-fade-in">
               <h2 className="text-xl font-bold mb-6 text-on-surface">Select Gift Card Brand</h2>
@@ -266,7 +323,7 @@ export function TradeGiftCard() {
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {[...assets].sort((a, b) => a.name.localeCompare(b.name)).map((asset) => {
-                    const hasRates = rates.some((r) => r.asset?._id === asset._id);
+                    const hasRates = rates.some((r) => r.asset?._id === asset._id || (r.asset as any) === asset._id);
                     return (
                       <button
                         key={asset._id}
@@ -286,7 +343,9 @@ export function TradeGiftCard() {
                           }
                         }}
                         className={`flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-300 text-left ${
-                          selectedAsset?._id === asset._id ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20 scale-[1.02]' : 'border-primary/10 bg-surface-container hover:border-primary/50'
+                          selectedAsset?._id === asset._id
+                            ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20 scale-[1.02]'
+                            : 'border-primary/10 bg-surface-container hover:border-primary/50'
                         }`}
                       >
                         <div className="w-20 h-12 rounded-xl flex items-center justify-center mb-3">
@@ -308,11 +367,12 @@ export function TradeGiftCard() {
             </div>
           )}
 
-          {/* Step 2: Details */}
+          {/* ── Step 2: Card Details ── */}
           {currentStep === 'details' && (
             <div className="animate-fade-in flex flex-col gap-6">
               <h2 className="text-xl font-bold mb-2 text-on-surface">Card Details</h2>
 
+              {/* Brand selector */}
               <div className="input-group">
                 <label className="input-label">Gift Card Brand</label>
                 <select
@@ -335,11 +395,20 @@ export function TradeGiftCard() {
                     <option key={asset._id} value={asset._id}>{asset.name}</option>
                   ))}
                 </select>
+
+                {/* Special info warning */}
+                {(selectedAsset as any)?.specialInfo && (
+                  <div className="mt-2 p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm flex gap-3">
+                    <FiAlertCircle className="w-5 h-5 flex-shrink-0 text-orange-400 mt-0.5" />
+                    <p>{(selectedAsset as any).specialInfo}</p>
+                  </div>
+                )}
               </div>
 
+              {/* Country + Card Type */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="input-group">
-                  <label className="input-label">Country</label>
+                  <label className="input-label">Country *</label>
                   <select
                     className="input-field appearance-none bg-surface-container"
                     value={country}
@@ -351,18 +420,18 @@ export function TradeGiftCard() {
                 </div>
 
                 <div className="input-group">
-                  <label className={`input-label ${!country && 'opacity-50'}`}>Card Type</label>
+                  <label className={`input-label ${!country && 'opacity-50'}`}>Card Type *</label>
                   <select
                     className="input-field appearance-none bg-surface-container disabled:opacity-50"
                     value={cardType}
                     onChange={(e) => {
                       setCardType(e.target.value);
-                      if (user?.userid && selectedAsset) {
+                      if (userId && selectedAsset) {
                         dispatch(recordGiftCardClick({
-                          id: user.userid,
+                          id: userId,
                           assetId: selectedAsset._id,
                           assetName: selectedAsset.name,
-                          country: country,
+                          country,
                           type: e.target.value,
                         }) as any);
                       }
@@ -370,18 +439,48 @@ export function TradeGiftCard() {
                     disabled={!country}
                   >
                     <option value="" disabled>{country ? 'Select card type' : 'Select country first'}</option>
-                    {availableTypes.map((type) => <option key={type} value={type}>{type}</option>)}
+                    {availableTypes.map((type) => {
+                      const typeRate = assetRates.find((r) => r.type === type && r.country === country);
+                      return (
+                        <option key={type} value={type}>
+                          {typeRate?.rateActive === false ? `⛔ ${type}` : type}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
               </div>
 
+              {/* Rate note warning */}
+              {selectedRate?.note && cardType && (
+                <div className="p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm flex gap-3">
+                  <FiAlertCircle className="w-5 h-5 flex-shrink-0 text-orange-400 mt-0.5" />
+                  <p>{selectedRate.note}</p>
+                </div>
+              )}
+
+              {/* Rate inactive warning */}
+              {selectedRate && selectedRate.rateActive === false && (
+                <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-bold flex items-start gap-3">
+                  <FiX className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <p className="flex-1">
+                    We are unable to redeem {selectedAsset?.name} ({cardType}) at the moment due to an issue beyond our control.
+                    Our team is working to resolve this as soon as possible.
+                  </p>
+                </div>
+              )}
+
+              {/* Amount */}
               <div className="input-group">
                 <label className="input-label flex items-baseline justify-between">
-                  <span>Card Amount (USD)</span>
+                  <span>Card Amount (USD) *</span>
                   {selectedRate && (
                     <span className="text-[10px] uppercase text-on-surface-variant tracking-widest">
-                      {selectedRate.fixRange ? `Fixed: $${selectedRate.fixRange.split(',').join(', $')}` : 
-                       selectedRate.range_above || !selectedRate.to ? `Min: $${selectedRate.from}` : `Range: $${selectedRate.from} – $${selectedRate.to}`}
+                      {selectedRate.fixRange
+                        ? `Fixed: $${selectedRate.fixRange.split(',').join(', $')}`
+                        : selectedRate.range_above || !selectedRate.to
+                          ? `Min: $${selectedRate.from}`
+                          : `Range: $${selectedRate.from} – $${selectedRate.to}`}
                     </span>
                   )}
                 </label>
@@ -397,17 +496,11 @@ export function TradeGiftCard() {
                 </div>
               </div>
 
-              {selectedRate && selectedRate.rateActive === false && (
-                <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-bold flex items-start gap-3">
-                  <FiX className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                  <p className="flex-1">We are unable to redeem {selectedAsset?.name} at the moment due to an issue beyond our control. Our team is working to resolve this as soon as possible.</p>
-                </div>
-              )}
-
+              {/* e-code fields */}
               {cardType.toLowerCase().includes('e-code') && (
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="input-group">
-                    <label className="input-label">Card Code</label>
+                    <label className="input-label">Card Code *</label>
                     <input type="text" placeholder="Enter gift card code" value={cardCode} onChange={(e) => setCardCode(e.target.value)} className="input-field" />
                   </div>
                   <div className="input-group">
@@ -417,40 +510,60 @@ export function TradeGiftCard() {
                 </div>
               )}
 
+              {/* Rate preview */}
               {amount && selectedRate && selectedRate.rateActive !== false && (
                 <div className="flex flex-col gap-3">
-                  <div className="flex justify-between items-center p-5 rounded-xl bg-surface-container/50 border border-primary/10">
-                    <span className="text-sm text-on-surface-variant font-bold uppercase tracking-widest">Current Rate</span>
-                    <div className="text-xl font-bold text-secondary">₦{selectedRate.rate} / $1</div>
-                  </div>
+                  {isAmountValid && (
+                    <div className="flex justify-between items-center p-5 rounded-xl bg-surface-container/50 border border-primary/10">
+                      <span className="text-sm text-on-surface-variant font-bold uppercase tracking-widest">Current Rate</span>
+                      <div className="text-xl font-bold text-secondary">₦{selectedRate.rate} / $1</div>
+                    </div>
+                  )}
 
                   {!isAmountValid && Number(amount) > 0 ? (
                     <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-bold">
                       {validationMessage}
                     </div>
-                  ) : (
+                  ) : isAmountValid ? (
                     <div className="p-6 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-between">
                       <span className="text-sm font-bold text-primary uppercase tracking-widest">Estimated Payout</span>
                       <span className="text-3xl font-black text-secondary">₦{calculatedAmount.toLocaleString()}</span>
                     </div>
-                  )}
+                  ) : null}
                 </div>
               )}
 
               <div className="h-px w-full bg-primary/10 my-2" />
 
+              {/* Receipt Upload */}
               {requiresReceipt && (
-                <UploadSection label="Receipt Upload" description="Upload a clear photo of your receipt" images={receiptImages} onUpload={handleReceiptUpload} onRemove={removeReceipt} inputId="receipt-upload" />
+                <UploadSection
+                  label="Receipt Upload *"
+                  description="Upload a clear photo of your receipt"
+                  images={receiptImages}
+                  onUpload={handleReceiptUpload}
+                  onRemove={removeReceipt}
+                  inputId="receipt-upload"
+                />
               )}
-              <UploadSection label={requiresReceipt ? "Card Images (optional)" : "Card Images"} description="Upload clear photos of the front and back of your gift card" images={uploadedImages} onUpload={handleImageUpload} onRemove={removeImage} inputId="card-upload" />
+
+              {/* Card Image Upload */}
+              <UploadSection
+                label={requiresReceipt ? 'Card Images (optional)' : 'Card Images *'}
+                description="Upload clear photos of the front and back of your gift card"
+                images={uploadedImages}
+                onUpload={handleImageUpload}
+                onRemove={removeImage}
+                inputId="card-upload"
+              />
             </div>
           )}
 
-          {/* Step 3: Review */}
+          {/* ── Step 3: Review ── */}
           {currentStep === 'review' && (
             <div className="animate-fade-in flex flex-col gap-6">
               <h2 className="text-xl font-bold mb-2 text-on-surface">Review Your Trade</h2>
-              
+
               <div className="p-6 rounded-2xl bg-surface-container/50 border border-primary/10 flex flex-col gap-4">
                 <div className="flex items-center gap-4 border-b border-primary/10 pb-4">
                   <div className="w-14 h-10 rounded-lg bg-white flex items-center justify-center p-1">
@@ -475,6 +588,12 @@ export function TradeGiftCard() {
                     <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest mb-1">Exchange Rate</p>
                     <p className="font-bold text-secondary">₦{selectedRate?.rate}/$</p>
                   </div>
+                  {selectedRate?.processing_time && (
+                    <div>
+                      <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest mb-1">Processing Time</p>
+                      <p className="font-bold text-on-surface">{selectedRate.processing_time} min</p>
+                    </div>
+                  )}
                   {cardCode && (
                     <div className="col-span-2">
                       <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest mb-1">Card Code</p>
@@ -484,11 +603,37 @@ export function TradeGiftCard() {
                 </div>
               </div>
 
+              {/* Card Images Preview */}
+              {uploadedImages.length > 0 && (
+                <div>
+                  <p className="input-label mb-2">Card Images</p>
+                  <div className="flex gap-2 flex-wrap">
+                    {uploadedImages.map((img, index) => (
+                      <img key={index} src={img} alt={`Card ${index + 1}`} className="w-20 h-20 object-cover rounded-lg border border-primary/20" />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Receipt Images Preview */}
+              {receiptImages.length > 0 && (
+                <div>
+                  <p className="input-label mb-2">Receipt Images</p>
+                  <div className="flex gap-2 flex-wrap">
+                    {receiptImages.map((img, index) => (
+                      <img key={index} src={img} alt={`Receipt ${index + 1}`} className="w-20 h-20 object-cover rounded-lg border border-primary/20" />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Total payout */}
               <div className="p-6 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-between">
                 <span className="text-sm font-bold text-primary uppercase tracking-widest">Total Payout</span>
                 <span className="text-3xl font-black text-secondary">₦{calculatedAmount.toLocaleString()}</span>
               </div>
 
+              {/* Comments */}
               <div className="input-group">
                 <label className="input-label">Additional Comments (Optional)</label>
                 <textarea
@@ -499,16 +644,18 @@ export function TradeGiftCard() {
                 />
               </div>
 
+              {/* Disclaimer */}
               <div className="p-4 rounded-xl bg-secondary/10 border border-secondary/20 flex items-start gap-3">
                 <FiCheck className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
                 <p className="text-xs text-on-surface font-medium leading-relaxed">
-                  By submitting this trade, you confirm that the provided details and images are accurate and belong to you. Fraudulent trades will lead to account suspension.
+                  By submitting this trade, you confirm that the provided details and images are accurate and belong to you.
+                  Fraudulent trades will lead to account suspension.
                 </p>
               </div>
             </div>
           )}
 
-          {/* Navigation Buttons */}
+          {/* ── Navigation ── */}
           <div className="flex justify-between mt-10 pt-6 border-t border-primary/10">
             {currentStep !== 'select' ? (
               <button type="button" onClick={handleBack} className="btn btn-outline-primary" disabled={isUploading || tradeLoading}>
@@ -517,12 +664,22 @@ export function TradeGiftCard() {
             ) : <div />}
 
             {currentStep === 'review' ? (
-              <button type="button" onClick={handleSubmit} className="btn btn-primary" disabled={tradeLoading || isUploading || !isAmountValid}>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="btn btn-primary"
+                disabled={tradeLoading || isUploading || !isAmountValid}
+              >
                 {tradeLoading ? <FiLoader className="animate-spin mr-2" /> : <FiCheck className="mr-2" />}
                 Submit Trade
               </button>
             ) : currentStep !== 'select' ? (
-              <button type="button" onClick={handleNext} className="btn btn-primary" disabled={isUploading || (currentStep === 'details' && !isAmountValid)}>
+              <button
+                type="button"
+                onClick={handleNext}
+                className="btn btn-primary"
+                disabled={isUploading || (selectedRate && selectedRate.rateActive === false)}
+              >
                 Next <FiArrowRight className="ml-2" />
               </button>
             ) : null}

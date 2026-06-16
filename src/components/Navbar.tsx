@@ -10,8 +10,7 @@ import { ThemeToggle } from './ThemeToggle';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
-  { label: 'Sell Gift Cards', href: '/sell-gift-cards' },
-  { label: 'Gift Card Brands', href: '/gift-card-brands' },
+  { label: 'About Us', href: '/about' },
   { label: 'Blog', href: '/blog' },
   { label: 'FAQs', href: '/faq' },
 ];
@@ -83,8 +82,8 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link href="/login" className="btn btn-ghost btn-sm">Sign In</Link>
-              <Link href="/register" className="btn btn-primary btn-sm">Get Started</Link>
+              <Link href="/login" className="btn btn-ghost btn-sm">Log In</Link>
+              <Link href="/register" className="btn btn-primary btn-sm">Sign Up</Link>
             </>
           )}
         </div>
@@ -127,8 +126,8 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link href="/login" className="btn btn-ghost w-full">Sign In</Link>
-                <Link href="/register" className="btn btn-primary w-full">Create Account</Link>
+                <Link href="/login" className="btn btn-ghost w-full">Log In</Link>
+                <Link href="/register" className="btn btn-primary w-full">Sign Up</Link>
               </>
             )}
           </div>

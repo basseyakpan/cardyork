@@ -1,172 +1,117 @@
 import Link from 'next/link';
+import { FaApple, FaGooglePlay, FaAmazon, FaSteam } from 'react-icons/fa';
+import { FiSearch, FiZap, FiBell, FiMusic, FiCreditCard } from 'react-icons/fi';
 
 export default function AppDownloadSection() {
   return (
-    <section className="relative py-24 overflow-hidden">
-      {/* Background glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/5 pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+    <section className="relative py-24 overflow-hidden bg-background">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#e8f0ff] via-transparent to-transparent dark:from-primary/5 pointer-events-none" />
 
-      <div className="relative z-10 max-w-[1200px] mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div className="relative z-10 max-w-[1200px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-          {/* Left: Text content */}
-          <div className="flex flex-col items-start">
-            <span className="chip chip-primary mb-6">📱 Mobile App</span>
-            <h2 className="display-sm mb-6">
-              Sell Gift Cards<br />
-              <span className="gradient-text">On the Go</span>
-            </h2>
-            <p className="text-on-surface-variant text-lg leading-relaxed mb-8 max-w-[460px]">
-              Get the CardYork app and sell your gift cards instantly from anywhere.
-              Real-time rate notifications, one-tap submissions, and instant payouts — all in your pocket.
-            </p>
+        {/* Left: Phone mockup showing rates */}
+        <div className="relative flex justify-center items-center order-last lg:order-first">
+          <div className="absolute w-64 h-64 bg-primary/15 blur-[80px] rounded-full" />
 
-            {/* Feature pills */}
-            <ul className="flex flex-col gap-3 mb-10">
-              {[
-                { icon: '⚡', text: 'Instant rate alerts & notifications' },
-                { icon: '🔒', text: 'Biometric login & bank-level security' },
-                { icon: '💸', text: 'Track payouts in real time' },
-              ].map(f => (
-                <li key={f.text} className="flex items-center gap-3 text-on-surface-variant text-sm font-medium">
-                  <span className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center text-base flex-shrink-0">{f.icon}</span>
-                  {f.text}
-                </li>
-              ))}
-            </ul>
-
-            {/* Store badges */}
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="#"
-                className="flex items-center gap-3 glass-card-sm px-5 py-3 hover:border-primary/40 hover:bg-primary/5 transition-all group"
-              >
-                <span className="text-2xl">🍎</span>
-                <div className="flex flex-col leading-tight">
-                  <span className="text-[10px] text-on-surface-variant font-medium uppercase tracking-widest">Download on the</span>
-                  <span className="text-on-surface font-bold text-sm">App Store</span>
+          <div className="relative z-10 w-[240px] sm:w-[260px]">
+            <div className="relative bg-gray-900 rounded-[44px] p-[3px] shadow-[0_40px_100px_rgba(30,91,255,0.2),0_20px_40px_rgba(0,0,0,0.3)] border border-primary/30">
+              <div className="bg-[#0b1120] rounded-[42px] overflow-hidden">
+                {/* Notch */}
+                <div className="flex items-center justify-between px-5 pt-3 pb-1">
+                  <span className="text-[9px] font-bold text-white/60">9:41</span>
+                  <div className="w-14 h-3 bg-black rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-2" />
                 </div>
-              </Link>
-              <Link
-                href="#"
-                className="flex items-center gap-3 glass-card-sm px-5 py-3 hover:border-secondary/40 hover:bg-secondary/5 transition-all group"
-              >
-                <span className="text-2xl">▶️</span>
-                <div className="flex flex-col leading-tight">
-                  <span className="text-[10px] text-on-surface-variant font-medium uppercase tracking-widest">Get it on</span>
-                  <span className="text-on-surface font-bold text-sm">Google Play</span>
-                </div>
-              </Link>
-            </div>
-          </div>
 
-          {/* Right: Phone mockup */}
-          <div className="relative flex justify-center items-center">
-            {/* Glow behind phone */}
-            <div className="absolute w-72 h-72 bg-primary/15 blur-[80px] rounded-full" />
-
-            {/* Phone frame */}
-            <div className="relative z-10 w-[260px]">
-              {/* Outer shell */}
-              <div className="relative bg-surface-container rounded-[44px] p-[3px] shadow-[0_40px_80px_rgba(0,0,0,0.35)] border border-primary/20">
-                {/* Inner bezel */}
-                <div className="bg-surface-container-low rounded-[42px] overflow-hidden">
-                  {/* Status bar */}
-                  <div className="flex items-center justify-between px-6 pt-4 pb-2">
-                    <span className="text-[10px] font-bold text-on-surface-variant">9:41</span>
-                    <div className="w-20 h-5 bg-surface-container rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-3" />
-                    <div className="flex gap-1 items-center">
-                      <div className="flex gap-[2px] items-end h-3">
-                        <div className="w-[3px] bg-on-surface-variant/60 rounded-sm" style={{ height: '40%' }} />
-                        <div className="w-[3px] bg-on-surface-variant/60 rounded-sm" style={{ height: '60%' }} />
-                        <div className="w-[3px] bg-on-surface-variant/60 rounded-sm" style={{ height: '80%' }} />
-                        <div className="w-[3px] bg-on-surface rounded-sm" style={{ height: '100%' }} />
-                      </div>
+                <div className="px-4 pb-6 pt-1">
+                  {/* Rates header */}
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-[12px] font-extrabold text-white">Rates</span>
+                    <div className="flex items-center gap-2 bg-[#141e35] rounded-lg px-2 py-1">
+                      <FiSearch className="w-3 h-3 text-white/50" />
+                      <span className="text-[9px] text-white/50">Search Gift Card</span>
                     </div>
                   </div>
 
-                  {/* App screen content */}
-                  <div className="px-4 pb-6 pt-2 flex flex-col gap-3">
-                    {/* Header */}
-                    <div className="flex items-center justify-between mb-1">
-                      <div>
-                        <p className="text-[10px] text-on-surface-variant font-medium">Good morning 👋</p>
-                        <p className="text-sm font-extrabold text-on-surface">CardYork</p>
-                      </div>
-                      <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center text-white text-xs font-bold">J</div>
-                    </div>
-
-                    {/* Balance card */}
-                    <div className="rounded-2xl bg-gradient-to-br from-primary to-primary-dim p-4 text-white">
-                      <p className="text-[9px] font-bold uppercase tracking-widest opacity-70 mb-0.5">Available Balance</p>
-                      <p className="text-xl font-black">₦12,450,000</p>
-                      <p className="text-[9px] opacity-60 mt-1">**** **** **** 4821</p>
-                    </div>
-
-                    {/* Quick actions */}
-                    <div className="grid grid-cols-3 gap-2">
-                      {[
-                        { icon: '💳', label: 'Sell' },
-                        { icon: '💸', label: 'Withdraw' },
-                        { icon: '📊', label: 'Rates' },
-                      ].map(a => (
-                        <div key={a.label} className="flex flex-col items-center gap-1 p-2 rounded-xl bg-surface-container-high">
-                          <span className="text-base">{a.icon}</span>
-                          <span className="text-[9px] font-bold text-on-surface-variant">{a.label}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Recent transactions */}
+                  {/* Balance reminder */}
+                  <div className="rounded-xl bg-gradient-to-br from-primary to-blue-700 p-3 mb-3 text-white flex justify-between items-center">
                     <div>
-                      <p className="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">Recent</p>
-                      <div className="flex flex-col gap-2">
-                        {[
-                          { name: 'Amazon Card', amount: '₦158,000', status: 'paid' },
-                          { name: 'iTunes Card', amount: '₦81,000', status: 'paid' },
-                          { name: 'Steam Card', amount: '₦46,200', status: 'pending' },
-                        ].map(t => (
-                          <div key={t.name} className="flex items-center justify-between py-1.5 border-b border-primary/5 last:border-0">
-                            <div className="flex items-center gap-2">
-                              <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center text-[8px]">💳</div>
-                              <span className="text-[9px] font-bold text-on-surface">{t.name}</span>
-                            </div>
-                            <div className="flex flex-col items-end">
-                              <span className="text-[9px] font-extrabold text-secondary">{t.amount}</span>
-                              <span className={`text-[7px] font-bold uppercase ${t.status === 'paid' ? 'text-secondary' : 'text-tertiary'}`}>{t.status}</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                      <p className="text-[7px] opacity-60 uppercase tracking-widest">Available</p>
+                      <p className="text-[13px] font-black">₦245,680</p>
                     </div>
+                    <span className="text-[10px] opacity-50">→</span>
+                  </div>
+
+                  {/* Rates list */}
+                  <div className="flex flex-col gap-2">
+                    {[
+                      { name: 'Amazon', Icon: FaAmazon, rate: '₦1,450', bg: 'from-[#ff9900] to-[#ff6600]', grade: '$1' },
+                      { name: 'iTunes', Icon: FiMusic, rate: '₦1,430', bg: 'from-pink-500 to-rose-600', grade: '$1' },
+                      { name: 'Steam', Icon: FaSteam, rate: '₦1,300', bg: 'from-gray-700 to-slate-900', grade: '$1' },
+                      { name: 'Google Play', Icon: FaGooglePlay, rate: '₦1,380', bg: 'from-green-600 to-emerald-700', grade: '$1' },
+                      { name: 'Sephora', Icon: undefined, textIcon: 'S', rate: '₦1,200', bg: 'from-black to-gray-800', grade: '$1' },
+                    ].map(item => (
+                      <div key={item.name} className="flex items-center justify-between bg-[#141e35] rounded-xl px-3 py-2">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${item.bg} flex items-center justify-center text-white font-bold text-[10px]`}>
+                            {item.Icon ? <item.Icon className="w-3 h-3" /> : item.textIcon}
+                          </div>
+                          <div>
+                            <p className="text-[9px] font-bold text-white">{item.name}</p>
+                            <p className="text-[7px] text-white/40">Store</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-extrabold text-green-400">{item.rate}/{item.grade}</span>
+                          <span className="text-[7px] bg-primary/20 text-primary px-1.5 py-0.5 rounded-full font-bold">Sell</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
-
-              {/* Side buttons */}
-              <div className="absolute -right-[4px] top-24 w-[3px] h-12 bg-surface-container-high rounded-r-full" />
-              <div className="absolute -left-[4px] top-20 w-[3px] h-8 bg-surface-container-high rounded-l-full" />
-              <div className="absolute -left-[4px] top-32 w-[3px] h-8 bg-surface-container-high rounded-l-full" />
-              <div className="absolute -left-[4px] top-44 w-[3px] h-8 bg-surface-container-high rounded-l-full" />
             </div>
-
-            {/* Floating notification bubble */}
-            <div className="absolute -right-4 top-12 glass-card-sm px-4 py-2.5 flex items-center gap-2.5 shadow-xl border border-secondary/20 animate-float">
-              <span className="text-secondary text-lg">💸</span>
-              <div className="flex flex-col">
-                <span className="text-[10px] font-extrabold text-on-surface">₦81,000 received!</span>
-                <span className="text-[9px] text-on-surface-variant">iTunes Card • Just now</span>
-              </div>
-            </div>
-
-            {/* Rating bubble */}
-            <div className="absolute -left-6 bottom-16 glass-card-sm px-3 py-2 flex items-center gap-2 shadow-xl border border-primary/20 animate-float" style={{ animationDelay: '0.5s' }}>
-              <span className="text-yellow-400">★★★★★</span>
-              <span className="text-[9px] font-bold text-on-surface">50K+ users</span>
-            </div>
+            <div className="absolute -right-[4px] top-24 w-[3px] h-12 bg-gray-700 rounded-r-full" />
+            <div className="absolute -left-[4px] top-20 w-[3px] h-8 bg-gray-700 rounded-l-full" />
+            <div className="absolute -left-[4px] top-32 w-[3px] h-8 bg-gray-700 rounded-l-full" />
           </div>
         </div>
+
+        {/* Right: Text */}
+        <div className="flex flex-col items-start">
+          <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-primary mb-3">MOBILE APP</span>
+          <h2 className="display-sm mb-6">
+            Trade On{' '}
+            <span className="gradient-text">The Go</span>
+          </h2>
+          <p className="text-on-surface-variant text-lg leading-relaxed mb-8 max-w-[460px]">
+            Download the Cardyork app and trade anytime, anywhere.
+          </p>
+
+          {/* Store badges */}
+          <div className="flex flex-wrap gap-4">
+            <Link
+              href="#"
+              className="flex items-center gap-3 bg-black text-white px-5 py-3 rounded-xl hover:opacity-90 transition-opacity shadow-lg"
+            >
+              <FaApple className="text-2xl" />
+              <div className="flex flex-col leading-tight">
+                <span className="text-[9px] font-medium uppercase tracking-widest opacity-70">Download on the</span>
+                <span className="font-bold text-sm">App Store</span>
+              </div>
+            </Link>
+            <Link
+              href="#"
+              className="flex items-center gap-3 bg-black text-white px-5 py-3 rounded-xl hover:opacity-90 transition-opacity shadow-lg"
+            >
+              <FaGooglePlay className="text-2xl" />
+              <div className="flex flex-col leading-tight">
+                <span className="text-[9px] font-medium uppercase tracking-widest opacity-70">GET IT ON</span>
+                <span className="font-bold text-sm">Google Play</span>
+              </div>
+            </Link>
+          </div>
+        </div>
+
       </div>
     </section>
   );

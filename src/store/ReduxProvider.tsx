@@ -11,14 +11,16 @@ function GlobalDataLoader({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
   const { user, isAuthenticated } = useAppSelector(s => s.auth);
 
+  const userId = user?.userid || user?.id;
+
   useEffect(() => {
-    if (isAuthenticated && user?.userid) {
-      dispatch(fetchUserProfile(user.userid));
-      dispatch(fetchAssets(user.userid));
-      dispatch(fetchRates(user.userid));
+    if (isAuthenticated && userId) {
+      dispatch(fetchUserProfile(userId));
+      dispatch(fetchAssets(userId));
+      dispatch(fetchRates(userId));
       dispatch(fetchCryptoCoins());
     }
-  }, [dispatch, user?.userid, isAuthenticated]);
+  }, [dispatch, userId, isAuthenticated]);
 
   return <>{children}</>;
 }

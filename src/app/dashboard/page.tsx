@@ -1,137 +1,160 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useAppSelector } from '@/store/hooks';
 import { mapAssetsToCards } from '@/lib/assetMapper';
 import BrandLogo from '@/components/BrandLogo';
+import { TradeGiftCard } from '@/components/trade/TradeGiftCard';
+import { TradeCrypto } from '@/components/trade/TradeCrypto';
+import { FiArrowRight, FiActivity, FiShield, FiCreditCard, FiDollarSign } from 'react-icons/fi';
+
+type Tab = 'cards' | 'crypto';
 
 export default function DashboardPage() {
+  const [activeTab, setActiveTab] = useState<Tab>('cards');
   const { trades } = useAppSelector(s => s.trade);
   const { user } = useAppSelector(s => s.auth);
+  const { assets, rates } = useAppSelector(s => s.assets);
 
   if (!user) return null;
 
-  const displayName = user.fullName || [user.firstname, user.lastname].filter(Boolean).join(' ') || user.username || 'User';
-
-  const { assets, rates } = useAppSelector(s => s.assets);
   const topCards = mapAssetsToCards(assets, rates).slice(0, 4);
 
   return (
-    <div className="flex flex-col gap-8">
-
-      {/* Welcome Banner */}
-      <div className="glass-card p-8 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-secondary/5 blur-3xl rounded-full -translate-x-1/2 translate-y-1/2" />
-
-        <div className="flex flex-col items-start gap-3 relative z-10">
-          <span className="chip chip-success">⚡ Platform Online</span>
-          <h2 className="text-3xl font-extrabold text-on-surface leading-tight">
-            Welcome back, {displayName.split(' ')[0]} 👋
-          </h2>
-          <p className="text-on-surface-variant text-base max-w-[480px]">
-            Your account is active and ready. Submit your gift cards and get paid in minutes.
-          </p>
-          {/* Available Balance inline */}
-          <div className="flex items-center gap-2 mt-1 px-4 py-2.5 rounded-xl bg-secondary/10 border border-secondary/20">
-            <span className="text-xl font-black text-secondary">₦{(user.balance || 0).toLocaleString()}.00</span>
-          </div>
+    <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 lg:gap-12">
+      
+      {/* Main Column - Sell Flow */}
+      <div className="xl:col-span-8 flex flex-col gap-8">
+        
+        {/* Segmented Control */}
+        <div className="flex bg-surface-container rounded-full p-1 border border-primary/10 shadow-sm relative w-full max-w-[400px]">
+          <div 
+            className="absolute top-1 bottom-1 w-[calc(50%-4px)] bg-primary rounded-full transition-all duration-300 ease-out shadow-md"
+            style={{ left: activeTab === 'cards' ? '4px' : 'calc(50% + 2px)' }}
+          />
+          <button
+            onClick={() => setActiveTab('cards')}
+            className={`flex-1 flex flex-col items-center justify-center py-2 px-4 rounded-full text-sm font-bold transition-colors z-10 ${
+              activeTab === 'cards' ? 'text-white' : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <FiCreditCard className="w-4 h-4" />
+              Gift Cards
+            </div>
+          </button>
+          <button
+            onClick={() => setActiveTab('crypto')}
+            className={`flex-1 flex flex-col items-center justify-center py-2 px-4 rounded-full text-sm font-bold transition-colors z-10 ${
+              activeTab === 'crypto' ? 'text-white' : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <FiDollarSign className="w-4 h-4" />
+              Crypto
+            </div>
+          </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 w-full md:w-auto relative z-10">
-          <div className="glass-card-sm p-5 flex flex-col items-center justify-center min-w-[140px]">
-            <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Cards Sold</span>
-            <span className="text-2xl font-extrabold text-on-surface tracking-tight">{user.totalTrades}</span>
-          </div>
-          <div className="glass-card-sm p-5 flex flex-col items-center justify-center min-w-[140px]">
-            <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold mb-1">Account Security</span>
-            <span className="text-2xl font-extrabold text-secondary tracking-tight">Active</span>
-          </div>
-        </div>
+        {activeTab === 'cards' ? <TradeGiftCard /> : <TradeCrypto />}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
-
-        {/* Recent Submissions */}
-        <div className="xl:col-span-8 flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-on-surface">Recent Submissions</h3>
-            <button className="text-sm font-bold text-primary hover:underline uppercase tracking-wider">View All</button>
-          </div>
-
-          <div className="glass-card overflow-hidden">
-            <div className="flex flex-col divide-y divide-primary/5">
-              {trades.map(trade => (
-                <div key={trade.id} className="p-5 flex items-center justify-between hover:bg-primary/5 transition-colors group">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center text-xl border border-primary/5 group-hover:scale-110 transition-transform">💳</div>
-                    <div className="flex flex-col">
-                      <span className="text-on-surface font-bold">{trade.cardName}</span>
-                      <span className="text-on-surface-variant text-xs font-medium">{new Date(trade.createdAt).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-8 text-right">
-                    <div className="flex flex-col">
-                      <span className="text-on-surface font-extrabold">₦{trade.nairaValue.toLocaleString()}</span>
-                      <span className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest">${trade.amount}</span>
-                    </div>
-                    <span className={`chip chip-${trade.status} min-w-[100px]`}>{trade.status}</span>
-                  </div>
-                </div>
-              ))}
+      {/* Right Column - Dashboard Summary */}
+      <div className="xl:col-span-4 flex flex-col gap-8">
+        
+        {/* Status Card */}
+        <div className="glass-card p-6 flex flex-col gap-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-2xl rounded-full translate-x-1/2 -translate-y-1/2" />
+          
+          <div className="flex items-center justify-between z-10">
+            <span className="chip chip-success">Account Active</span>
+            <div className="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center">
+              <FiShield className="w-4 h-4 text-primary" />
             </div>
           </div>
-        </div>
-
-        {/* Sidebar */}
-        <div className="xl:col-span-4 flex flex-col gap-8">
-
-          {/* Top Gift Card Rates */}
-          <div className="flex flex-col gap-4">
-            <h3 className="text-xl font-bold text-on-surface">Today's Best Rates</h3>
-            <div className="flex flex-col gap-3">
-              {topCards.map(card => (
-                <Link
-                  key={card.id}
-                  href={`/sell-gift-cards/${card.id}`}
-                  className="glass-card-sm p-4 flex items-center justify-between hover:border-primary/30 hover:bg-primary/5 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-surface-container-high flex items-center justify-center border border-primary/10">
-                      <BrandLogo id={card.id} fallback={card.icon} className="w-5 h-5" />
-                    </div>
-                    <div className="flex flex-col">
-                      <p className="text-on-surface font-bold text-sm leading-tight">{card.brand}</p>
-                      <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest leading-tight">{card.category}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-secondary font-extrabold text-sm leading-tight">₦{card.ratePerDollar.toLocaleString()}</p>
-                    <p className="text-on-surface-variant text-[10px] font-medium leading-tight">per $1</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
+          
+          <div className="flex flex-col z-10">
+            <span className="text-xs uppercase tracking-widest text-on-surface-variant font-bold mb-1">Total Cards Sold</span>
+            <span className="text-4xl font-black text-on-surface">{user.totalTrades || 0}</span>
           </div>
 
-          {/* Sell Now CTA */}
-          <div className="glass-card p-6 flex flex-col gap-4 bg-gradient-to-br from-primary/10 to-transparent border-primary/20">
-            <h4 className="text-lg font-bold text-on-surface">Sell More, Earn More</h4>
-            <p className="text-xs text-on-surface-variant font-medium leading-relaxed">
-              Complete {Math.max(0, 50 - user.totalTrades)} more sales to unlock Elite Tier — higher rates and 0% withdrawal fees.
-            </p>
+          <div className="h-px w-full bg-primary/10 z-10" />
+
+          <div className="flex flex-col gap-3 z-10">
+            <div className="flex justify-between items-center text-sm font-bold">
+              <span className="text-on-surface-variant">Progress to Elite Tier</span>
+              <span className="text-primary">{Math.min(100, Math.round(((user.totalTrades || 0) / 50) * 100))}%</span>
+            </div>
             <div className="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-primary rounded-full transition-all duration-700"
-                style={{ width: `${Math.min(100, (user.totalTrades / 50) * 100)}%` }}
+                style={{ width: `${Math.min(100, ((user.totalTrades || 0) / 50) * 100)}%` }}
               />
             </div>
-            <Link href="/dashboard/trade" className="btn btn-primary btn-sm w-full font-bold">
-              Sell a Gift Card →
+          </div>
+        </div>
+
+        {/* Top Rates */}
+        <div className="flex flex-col gap-4">
+          <h3 className="text-lg font-bold text-on-surface flex items-center gap-2">
+            <FiActivity className="text-secondary" /> Top Rates Today
+          </h3>
+          <div className="flex flex-col gap-3">
+            {topCards.map(card => (
+              <div key={card.id} className="glass-card-sm p-4 flex items-center justify-between border-primary/5 hover:border-primary/20 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center border border-primary/5">
+                    <BrandLogo id={card.id} fallback={card.icon} className="w-6 h-6" />
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-on-surface font-bold text-sm leading-tight">{card.brand}</p>
+                    <p className="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest leading-tight">{card.category}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-secondary font-black text-base leading-tight">₦{card.ratePerDollar}</p>
+                  <p className="text-on-surface-variant text-[10px] font-medium leading-tight">per $1</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Submissions Mini */}
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold text-on-surface">Recent Trades</h3>
+            <Link href="/dashboard/history" className="text-xs font-bold text-primary hover:underline flex items-center gap-1">
+              View All <FiArrowRight />
             </Link>
           </div>
-
+          
+          <div className="glass-card overflow-hidden">
+            {trades.length === 0 ? (
+              <div className="p-6 text-center text-on-surface-variant text-sm font-medium">
+                No recent trades found.
+              </div>
+            ) : (
+              <div className="flex flex-col divide-y divide-primary/5">
+                {trades.slice(0, 3).map(trade => (
+                  <div key={trade.id} className="p-4 flex flex-col gap-2 hover:bg-primary/5 transition-colors">
+                    <div className="flex justify-between items-start">
+                      <span className="text-on-surface font-bold text-sm">{trade.cardName}</span>
+                      <span className={`chip chip-${trade.status} text-[10px] py-0.5 px-2 min-w-0`}>{trade.status}</span>
+                    </div>
+                    <div className="flex justify-between items-end">
+                      <span className="text-on-surface-variant text-xs font-medium">{new Date(trade.createdAt).toLocaleDateString()}</span>
+                      <span className="text-secondary font-black text-sm">₦{trade.nairaValue.toLocaleString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+
       </div>
+
     </div>
   );
 }

@@ -9,6 +9,7 @@ const FOOTER_LINKS = {
     { label: 'FAQs', href: '/faq' },
     { label: 'Privacy Policy', href: '/privacy-policy' },
     { label: 'Terms and Conditions', href: '/terms-and-conditions' },
+    { label: 'Contact Us', href: '/contact' },
   ],
   giftCards: [
     { label: 'Sell Steam Gift Card', href: '/sell-gift-cards/steam' },

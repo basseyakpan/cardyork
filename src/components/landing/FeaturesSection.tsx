@@ -1,36 +1,38 @@
+import { FiZap, FiLock, FiHeadphones, FiTrendingUp, FiCheckCircle, FiShield } from 'react-icons/fi';
+
 const FEATURES = [
   {
-    icon: '⚡',
+    Icon: FiZap,
     color: '#3fff8b',
     title: 'Lightning Payouts',
     desc: 'Funds dispatched to your local bank account or crypto wallet within 5 minutes of card confirmation.',
   },
   {
-    icon: '🔒',
+    Icon: FiLock,
     color: '#97a9ff',
     title: 'Secure Encryption',
     desc: 'Your assets are secured in the Luminous Archive. Bank-level encryption protects your data and transactions at all times.',
   },
   {
-    icon: '📞',
+    Icon: FiHeadphones,
     color: '#ffa3e9',
     title: '24/7 Customer Support',
     desc: 'Our dedicated team is always available to help you at any time of the day, every day of the year.',
   },
   {
-    icon: '📈',
+    Icon: FiTrendingUp,
     color: '#3fff8b',
     title: 'Best Market Rates',
     desc: 'We monitor the market in real-time to offer the most competitive exchange rates for all major gift card brands.',
   },
   {
-    icon: '✅',
+    Icon: FiCheckCircle,
     color: '#97a9ff',
     title: 'Proven Track Record',
     desc: 'Years of experience and 50,000+ happy customers. Cardyork is built on integrity, trust, and customer satisfaction.',
   },
   {
-    icon: '🛡️',
+    Icon: FiShield,
     color: '#ffa3e9',
     title: 'Fraud Protection',
     desc: 'Advanced fraud detection systems and manual verification ensure every trade is legitimate and secure.',
@@ -39,7 +41,7 @@ const FEATURES = [
 
 export default function FeaturesSection() {
   return (
-    <section className="section py-20 bg-black/20">
+    <section className="section py-20 bg-black/20" id="features">
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="text-center mb-16 max-w-[800px] mx-auto flex flex-col items-center">
           <span className="chip chip-primary mb-4">Why Choose CardYork</span>
@@ -58,7 +60,7 @@ export default function FeaturesSection() {
                 className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 text-2xl transition-transform duration-300 group-hover:scale-110" 
                 style={{ background: `${f.color}18`, border: `1px solid ${f.color}30` }}
               >
-                <span>{f.icon}</span>
+                <f.Icon style={{ color: f.color }} />
               </div>
               <h3 className="text-xl font-bold text-on-surface mb-3">{f.title}</h3>
               <p className="text-on-surface-variant text-sm leading-relaxed">{f.desc}</p>
@@ -69,4 +71,3 @@ export default function FeaturesSection() {
     </section>
   );
 }
-

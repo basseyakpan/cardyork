@@ -1,11 +1,12 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import HeroSection from '@/components/landing/HeroSection';
-import FeaturesSection from '@/components/landing/FeaturesSection';
-import GiftCardsSection from '@/components/landing/GiftCardsSection';
-import TestimonialsSection from '@/components/landing/TestimonialsSection';
+import BrandsBar from '@/components/landing/BrandsBar';
+import HowItWorksSection from '@/components/landing/HowItWorksSection';
 import StatsSection from '@/components/landing/StatsSection';
 import AppDownloadSection from '@/components/landing/AppDownloadSection';
+import FeaturesSection from '@/components/landing/FeaturesSection';
+import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -18,13 +19,13 @@ export default function HomePage() {
     <main className="bg-background min-h-screen">
       <Navbar />
       <HeroSection />
+      <BrandsBar />
+      <HowItWorksSection />
       <StatsSection />
-      <FeaturesSection />
-      <GiftCardsSection />
       <AppDownloadSection />
+      <FeaturesSection />
       <TestimonialsSection />
       <Footer />
     </main>
   );
 }
-
