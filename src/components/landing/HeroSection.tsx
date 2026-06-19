@@ -11,7 +11,7 @@ const TRUST_BADGES = [
 
 export default function HeroSection() {
   return (
-    <section className="relative lg:min-h-screen flex items-center pt-20 lg:pt-28 pb-8 lg:pb-12 overflow-hidden bg-background">
+    <section className="relative lg:min-h-screen block lg:flex lg:items-center pt-20 lg:pt-28 pb-8 lg:pb-12 overflow-hidden bg-background">
       {/* Soft blue gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#e8f0ff] via-[#f4f7ff] to-[#eaf3ff] dark:from-[#000822] dark:via-[#000f3a] dark:to-[#000822] pointer-events-none" />
       <div className="absolute top-0 right-0 w-[55%] h-full bg-gradient-to-l from-blue-100/60 via-transparent to-transparent dark:from-primary/10 pointer-events-none" />
