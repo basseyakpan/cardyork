@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { SliceZone } from "@prismicio/react";
 import { components } from "@/slices";
 import Link from "next/link";
+import BlogAppDownload from "@/components/blog/BlogAppDownload";
 
 export const revalidate = 0;
 
@@ -99,6 +100,7 @@ export default async function BlogPost({
           </div>
         </article>
       </div>
+      <BlogAppDownload />
       <Footer />
     </main>
   );

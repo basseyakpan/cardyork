@@ -1,28 +1,35 @@
-import { FiUsers, FiCreditCard, FiShield, FiHeadphones } from 'react-icons/fi';
-
-const STATS = [
-  { value: '150K+', label: 'Happy Users', sub: 'Across Nigeria and beyond', Icon: FiUsers },
-  { value: '500K+', label: 'Successful Trades', sub: 'Completed with satisfaction', Icon: FiCreditCard },
-  { value: '99.9%', label: 'Secure Transactions', sub: 'Safety and trust always guaranteed', Icon: FiShield },
-  { value: '24/7', label: 'Customer Support', sub: 'We are here whenever you need us', Icon: FiHeadphones },
-];
+import Image from 'next/image';
 
 export default function StatsSection() {
   return (
-    <section className="py-10 bg-primary">
-      <div className="max-w-[1200px] mx-auto px-6 grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {STATS.map((s) => (
-          <div key={s.label} className="flex items-center gap-4 py-4">
-            <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center text-xl flex-shrink-0">
-              <s.Icon className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white text-2xl font-extrabold leading-tight">{s.value}</span>
-              <span className="text-white font-semibold text-sm leading-tight">{s.label}</span>
-              <span className="text-white/60 text-[10px] leading-tight mt-0.5 hidden sm:block">{s.sub}</span>
-            </div>
-          </div>
-        ))}
+    <section className="py-8 border-y border-primary/10 bg-[#0b1120] dark:bg-black">
+      <div className="max-w-[1200px] mx-auto px-6 flex flex-col items-center">
+        <p className="text-sm font-bold text-white/60 uppercase tracking-[0.2em] mb-4">
+          As Mentioned On
+        </p>
+        <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 lg:gap-32 opacity-80 hover:opacity-100 transition-opacity duration-300">
+          <Image 
+            src="/tribune.png" 
+            alt="Tribune" 
+            width={3000} 
+            height={1000} 
+            className="h-24 sm:h-20 lg:h-48 w-auto object-contain" 
+          />
+          <Image 
+            src="/times.png" 
+            alt="Premium Times" 
+            width={300} 
+            height={100} 
+            className="h-10 sm:h-14 lg:h-48 w-auto object-contain" 
+          />
+          <Image 
+            src="/punch.png" 
+            alt="Punch" 
+            width={300} 
+            height={100} 
+            className="h-10 sm:h-14 lg:h-48 w-auto object-contain" 
+          />
+        </div>
       </div>
     </section>
   );

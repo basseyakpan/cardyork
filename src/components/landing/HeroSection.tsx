@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiShield, FiZap, FiHeadphones } from 'react-icons/fi';
+import { FaGooglePlay, FaApple } from 'react-icons/fa';
 
 const TRUST_BADGES = [
   { Icon: FiShield, label: '100% Secure', sub: 'Your safety is our priority' },
@@ -34,15 +35,20 @@ export default function HeroSection() {
             Sell your gift cards for the best rates and get paid instantly to your bank or wallet. Safe, fast and reliable.
           </p>
 
-          <div className="flex flex-row w-full sm:w-auto items-center gap-3 sm:gap-4 mb-6">
-            <Link href="/register" className="btn btn-primary flex-1 sm:flex-none px-4 sm:px-8 py-3.5 sm:py-4 text-[13px] sm:text-base justify-center">
-              Start Trading <span className="hidden sm:inline">Now</span> →
+          <div className="flex flex-col sm:flex-row w-full sm:w-auto items-center gap-3 sm:gap-4 mb-6">
+            <Link href="/download" className="inline-flex items-center justify-center gap-3 bg-[#0d52ff] dark:bg-primary text-white rounded-full px-6 sm:px-8 py-3.5 sm:py-4 text-[13px] sm:text-base font-semibold hover:opacity-90 transition-opacity w-full sm:w-auto">
+              <div className="flex items-center gap-2.5">
+                <FaGooglePlay className="text-[20px]" />
+                <div className="w-px h-5 bg-white/40" />
+                <FaApple className="text-[22px] mb-0.5" />
+              </div>
+              <span className="ml-1">Download App</span>
             </Link>
             <Link
-              href="/sell-gift-cards"
-              className="inline-flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 sm:px-8 py-3.5 sm:py-4 rounded-full text-[13px] sm:text-base font-semibold border border-primary/30 text-primary bg-white/60 dark:bg-surface-container hover:bg-primary/5 transition-all whitespace-nowrap"
+              href="/register"
+              className="inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-[13px] sm:text-base font-semibold border-[1.5px] border-primary/20 text-primary bg-white/60 dark:bg-surface-container hover:bg-primary/5 transition-all whitespace-nowrap w-full sm:w-auto"
             >
-              Check Rates
+              Get Started <span className="font-bold text-lg leading-none mt-[1px]">→</span>
             </Link>
           </div>
 
@@ -61,24 +67,24 @@ export default function HeroSection() {
             ))}
           </div>
         </div>
-      </div>
 
-      {/* ── Right: Hero PNG ── */}
-      <div className="relative lg:absolute lg:top-0 lg:bottom-0 lg:right-0 flex justify-center lg:justify-end items-center w-full lg:w-1/2 h-[320px] sm:h-[400px] md:h-[500px] lg:h-full mt-4 lg:mt-0 pointer-events-none z-10 lg:pl-10">
+        {/* ── Right: Hero PNG ── */}
+        <div className="relative flex justify-center lg:justify-end items-end w-full lg:w-[45%] mt-12 lg:mt-0 z-10 pointer-events-none">
           {/* Glow behind image */}
-          <div className="absolute w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] lg:left-[-4%] lg:w-[500px] lg:h-[500px] bg-primary/15 blur-[80px] lg:blur-[120px] rounded-full" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[450px] lg:h-[450px] bg-primary/15 blur-[100px] rounded-full -z-10" />
 
-          <div className="relative w-full h-full lg:scale-110 lg:translate-x-12 lg:translate-y-4">
+          <div className="relative w-[80%] sm:w-[60%] lg:w-[100%] max-w-[450px]">
             <Image
               src="/cardYorkHero.png"
               alt="CardYork Gift Card Trading App"
-              fill
+              width={450}
+              height={720}
               priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-contain object-center lg:object-right drop-shadow-2xl"
+              className="w-full h-auto drop-shadow-2xl"
             />
           </div>
         </div>
+      </div>
     </section>
   );
 }

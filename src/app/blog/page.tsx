@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import BlogAppDownload from "@/components/blog/BlogAppDownload";
 import { createClient } from "@/prismicio";
 
 export const revalidate = 0;
@@ -192,6 +193,7 @@ export default async function BlogPage() {
         </div>
       </div>
 
+      <BlogAppDownload />
       <Footer />
     </main>
   );

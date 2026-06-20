@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logout } from '@/store/slices/authSlice';
 import { toggleMobileMenu, setMobileMenuOpen } from '@/store/slices/uiSlice';
 import { ThemeToggle } from './ThemeToggle';
+import Image from 'next/image';
 
 
 const NAV_LINKS = [
@@ -47,8 +48,7 @@ export default function Navbar() {
       <div className="max-w-[1200px] mx-auto px-6 h-[72px] flex items-center justify-between gap-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 text-xl font-extrabold tracking-tight no-underline">
-          <span className="text-2xl bg-gradient-primary bg-clip-text text-transparent">⬡</span>
-          <span className="text-on-surface">Card<span className="bg-gradient-primary bg-clip-text text-transparent">York</span></span>
+          <Image src="/logo.png" alt="CardYork Logo" width={140} height={40} className="object-contain" priority />
         </Link>
 
         {/* Desktop Nav */}

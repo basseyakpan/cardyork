@@ -1,70 +1,56 @@
-'use client';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import React from 'react';
 
-export default function TermsAndConditionsPage() {
+export default function TermsAndConditions() {
   return (
-    <main className="bg-background min-h-screen flex flex-col">
-      <Navbar />
-      
-      <div className="flex-1 py-20 px-6">
-        <div className="max-w-[800px] mx-auto">
-          <h1 className="display-sm mb-8">Terms and <span className="gradient-text">Conditions</span></h1>
-          
-          <div className="glass-card p-10 flex flex-col gap-8 text-on-surface-variant leading-relaxed">
-            <section>
-              <h2 className="text-xl font-bold text-on-surface mb-4">1. Introduction</h2>
-              <p>
-                This website is operated by Cardyork Services. Throughout the site, the terms “we”, “us” and “our” refer to Cardyork Services. Cardyork Services offers this website, including all information, tools and services available from this site to you, the user, conditioned upon your acceptance of all terms, conditions, policies and notices stated here.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-on-surface mb-4">2. Governing Law</h2>
-              <p>
-                Cardyork Services is a limited company based in Nigeria. These Terms of Service and any separate agreements whereby we provide you Services shall be governed by and construed in accordance with the laws of the Federal Republic of Nigeria.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-on-surface mb-4">3. User Responsibilities</h2>
-              <p>
-                By visiting our site and/ or purchasing something from us, you engage in our “Service” and agree to be bound by the following terms and conditions. These Terms of Service apply to all users of the site, including without limitation users who are browsers, vendors, customers, merchants, and/ or contributors of content.
-              </p>
-              <p className="mt-4">
-                Failure to comply with these terms may lead to immediate suspension or expulsion from the site without prior notice.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-on-surface mb-4">4. Service Usage</h2>
-              <p>
-                CardYork provides a platform for the purchase and sale of gift cards. You agree not to reproduce, duplicate, copy, sell, resell or exploit any portion of the Service, use of the Service, or access to the Service or any contact on the website through which the service is provided, without express written permission by us.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-on-surface mb-4">5. Company Rights</h2>
-              <p>
-                We reserve the right to refuse service to anyone for any reason at any time. We also reserve the right to modify or discontinue the Service (or any part or content thereof) without notice at any time. We shall not be liable to you or to any third-party for any modification, price change, suspension or discontinuance of the Service.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-on-surface mb-4">6. Accuracy of Billing</h2>
-              <p>
-                We reserve the right to refuse any order you place with us. In the event that we make a change to or cancel an order, we may attempt to notify you by contacting the e-mail and/or billing address/phone number provided at the time the order was made.
-              </p>
-            </section>
-          </div>
-
-          <div className="mt-12 text-center text-sm text-on-surface-variant">
-            Last updated: December 2024
-          </div>
-        </div>
+    <main className="pt-32 pb-20 max-w-[800px] mx-auto px-6">
+      <h1 className="text-3xl md:text-4xl font-bold mb-8 text-on-surface">Terms of Service</h1>
+      <div className="prose prose-invert max-w-none text-on-surface-variant">
+        <p>By accessing or using Cardyork.com, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you must not use our website, mobile application, or services.</p>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">1. General Terms</h2>
+        <p>Cardyork.com is owned and operated by Cardyork Digital Solutions Limited ("Cardyork", "we", "us", or "our"). By accessing or using our website, mobile application, or any services provided by Cardyork, you agree to comply with and be bound by these Terms of Service.</p>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">2. Governing Law</h2>
+        <p>These Terms shall be governed by and construed in accordance with the laws of the Federal Republic of Nigeria. Failure to comply with these laws will result in immediate expulsion from this site, without necessitating any forewarning.</p>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">3. Changes to These Terms</h2>
+        <p>Cardyork may update these Terms from time to time.<br />Updated versions will be posted on Cardyork.com and within the application where applicable.<br />Continued use of the services after changes become effective constitutes acceptance of the updated Terms.</p>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">4. Pricing &amp; Variations</h2>
+        <p>All prices displayed on Cardyork.com are estimates and are provided for informational purposes only. Final transaction values may vary based on prevailing market rates, processing fees, commissions, and other applicable charges at the time a transaction is completed.</p>
+        <p>Prices may change at any time without notice, and Cardyork shall not be held liable for any fluctuations or adjustments in pricing.</p>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">5. Suspension and Termination</h2>
+        <p>We reserve the right to suspend, restrict, or terminate access to our services at our sole discretion if a user violates these Terms or engages in any activity deemed unlawful, fraudulent, abusive, or harmful to our platform.</p>
+        <p>We may also refuse, limit, or cancel transactions that do not meet our operational requirements or minimum and maximum transaction thresholds.</p>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">6. Wallet Address and Account Information</h2>
+        <p>Users are solely responsible for providing accurate wallet addresses, payment details, and account information. Cardyork shall not be liable for losses resulting from incorrect information submitted by users, including transfers made to incorrect wallet addresses.</p>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">7. Limitation of Liability</h2>
+        <p>To the fullest extent permitted by law, Cardyork shall not be liable for:</p>
+        <ul className="list-disc pl-6 mb-4">
+          <li>Delays caused by verification requirements.</li>
+          <li>Errors resulting from inaccurate information supplied by users.</li>
+          <li>Service interruptions beyond our reasonable control.</li>
+          <li>Indirect, incidental, or consequential damages arising from use of the platform.</li>
+        </ul>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">8. Account Deletion</h2>
+        <p>Users may request account deletion at any time through the Profile section of the mobile application or website, or by contacting our support team.</p>
+        <p>Upon successful verification, account deletion requests will be processed within a reasonable period, subject to legal, regulatory, and compliance obligations that may require us to retain certain records.</p>
+        <p>Deleted accounts cannot be restored, and users may lose access to transaction history and other account-related information.</p>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">9. Service Availability</h2>
+        <p>While we strive to maintain uninterrupted access to our services, we do not guarantee that the platform will always be available, secure, or error-free. Cardyork shall not be responsible for service interruptions, delays, maintenance periods, or technical issues beyond our reasonable control.</p>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">10. Privacy</h2>
+        <p>Your use of Cardyork is also governed by our Privacy Policy, available at: <a href="https://cardyork.com/privacy-policy" className="text-primary hover:underline">https://cardyork.com/privacy-policy</a></p>
+        
+        <h2 className="text-xl font-bold mt-8 mb-4 text-on-surface">11. Contact Information</h2>
+        <p>If you have questions regarding these Terms, please contact:</p>
+        <p>Cardyork Digital Solutions Limited<br />Email: <a href="mailto:support@cardyork.com" className="text-primary hover:underline">support@cardyork.com</a><br />Website: <a href="http://cardyork.com" className="text-primary hover:underline">Cardyork.com</a></p>
       </div>
-
-      <Footer />
     </main>
   );
 }
