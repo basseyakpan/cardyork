@@ -7,6 +7,7 @@ import { fetchUserProfile } from '@/store/slices/authSlice';
 import { fetchTrades } from '@/store/slices/tradeSlice';
 import { fetchCryptoTrades } from '@/store/slices/cryptoSlice';
 import Link from 'next/link';
+import Image from 'next/image';
 import Toast from '@/components/Toast';
 import { FiHome, FiCreditCard, FiDollarSign, FiClock, FiUser, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
 
@@ -53,9 +54,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           
           {/* Logo & Desktop Nav */}
           <div className="flex items-center gap-12">
-            <Link href="/" className="flex items-center gap-2.5 no-underline">
-              <span className="text-3xl bg-gradient-primary bg-clip-text text-transparent flex-shrink-0">⬡</span>
-              <span className="text-xl text-on-surface font-extrabold tracking-tight hidden sm:block">Card<span className="bg-gradient-primary bg-clip-text text-transparent">York</span></span>
+            <Link href="/" className="flex items-center gap-2.5 text-xl font-extrabold tracking-tight no-underline">
+              <Image src="/logo.png" alt="CardYork Logo" width={140} height={40} className="object-contain" priority />
             </Link>
 
             <nav className="hidden lg:flex items-center gap-1">
