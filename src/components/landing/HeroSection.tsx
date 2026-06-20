@@ -73,14 +73,14 @@ export default function HeroSection() {
           {/* Glow behind image */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] lg:w-[450px] lg:h-[450px] bg-primary/15 blur-[100px] rounded-full -z-10" />
 
-          <div className="relative w-[80%] sm:w-[60%] lg:w-[100%] max-w-[450px]">
+          <div className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[600px] flex justify-center lg:justify-end">
             <Image
               src="/cardYorkHero.png"
               alt="CardYork Gift Card Trading App"
-              width={450}
-              height={720}
+              width={750}
+              height={1052}
               priority
-              className="w-full h-auto drop-shadow-2xl"
+              className="w-auto h-full object-contain object-bottom lg:object-right-bottom drop-shadow-2xl"
             />
           </div>
         </div>
