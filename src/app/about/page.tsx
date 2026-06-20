@@ -8,6 +8,7 @@ import {
   FiEye, FiCheckCircle, FiBell 
 } from 'react-icons/fi';
 import { FaApple, FaAmazon, FaSteam, FaGooglePlay } from 'react-icons/fa';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'About Us — CardYork | Trusted Gift Card Trading Platform in Nigeria',
@@ -89,82 +90,9 @@ export default function AboutPage() {
           <div className="relative flex justify-center items-center">
             <div className="absolute w-72 h-72 bg-primary/15 blur-[100px] rounded-full" />
 
-            {/* Floating brand cards */}
-            <div className="absolute -left-2 top-4 w-14 h-14 rounded-2xl bg-gradient-to-br from-[#ff9900] to-[#ff6600] shadow-xl flex items-center justify-center text-white font-black text-xl rotate-[-10deg] animate-float z-20">
-              <FaAmazon className="text-2xl text-white" />
-            </div>
-            <div className="absolute -left-6 top-28 w-12 h-12 rounded-2xl bg-gradient-to-br from-gray-900 to-gray-700 shadow-xl flex items-center justify-center rotate-[8deg] animate-float z-20" style={{ animationDelay: '0.4s' }}>
-              <FaApple className="text-2xl text-white" />
-            </div>
-            <div className="absolute right-0 top-8 w-16 h-10 rounded-xl bg-gradient-to-br from-[#1b2838] to-[#2a475e] shadow-xl flex items-center justify-center z-20 rotate-[5deg] animate-float" style={{ animationDelay: '0.7s' }}>
-              <FaSteam className="text-xl text-white" />
-            </div>
-            <div className="absolute right-2 bottom-16 w-14 h-10 rounded-xl bg-gradient-to-br from-[#4285f4] via-[#ea4335] to-[#34a853] shadow-xl flex items-center justify-center z-20 rotate-[-4deg] animate-float" style={{ animationDelay: '1s' }}>
-              <FaGooglePlay className="text-xl text-white" />
-            </div>
-
-            {/* Phone frame */}
-            <div className="relative z-10 w-[220px] sm:w-[250px]">
-              <div className="relative bg-gray-900 rounded-[44px] p-[3px] shadow-[0_40px_100px_rgba(30,91,255,0.25),0_20px_40px_rgba(0,0,0,0.3)] border border-primary/30">
-                <div className="bg-[#0b1120] rounded-[42px] overflow-hidden">
-                  <div className="flex items-center justify-between px-5 pt-3 pb-1">
-                    <span className="text-[9px] font-bold text-white/60">9:41</span>
-                    <div className="w-14 h-3 bg-black rounded-full absolute left-1/2 -translate-x-1/2 top-2" />
-                  </div>
-                  <div className="px-4 pb-6 pt-1 flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
-                          <span className="text-white text-[8px] font-black">C</span>
-                        </div>
-                        <span className="text-white text-[10px] font-extrabold tracking-wide">CARDYORK</span>
-                      </div>
-                      <FiBell className="text-white/50 w-4 h-4" />
-                    </div>
-                    <div className="rounded-2xl bg-gradient-to-br from-primary via-blue-600 to-blue-800 p-4 text-white">
-                      <p className="text-[8px] font-bold uppercase tracking-widest opacity-70 mb-0.5">Wallet Balance</p>
-                      <p className="text-lg font-black">₦245,680.00</p>
-                      <p className="text-[8px] opacity-60 mt-0.5">Naira Wallet ▼</p>
-                    </div>
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-[9px] font-bold text-white">Sell Gift Card</span>
-                        <span className="text-[8px] text-primary">View all</span>
-                      </div>
-                      <div className="grid grid-cols-3 gap-1.5">
-                        {[
-                          { label: 'Amazon', color: 'from-[#ff9900] to-[#ff6600]', Icon: FaAmazon },
-                          { label: 'iTunes', color: 'from-pink-500 to-rose-600', Icon: FaApple },
-                          { label: 'Steam', color: 'from-gray-700 to-slate-900', Icon: FaSteam },
-                        ].map(card => (
-                          <div key={card.label} className={`rounded-xl bg-gradient-to-br ${card.color} p-2 flex flex-col items-center justify-center aspect-square`}>
-                            <card.Icon className="text-white text-base" />
-                            <span className="text-[6px] text-white/80 mt-1">{card.label}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="rounded-xl bg-[#141e35] p-2.5 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-[#ff9900]/20 flex items-center justify-center text-[10px]">
-                          <FaAmazon className="w-3 h-3 text-[#ff9900]" />
-                        </div>
-                        <div>
-                          <p className="text-[8px] font-bold text-white">Amazon $100</p>
-                          <p className="text-[6px] text-white/40">May 12, 2024</p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <span className="text-[8px] font-extrabold text-green-400">₦145,000</span>
-                        <span className="text-[6px] text-green-400">Completed</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute -right-[4px] top-24 w-[3px] h-12 bg-gray-700 rounded-r-full" />
-              <div className="absolute -left-[4px] top-20 w-[3px] h-8 bg-gray-700 rounded-l-full" />
-              <div className="absolute -left-[4px] top-32 w-[3px] h-8 bg-gray-700 rounded-l-full" />
+            {/* Phone mockup */}
+            <div className="relative z-10 w-[280px] sm:w-[320px] lg:w-[400px]">
+              <Image src="/phone_mock_c.png" alt="CardYork App Mockup" width={400} height={800} className="w-full h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] object-contain" priority />
             </div>
           </div>
         </div>
@@ -177,14 +105,15 @@ export default function AboutPage() {
           {/* Left: Photo placeholder */}
           <div className="relative">
             <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 dark:from-surface-container dark:to-surface-container-high relative">
-              {/* Placeholder for photo of people */}
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-surface-container dark:to-primary/10 flex items-center justify-center">
-                  <FiUsers className="w-16 h-16 text-primary/30" />
-                </div>
-              </div>
+              <Image 
+                src="/phone-smile-businessman.avif" 
+                alt="Happy CardYork User" 
+                fill 
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
               {/* Trust badge overlay */}
-              <div className="absolute bottom-4 left-4 flex items-center gap-3 bg-primary text-white px-4 py-2.5 rounded-xl shadow-lg">
+              <div className="absolute bottom-4 left-4 flex items-center gap-3 bg-primary text-white px-4 py-2.5 rounded-xl shadow-lg z-10">
                 <FiShield className="w-6 h-6" />
                 <span className="text-xs font-semibold leading-tight">Trusted by thousands<br />of users across Nigeria</span>
               </div>
