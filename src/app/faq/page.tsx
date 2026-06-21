@@ -36,7 +36,7 @@ const faqs = [
       },
       {
         q: "Is there a minimum or maximum trade amount?",
-        a: "Minimum trade value is $10. Maximum depends on your account verification level. Fully verified accounts can trade up to $10,000 per transaction.",
+        a: "Minimum trade value is $10. Maximum depends on your account verification level. Fully verified accounts can trade up to $3,000 per transaction.",
       },
     ],
   },

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FiEye, FiEyeOff, FiMail, FiLock, FiArrowLeft, FiShield } from "react-icons/fi";
 import { useAppDispatch } from "@/store/hooks";
@@ -94,8 +95,8 @@ export default function Login() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
         
         <div className="flex items-center justify-between mb-8 relative z-10">
-          <Link href="/" className="text-2xl font-black tracking-tighter">
-            CARD<span className="text-primary">YORK</span>
+          <Link href="/" className="flex items-center gap-2.5 text-xl font-extrabold tracking-tight no-underline">
+            <Image src="/logo.png" alt="CardYork Logo" width={140} height={40} className="object-contain" priority />
           </Link>
         </div>
 

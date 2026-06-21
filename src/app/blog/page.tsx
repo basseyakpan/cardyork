@@ -35,7 +35,7 @@ export default async function BlogPage() {
       <div className="flex-1 py-20 px-6">
         <div className="max-w-[1200px] mx-auto mt-12">
           <div className="text-center mb-20">
-            <span className="chip chip-primary mb-4">Luminous Blog</span>
+            <span className="chip chip-primary mb-4">Cardyork Blog</span>
             <h1 className="display-sm mb-6">
               Insights from the{" "}
               <span className="gradient-text">Vanguard Archive</span>

@@ -106,7 +106,7 @@ export default function AboutPage() {
           <div className="relative">
             <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 dark:from-surface-container dark:to-surface-container-high relative">
               <Image 
-                src="/phone-smile-businessman.avif" 
+                src="/phone-smile-businessman.png" 
                 alt="Happy CardYork User" 
                 fill 
                 className="object-cover"

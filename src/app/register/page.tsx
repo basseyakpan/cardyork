@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   FiEye, FiEyeOff, FiMail, FiLock, FiUser, FiPhone, FiGift,
@@ -388,8 +389,8 @@ export default function RegisterPage() {
         
         {/* Header */}
         <div className="flex items-center justify-between mb-6 relative z-10">
-          <Link href="/" className="text-2xl font-black tracking-tighter">
-            CARD<span className="text-primary">YORK</span>
+          <Link href="/" className="flex items-center gap-2.5 text-xl font-extrabold tracking-tight no-underline">
+            <Image src="/logo.png" alt="CardYork Logo" width={140} height={40} className="object-contain" priority />
           </Link>
         </div>
 
