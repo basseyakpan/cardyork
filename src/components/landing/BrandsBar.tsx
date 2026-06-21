@@ -51,6 +51,21 @@ export default function BrandsBar() {
           We accept all major gift cards
         </p>
         <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16">
+          {/* Temporary hardcoded list as requested */}
+          <div className="flex flex-col items-center gap-3 text-on-surface-variant hover:text-on-surface transition-colors opacity-80 hover:opacity-100">
+            <span className="text-3xl font-black tracking-tighter uppercase" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>XBOX</span>
+          </div>
+          <div className="flex flex-col items-center gap-3 text-on-surface-variant hover:text-on-surface transition-colors opacity-80 hover:opacity-100">
+            <span className="text-3xl font-extrabold tracking-[0.2em] uppercase" style={{ fontFamily: 'Trebuchet MS, sans-serif' }}>STEAM</span>
+          </div>
+          <div className="flex flex-col items-center gap-3 text-on-surface-variant hover:text-on-surface transition-colors opacity-80 hover:opacity-100">
+            <span className="text-3xl font-black italic tracking-tight" style={{ fontFamily: 'Verdana, sans-serif' }}>PlayStation</span>
+          </div>
+          <div className="flex flex-col items-center gap-3 text-on-surface-variant hover:text-on-surface transition-colors opacity-80 hover:opacity-100">
+            <span className="text-2xl font-bold tracking-widest uppercase border-2 border-current px-3 py-1 rounded-sm" style={{ fontFamily: 'Courier New, monospace' }}>RAZER GOLD</span>
+          </div>
+
+          {/*
           {isLoading ? (
             <div className="flex items-center justify-center gap-10 md:gap-16 animate-pulse">
               {[1, 2, 3, 4].map(i => (
@@ -79,6 +94,7 @@ export default function BrandsBar() {
               <span className="text-xl font-black tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>Amazon</span>
             </div>
           )}
+          */}
         </div>
         <div className="mt-8 text-center">
           <Link href="/login" className="text-primary hover:text-primary-dark text-sm font-bold uppercase tracking-widest no-underline hover:underline transition-colors inline-block">
