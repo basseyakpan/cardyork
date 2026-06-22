@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { FiUpload, FiCreditCard, FiArrowRight, FiArrowLeft, FiCheck, FiImage, FiX, FiLoader, FiAlertCircle } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchAssets, fetchRates, fetchAssetRates, recordGiftCardClick } from '@/store/slices/assetSlice';
@@ -32,6 +32,8 @@ export function TradeGiftCard() {
   const [isUploading, setIsUploading] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialAssetId = searchParams.get('assetId');
 
   const steps = [
     { id: 'select', label: 'Select Card', icon: FiCreditCard },
@@ -50,6 +52,35 @@ export function TradeGiftCard() {
       dispatch(fetchRates(userId));
     }
   }, [dispatch, userId]);
+
+  // ---- Handle initial Asset ID from URL ----
+  useEffect(() => {
+    if (initialAssetId && assets.length > 0 && !selectedAsset) {
+      const asset = assets.find((a) => a._id === initialAssetId);
+      if (asset) {
+        setSelectedAsset(asset);
+        setSelectedRate(null);
+        setCardType('');
+        setCountry('');
+        setAmount('');
+        setUploadedImages([]);
+        setReceiptImages([]);
+
+        dispatch(fetchAssetRates({ userId, assetId: asset._id }))
+          .unwrap()
+          .then((fetchedRates) => {
+            if (fetchedRates && fetchedRates.length > 0) {
+              setCurrentStep('details');
+            } else {
+              dispatch(showToast({ message: 'This card has no active rates at the moment.', type: 'error' }));
+            }
+          })
+          .catch(() => {
+            dispatch(showToast({ message: 'Failed to fetch rates for this card.', type: 'error' }));
+          });
+      }
+    }
+  }, [initialAssetId, assets, selectedAsset, dispatch, userId]);
 
   // ---- Rate computation ----
   const assetRates = useMemo(() => {
@@ -118,19 +149,26 @@ export function TradeGiftCard() {
     try {
       const urls = await Promise.all(Array.from(files).map((file) => compressAndUpload(file)));
       setter((prev) => [...prev, ...urls]);
-    } catch {
-      dispatch(showToast({ message: 'Could not upload one or more images. Please try again.', type: 'error' }));
+    } catch (error: any) {
+      console.error('Image upload failed:', error);
+      dispatch(showToast({ message: error.message || 'Could not upload one or more images. Please try again.', type: 'error' }));
     } finally {
       setIsUploading(false);
     }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) uploadFiles(e.target.files, setUploadedImages);
+    if (e.target.files && e.target.files.length > 0) {
+      uploadFiles(e.target.files, setUploadedImages);
+    }
+    e.target.value = '';
   };
 
   const handleReceiptUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) uploadFiles(e.target.files, setReceiptImages);
+    if (e.target.files && e.target.files.length > 0) {
+      uploadFiles(e.target.files, setReceiptImages);
+    }
+    e.target.value = '';
   };
 
   const removeImage = (index: number) => setUploadedImages(uploadedImages.filter((_, i) => i !== index));

@@ -1,6 +1,7 @@
 'use client';
+import { Suspense } from 'react';
 import { TradeGiftCard } from '@/components/trade/TradeGiftCard';
-import { FiCreditCard } from 'react-icons/fi';
+import { FiCreditCard, FiLoader } from 'react-icons/fi';
 
 export default function CardsPage() {
   return (
@@ -16,7 +17,9 @@ export default function CardsPage() {
       </div>
       
       <div className="w-full">
-        <TradeGiftCard />
+        <Suspense fallback={<div className="flex justify-center p-12"><FiLoader className="w-8 h-8 animate-spin text-primary" /></div>}>
+          <TradeGiftCard />
+        </Suspense>
       </div>
     </div>
   );

@@ -27,20 +27,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const dispatch = useAppDispatch();
 
+  const userId = user?.userid || user?.id;
+
   useEffect(() => {
     if (!isAuthenticated) {
       router.push('/login');
-    } else if (user) {
-      const userId = user.userid || user.id;
-      if (userId) {
-        dispatch(fetchAssets(userId));
-        dispatch(fetchRates(userId));
-        dispatch(fetchUserProfile(userId));
-        dispatch(fetchTrades({ id: userId, start: 0, sort: 'DESC', filter: { status: 'All' } }));
-        dispatch(fetchCryptoTrades({ id: userId, start: '0', sort: 'DESC', filter: { status: 'All' } }));
-      }
+    } else if (userId) {
+      dispatch(fetchAssets(userId));
+      dispatch(fetchRates(userId));
+      dispatch(fetchUserProfile(userId));
+      dispatch(fetchTrades({ id: userId, start: 0, sort: 'DESC', filter: { status: 'All' } }));
+      dispatch(fetchCryptoTrades({ id: userId, start: '0', sort: 'DESC', filter: { status: 'All' } }));
     }
-  }, [isAuthenticated, router, user, dispatch]);
+  }, [isAuthenticated, router, userId, dispatch]);
 
   if (!isAuthenticated || !user) return null;
 

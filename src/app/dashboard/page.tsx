@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAppSelector } from '@/store/hooks';
@@ -16,21 +16,23 @@ export default function DashboardHomePage() {
 
   if (!user) return null;
 
-  const fixed = assets.filter(c => {
-    const name = c.name.toLowerCase();
-    return name.includes('apple') || name.includes('steam') || name.includes('razor');
-  });
+  const topCards = useMemo(() => {
+    const fixed = assets.filter(c => {
+      const name = c.name.toLowerCase();
+      return name.includes('apple') || name.includes('steam') || name.includes('razor');
+    });
 
-  const allowedRandoms = assets.filter(c => {
-    const name = c.name.toLowerCase();
-    return name.includes('footlocker') || name.includes('tremendous') || name.includes('sephora') || name.includes('macy');
-  }).sort(() => Math.random() - 0.5).slice(0, 2);
+    const allowedRandoms = assets.filter(c => {
+      const name = c.name.toLowerCase();
+      return name.includes('footlocker') || name.includes('tremendous') || name.includes('sephora') || name.includes('macy');
+    }).slice(0, 2);
 
-  const topCards = [...fixed, ...allowedRandoms].slice(0, 5).map(asset => ({
-    id: asset._id,
-    brand: asset.name,
-    icon: asset.vertical_image || asset.images?.[0] || '💳',
-  }));
+    return [...fixed, ...allowedRandoms].slice(0, 5).map(asset => ({
+      id: asset._id,
+      brand: asset.name,
+      icon: asset.vertical_image || asset.images?.[0] || '💳',
+    }));
+  }, [assets]);
 
   return (
     <div className="flex flex-col gap-6 md:gap-8 pb-8">
@@ -140,7 +142,7 @@ export default function DashboardHomePage() {
               {topCards.map(card => (
                 <div 
                   key={card.id} 
-                  onClick={() => router.push('/dashboard/cards')}
+                  onClick={() => router.push(`/dashboard/cards?assetId=${card.id}`)}
                   className="shrink-0 w-28 flex flex-col gap-2 snap-center cursor-pointer group"
                 >
                   <div className="w-28 h-28 rounded-2xl bg-surface-container flex items-center justify-center border border-primary/5 group-hover:border-primary/30 transition-colors shadow-sm overflow-hidden">
