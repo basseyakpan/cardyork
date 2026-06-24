@@ -29,7 +29,7 @@ const FEATURES = [
     Icon: FiCheckCircle,
     color: '#97a9ff',
     title: 'Proven Track Record',
-    desc: 'Years of experience and 50,000+ happy customers. Cardyork is built on integrity, trust, and customer satisfaction.',
+    desc: 'Years of experience and happy customers. Cardyork is built on integrity, trust, and customer satisfaction.',
   },
   {
     Icon: FiShield,

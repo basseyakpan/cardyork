@@ -12,7 +12,7 @@ import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'About Us — CardYork | Trusted Gift Card Trading Platform in Nigeria',
-  description: 'Learn about Cardyork — Nigeria\'s most trusted gift card trading platform. We provide fast, secure and reliable gift card to cash conversions at the best rates.',
+  description: 'Cardyork is a digital platform operated by Cardyork Digital Solutions Limited, dedicated to providing a secure, reliable, and user-friendly experience for individuals looking to convert their unused gift cards into cash. We are committed to delivering fast payments, competitive rates, and an exceptional experience for every user.',
 };
 
 const STATS = [

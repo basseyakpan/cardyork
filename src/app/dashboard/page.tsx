@@ -7,12 +7,27 @@ import { useAppSelector } from '@/store/hooks';
 import BrandLogo from '@/components/BrandLogo';
 import { FiEye, FiEyeOff, FiBell, FiLifeBuoy, FiArrowUpRight, FiCreditCard, FiDollarSign, FiArrowRight, FiClock } from 'react-icons/fi';
 
+const getCurrencySymbol = (country: string) => {
+  const c = (country || '').toLowerCase();
+  if (c.includes('usa') || c.includes('us')) return '$';
+  if (c.includes('uk') || c.includes('kingdom')) return '£';
+  if (c.includes('euro') || c.includes('europe') || c.includes('germany') || c.includes('france')) return '€';
+  if (c.includes('cad') || c.includes('canada')) return 'C$';
+  if (c.includes('aud') || c.includes('australia')) return 'A$';
+  if (c.includes('ghana')) return 'GH₵';
+  if (c.includes('kenya')) return 'KSh';
+  if (c.includes('nigeria') || c.includes('ngn')) return '₦';
+  return '$'; // default to $ if not specified, since most gift cards are USD if not NGN
+};
+
 export default function DashboardHomePage() {
   const router = useRouter();
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const { trades } = useAppSelector(s => s.trade);
   const { user } = useAppSelector(s => s.auth);
   const { assets, rates } = useAppSelector(s => s.assets);
+
+  console.log({trades})
 
   if (!user) return null;
 
@@ -172,14 +187,17 @@ export default function DashboardHomePage() {
               ) : (
                 <div className="flex flex-col divide-y divide-primary/5">
                   {trades.slice(0, 4).map(trade => (
-                    <div key={trade.id} className="p-4 flex flex-col gap-2 hover:bg-primary/5 transition-colors cursor-pointer" onClick={() => router.push('/dashboard/history')}>
+                    <div key={trade.id || trade._id} className="p-4 flex flex-col gap-2 hover:bg-primary/5 transition-colors cursor-pointer" onClick={() => router.push('/dashboard/history')}>
                       <div className="flex justify-between items-start">
-                        <span className="text-on-surface font-bold text-sm">{trade.cardName}</span>
-                        <span className={`chip chip-${trade.status} text-[10px] py-0.5 px-2 min-w-0`}>{trade.status}</span>
+                        <span className="text-on-surface font-bold text-sm capitalize">{trade.assetName || trade.cardName || 'Trade'}</span>
+                        <span className={`chip chip-${(trade.status || '').toLowerCase()} text-[10px] py-0.5 px-2 min-w-0`}>{trade.status}</span>
                       </div>
                       <div className="flex justify-between items-end">
                         <span className="text-on-surface-variant text-xs font-medium">{new Date(trade.createdAt).toLocaleDateString()}</span>
-                        <span className="text-secondary font-black text-sm">₦{(trade.nairaValue || trade.actualAmount || trade.amount || 0).toLocaleString()}</span>
+                        <span className="text-secondary font-black text-sm">
+                          {getCurrencySymbol(trade.country || trade.country_info?.name)}
+                          {(trade.actualAmount || trade.userAmount || trade.amount || trade.nairaValue || trade.cost || 0).toLocaleString()}
+                        </span>
                       </div>
                     </div>
                   ))}

@@ -12,6 +12,9 @@ interface Trade {
   userAmount: number;
   actualAmount: number;
   cost: number;
+  type:string;
+  country:string;
+  country_info?:{name:string}
   quantity: number;
   images: string[]; // User uploaded images
   status: string;
