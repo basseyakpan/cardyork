@@ -1,7 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { FiMail, FiPhone, FiGlobe, FiMessageSquare } from 'react-icons/fi';
-// import Navbar from '@/components/layout/Navbar';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 

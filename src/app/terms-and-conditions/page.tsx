@@ -1,6 +1,6 @@
 import React from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { FiFileText, FiGlobe, FiAlertTriangle, FiDollarSign, FiSlash, FiUserX, FiShield, FiXCircle } from 'react-icons/fi';
 import { Metadata } from 'next';
 
