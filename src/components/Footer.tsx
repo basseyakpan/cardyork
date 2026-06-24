@@ -47,14 +47,14 @@ export default function Footer() {
               <div className="mt-4">
                 <h4 className="text-on-surface text-base font-bold mb-4">Trade on the Go</h4>
                 <div className="flex flex-wrap gap-3">
-                  <Link href="#" className="inline-flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
+                  <Link href="/download/ios" className="inline-flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
                     <FaApple className="text-2xl" />
                     <div className="flex flex-col leading-tight">
                       <span className="text-[8px] uppercase tracking-wider opacity-80">Download on</span>
                       <span className="text-xs font-bold">Apple</span>
                     </div>
                   </Link>
-                  <Link href="#" className="inline-flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
+                  <Link href="/download/android" className="inline-flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
                     <FaGooglePlay className="text-2xl" />
                     <div className="flex flex-col leading-tight">
                       <span className="text-[8px] uppercase tracking-wider opacity-80">GET IT ON</span>

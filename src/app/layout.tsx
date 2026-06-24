@@ -3,6 +3,7 @@ import './globals.css';
 import ReduxProvider from '@/store/ReduxProvider';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { CookieManager } from '@/components/CookieManager';
+import ComingSoonModal from '@/components/ComingSoonModal';
 
 export const metadata: Metadata = {
   title: 'CardYork — Turn Gift Cards into Instant Cash',
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ReduxProvider>
             {children}
             <CookieManager />
+            <ComingSoonModal />
           </ReduxProvider>
         </ThemeProvider>
       </body>

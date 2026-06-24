@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { fetchAssets, fetchRates } from '@/store/slices/assetSlice';
-import { fetchUserProfile } from '@/store/slices/authSlice';
+import { fetchUserProfile, logout } from '@/store/slices/authSlice';
 import { fetchTrades } from '@/store/slices/tradeSlice';
 import { fetchCryptoTrades } from '@/store/slices/cryptoSlice';
 import Link from 'next/link';
@@ -28,6 +28,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const dispatch = useAppDispatch();
 
   const userId = user?.userid || user?.id;
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push('/');
+  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -115,7 +120,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <span className="w-4 h-4 text-center">🛡️</span> Security
                     </Link>
                     <div className="h-px w-full bg-primary/10 my-1" />
-                    <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-red-500 hover:bg-red-500/10 transition-colors">
+                    <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-red-500 hover:bg-red-500/10 transition-colors">
                       <FiLogOut className="w-4 h-4" /> Sign Out
                     </button>
                   </div>

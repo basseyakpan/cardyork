@@ -32,7 +32,7 @@ export default function BlogAppDownload() {
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
                 <Link
-                  href="#"
+                  href="/download/ios"
                   className="flex items-center justify-center gap-3 bg-black text-white px-6 py-3.5 rounded-xl hover:opacity-90 transition-opacity shadow-lg"
                 >
                   <FaApple className="text-2xl" />
@@ -42,7 +42,7 @@ export default function BlogAppDownload() {
                   </div>
                 </Link>
                 <Link
-                  href="#"
+                  href="/download/android"
                   className="flex items-center justify-center gap-3 bg-black text-white px-6 py-3.5 rounded-xl hover:opacity-90 transition-opacity shadow-lg"
                 >
                   <FaGooglePlay className="text-2xl" />

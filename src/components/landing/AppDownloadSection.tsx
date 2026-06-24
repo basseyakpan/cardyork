@@ -31,12 +31,12 @@ export default function AppDownloadSection() {
           </p>
 
           <div className="flex flex-col xl:flex-row gap-4">
-            <Link href="#" className="flex items-center gap-4 bg-black text-white px-8 py-[18px] rounded-full hover:bg-black/80 transition-colors w-full xl:w-auto justify-center min-w-[240px]">
+            <Link href="/download/ios" className="flex items-center gap-4 bg-black text-white px-8 py-[18px] rounded-full hover:bg-black/80 transition-colors w-full xl:w-auto justify-center min-w-[240px]">
               <FaApple className="text-[26px]" />
               <span className="text-[19px] font-bold">Get on iPhone</span>
             </Link>
 
-            <Link href="#" className="flex items-center gap-4 bg-primary text-white px-8 py-[18px] rounded-full hover:bg-primary/90 transition-colors w-full xl:w-auto justify-center min-w-[240px]">
+            <Link href="/download/android" className="flex items-center gap-4 bg-primary text-white px-8 py-[18px] rounded-full hover:bg-primary/90 transition-colors w-full xl:w-auto justify-center min-w-[240px]">
               <FaGooglePlay className="text-2xl" />
               <span className="text-[19px] font-bold tracking-tight">Get on Android</span>
             </Link>
