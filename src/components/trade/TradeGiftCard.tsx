@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { FiUpload, FiCreditCard, FiArrowRight, FiArrowLeft, FiCheck, FiImage, FiX, FiLoader, FiAlertCircle } from 'react-icons/fi';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchAssets, fetchRates, fetchAssetRates, recordGiftCardClick } from '@/store/slices/assetSlice';
-import { startTrade } from '@/store/slices/tradeSlice';
+import { startTrade, fetchTrades } from '@/store/slices/tradeSlice';
 import { showToast } from '@/store/slices/uiSlice';
 import { compressAndUpload } from '@/lib/imageUtils';
 import { chatService } from '@/lib/chatService';
@@ -263,6 +263,8 @@ ${cardCode ? `Card Code: ${cardCode}\n` : ''}${cardPin ? `Card PIN: ${cardPin}\n
           data: [tradeData],
         }),
       ).unwrap();
+
+      dispatch(fetchTrades({ id: userId, start: 0, sort: 'DESC', filter: { status: 'All' } }));
 
       dispatch(showToast({ message: 'Trade submitted successfully! You\'ll be notified once it\'s processed.', type: 'success' }));
       router.push('/dashboard');

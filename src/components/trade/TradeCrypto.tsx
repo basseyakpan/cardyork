@@ -24,6 +24,7 @@ import {
   fetchCryptoRate,
   resetCurrentTrade,
   clearNetworks,
+  fetchCryptoTrades,
 } from "@/store/slices/cryptoSlice";
 
 const HARDCODED_ADDRESSES: Record<string, string> = {
@@ -181,6 +182,9 @@ export function TradeCrypto() {
           data: [{ rateSpec: matchingRate._id, userAmount: parsedAmt, images: uploadedImages }],
         }),
       ).unwrap();
+      
+      dispatch(fetchCryptoTrades({ id: user.userid, start: '0', sort: 'DESC', filter: { status: 'All' } }));
+
       setCurrentStep("success");
       dispatch(showToast({ message: "Trade submitted successfully!", type: 'success' }));
     } catch (err: any) {

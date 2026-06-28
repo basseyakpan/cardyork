@@ -6,6 +6,7 @@ import { fetchAssets, fetchRates } from '@/store/slices/assetSlice';
 import { fetchUserProfile, logout } from '@/store/slices/authSlice';
 import { fetchTrades } from '@/store/slices/tradeSlice';
 import { fetchCryptoTrades } from '@/store/slices/cryptoSlice';
+import { fetchWallet } from '@/store/slices/walletSlice';
 import Link from 'next/link';
 import Image from 'next/image';
 import Toast from '@/components/Toast';
@@ -23,7 +24,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated } = useAppSelector(s => s.auth);
+  const { wallet } = useAppSelector(s => s.wallet);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -41,11 +44,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       dispatch(fetchAssets(userId));
       dispatch(fetchRates(userId));
       dispatch(fetchUserProfile(userId));
+      dispatch(fetchWallet(userId));
       dispatch(fetchTrades({ id: userId, start: 0, sort: 'DESC', filter: { status: 'All' } }));
       dispatch(fetchCryptoTrades({ id: userId, start: '0', sort: 'DESC', filter: { status: 'All' } }));
     }
   }, [isAuthenticated, router, userId, dispatch]);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
   if (!isAuthenticated || !user) return null;
 
   const displayName = user.fullName || [user.firstname, user.lastname].filter(Boolean).join(' ') || user.username || 'User';
@@ -87,7 +96,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="flex items-center gap-4 sm:gap-6">
             <div className="hidden sm:flex flex-col items-end">
               <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Wallet Balance</span>
-              <span className="text-lg font-black text-secondary">₦{(user.balance || 0).toLocaleString()}</span>
+              <span className="text-lg font-black text-secondary">₦{(wallet?.balance || user.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
 
             {/* Profile Dropdown */}
