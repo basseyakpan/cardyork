@@ -17,7 +17,8 @@ const FOOTER_LINKS = {
   contact: [
     { label: '+234-802-684-6656', href: 'tel:+2348026846656' },
     { label: 'support@cardyork.com', href: 'mailto:support@cardyork.com' },
-    { label: 'Partners@Cardyork.com', href: 'mailto:Partners@Cardyork.com' },
+    { label: 'partners@Cardyork.com', href: 'mailto:Partners@Cardyork.com' },
+    { label: '49 Sylvanus Okon, Uyo, Akwa Ibom, 520103', href: '#' },
   ],
   giftCards: [
     { label: 'Steam', href: '/sell-gift-cards/steam' },
@@ -94,12 +95,12 @@ export default function Footer() {
 
             <div className="flex flex-col gap-6">
               <h4 className="text-on-surface text-base font-bold uppercase tracking-wider">Contact</h4>
-              <ul className="flex flex-col gap-3 list-none overflow-hidden">
+              <ul className="flex flex-col gap-3 list-none">
                 {FOOTER_LINKS.contact.map(l => (
-                  <li key={l.href} className="truncate">
-                    <a href={l.href} className="text-on-surface-variant text-sm hover:text-primary transition-colors no-underline">
+                  <li key={l.href}>
+                    <Link href={l.href} className="text-on-surface-variant text-sm hover:text-primary transition-colors no-underline">
                       {l.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

@@ -137,7 +137,7 @@ function SignupForm({ onSuccess }: any) {
       <div className="flex items-start gap-3 pt-2">
         <input type="checkbox" id="terms" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="mt-1 w-4 h-4 text-primary bg-surface-container border-primary/20 rounded focus:ring-primary focus:ring-2" />
         <label htmlFor="terms" className="text-sm font-medium leading-relaxed text-on-surface-variant cursor-pointer">
-          By signing up, you have read and agreed to our <Link href="#" className="text-primary hover:underline">Terms of Service</Link> and <Link href="#" className="text-primary hover:underline">Privacy Policy</Link>
+          By signing up, you have read and agreed to our <Link href="terms-and-conditions" className="text-primary hover:underline">Terms of Service</Link> and <Link href="privacy-policy" className="text-primary hover:underline">Privacy Policy</Link>
         </label>
       </div>
 
