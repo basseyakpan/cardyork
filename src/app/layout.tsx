@@ -7,7 +7,10 @@ import ComingSoonModal from '@/components/ComingSoonModal';
 
 export const metadata: Metadata = {
   icons: {
-    icon: '/icon.png',
+    icon: '/images/icon.png',
+    shortcut: "/images/icon.png",
+    apple: "/images/icon.png",
+    other: { rel: "icon", url: "/images/icon.png" },
   },
   title: 'CardYork — Turn Gift Cards into Instant Cash',
   description: 'Sell, trade & convert your iTunes, Steam, Amazon, Google, Apple Gift Cards etc to Naira in Nigeria at high rate and get paid instantly. Safe, fast, and secure.',
