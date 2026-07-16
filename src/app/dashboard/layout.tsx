@@ -6,10 +6,10 @@ import { fetchAssets, fetchRates } from '@/store/slices/assetSlice';
 import { fetchUserProfile, logout } from '@/store/slices/authSlice';
 import { fetchTrades } from '@/store/slices/tradeSlice';
 import { fetchCryptoTrades } from '@/store/slices/cryptoSlice';
-import { fetchWallet } from '@/store/slices/walletSlice';
+import { fetchWallet, fetchWithdrawals } from '@/store/slices/walletSlice';
+import { fetchNotifications } from '@/store/slices/notificationSlice';
 import Link from 'next/link';
 import Image from 'next/image';
-import Toast from '@/components/Toast';
 import { FiHome, FiCreditCard, FiDollarSign, FiClock, FiUser, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
 
 const NAV_LINKS = [
@@ -45,8 +45,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       dispatch(fetchRates(userId));
       dispatch(fetchUserProfile(userId));
       dispatch(fetchWallet(userId));
+      dispatch(fetchWithdrawals({ userId }));
       dispatch(fetchTrades({ id: userId, start: 0, sort: 'DESC', filter: { status: 'All' } }));
       dispatch(fetchCryptoTrades({ id: userId, start: '0', sort: 'DESC', filter: { status: 'All' } }));
+      dispatch(fetchNotifications({ userId }));
     }
   }, [isAuthenticated, router, userId, dispatch]);
 
@@ -143,7 +145,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main Content Area */}
       <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10 min-w-0">
         {children}
-        <Toast />
       </main>
 
       {/* Bottom Navigation Bar (Mobile) */}

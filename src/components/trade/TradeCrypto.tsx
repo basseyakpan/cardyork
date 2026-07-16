@@ -514,7 +514,7 @@ export function TradeCrypto() {
           <button type="button" className="btn btn-primary"  onClick={() => router.push("/dashboard")}>
             Back to Dashboard
           </button>
-          <button type="button" className="btn btn-outline-primary"  onClick={() => router.push("/trade-history")}>
+          <button type="button" className="btn btn-outline-primary"  onClick={() => router.push("/dashboard/history")}>
             View History
           </button>
         </div>

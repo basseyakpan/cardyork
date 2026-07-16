@@ -16,6 +16,7 @@ export default function WithdrawalPage() {
   const [isPinDialogOpen, setIsPinDialogOpen] = useState(false);
   const [isAddBankModalOpen, setIsAddBankModalOpen] = useState(false);
   
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
@@ -33,7 +34,8 @@ export default function WithdrawalPage() {
 
   const numAmount = parseFloat(amount) || 0;
   const balance = wallet?.balance || 0;
-  const isAmountValid = numAmount >= minimumWithdrawal && numAmount <= balance;
+  // Allow proceed if wallet hasn't loaded yet but amount >= minimum
+  const isAmountValid = numAmount >= minimumWithdrawal && (balance === 0 || numAmount <= balance);
 
   const handleWithdrawClick = () => {
     setErrorMsg('');
@@ -41,7 +43,7 @@ export default function WithdrawalPage() {
       setErrorMsg(`Minimum withdrawal amount is ₦${minimumWithdrawal.toLocaleString()}`);
       return;
     }
-    if (numAmount > balance) {
+    if (balance > 0 && numAmount > balance) {
       setErrorMsg('Insufficient balance');
       return;
     }
@@ -61,23 +63,25 @@ export default function WithdrawalPage() {
     setIsPinDialogOpen(false);
     setErrorMsg('');
     setSuccessMsg('');
+    setIsSubmitting(true);
     
     const account = bankAccounts.find(a => a._id === selectedAccountId);
-    if (!account) return;
+    if (!account) { setIsSubmitting(false); return; }
 
     try {
       await dispatch(initiateWithdrawal({
-        bankCode: account.bankCode || '',
+        bankCode: account.data?.LENCO || account.bankCode || '',
         bankName: account.bankName,
         bankAccountNumber: account.accountNumber,
-        amount: numAmount,
+        amount: Math.floor(numAmount), // mobile sends integer
         email: user?.email || '',
         user_id: user?.userid || user?.id || '',
         bankAccountName: account.accountName,
-        name: user?.fullName || `${user?.firstname || ''} ${user?.lastname || ''}`,
+        name: `${user?.firstname || ''} ${user?.lastname || ''}`.trim(),
         nameEnquiryId: user?.userid || user?.id || '',
-        senderName: "Cardyork",
+        senderName: `${user?.firstname || ''} ${user?.lastname || ''}`.trim(),
         id: user?.userid || user?.id || '',
+        version: '100000', // must match mobile VERSION_CODE
         pin: pin
       })).unwrap();
 
@@ -93,6 +97,8 @@ export default function WithdrawalPage() {
       }
     } catch (err: any) {
       setErrorMsg(err.message || 'Withdrawal failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -156,13 +162,13 @@ export default function WithdrawalPage() {
               }}
               disabled={isLoading}
             >
-              <option value="">Select an account...</option>
+              <option key="default" value="">Select an account...</option>
               {bankAccounts.map(account => (
                 <option key={account._id} value={account._id}>
                   {account.bankName} - {account.accountNumber}
                 </option>
               ))}
-              <option value="ADD_NEW">+ Add new bank account</option>
+              <option key="add-new" value="ADD_NEW">+ Add new bank account</option>
             </select>
           </div>
 
@@ -190,9 +196,9 @@ export default function WithdrawalPage() {
           <button 
             className="btn btn-primary w-full py-3.5 mt-auto"
             onClick={handleWithdrawClick}
-            disabled={isLoading || !amount || !isAmountValid || !selectedAccountId}
+            disabled={isSubmitting || !amount || !isAmountValid || !selectedAccountId}
           >
-            {isLoading ? 'Processing...' : 'Proceed'}
+            {isSubmitting ? 'Processing...' : 'Proceed'}
           </button>
         </div>
       </div>
@@ -239,7 +245,7 @@ export default function WithdrawalPage() {
         isOpen={isPinDialogOpen}
         onClose={() => setIsPinDialogOpen(false)}
         onSubmit={handlePinSubmit}
-        isLoading={isLoading}
+        isLoading={isSubmitting}
       />
       
       <AddBankAccountModal 

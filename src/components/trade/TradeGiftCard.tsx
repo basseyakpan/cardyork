@@ -709,7 +709,6 @@ ${cardCode ? `Card Code: ${cardCode}\n` : ''}${cardPin ? `Card PIN: ${cardPin}\n
                 <FiCheck className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
                 <p className="text-xs text-on-surface font-medium leading-relaxed">
                   By submitting this trade, you confirm that the provided details and images are accurate and belong to you.
-                  Fraudulent trades will lead to account suspension.
                 </p>
               </div>
             </div>

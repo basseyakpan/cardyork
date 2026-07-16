@@ -2,7 +2,8 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { markAsRead } from '@/store/slices/notificationSlice';
 
 import BrandLogo from '@/components/BrandLogo';
 import { FiEye, FiEyeOff, FiBell, FiLifeBuoy, FiArrowUpRight, FiCreditCard, FiDollarSign, FiArrowRight, FiClock } from 'react-icons/fi';
@@ -22,8 +23,11 @@ const getCurrencySymbol = (country: string) => {
 
 export default function DashboardHomePage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
+  const [isNotifOpen, setIsNotifOpen] = useState(false);
   const { trades } = useAppSelector(s => s.trade);
+  const { notifications, unreadCount } = useAppSelector(s => s.notification);
   const { user } = useAppSelector(s => s.auth);
   const { wallet } = useAppSelector(s => s.wallet);
   const { assets, rates } = useAppSelector(s => s.assets);
@@ -65,11 +69,46 @@ export default function DashboardHomePage() {
           </div>
           <h2 className="text-xl font-bold text-on-surface">Hi, {user.firstname || 'User'}!</h2>
         </div>
-        <div className="flex items-center gap-4 text-primary">
-          <button className="relative p-2 rounded-full hover:bg-primary/10 transition-colors">
+        <div className="flex items-center gap-4 text-primary relative">
+          <button onClick={() => setIsNotifOpen(!isNotifOpen)} className="relative p-2 rounded-full hover:bg-primary/10 transition-colors focus:outline-none">
             <FiBell className="w-6 h-6" />
-            <span className="absolute top-1.5 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-background" />
+            {unreadCount > 0 && (
+              <span className="absolute top-1.5 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-background" />
+            )}
           </button>
+          
+          {isNotifOpen && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setIsNotifOpen(false)} />
+              <div className="absolute top-full right-0 mt-2 w-80 rounded-2xl glass-card border border-primary/10 p-2 z-50 shadow-xl animate-fade-in max-h-96 overflow-y-auto">
+                <div className="p-3 border-b border-primary/10 flex justify-between items-center">
+                  <span className="font-bold text-on-surface">Notifications</span>
+                  <span className="text-xs text-on-surface-variant">{unreadCount} unread</span>
+                </div>
+                {notifications.length === 0 ? (
+                  <div className="p-6 text-center text-on-surface-variant text-sm">No new notifications</div>
+                ) : (
+                  <div className="flex flex-col">
+                    {notifications.map(notif => (
+                      <div 
+                        key={notif._id} 
+                        onClick={() => dispatch(markAsRead(notif._id))}
+                        className={`p-3 border-b border-primary/5 hover:bg-primary/5 transition-colors cursor-pointer flex flex-col gap-1 ${!notif.isRead ? 'bg-primary/5' : ''}`}
+                      >
+                        <div className="flex justify-between items-start gap-2">
+                          <span className="font-bold text-sm text-on-surface line-clamp-1">{notif.title}</span>
+                          {!notif.isRead && <span className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5" />}
+                        </div>
+                        <span className="text-xs text-on-surface-variant line-clamp-2">{notif.message}</span>
+                        <span className="text-[10px] text-on-surface-variant/70 mt-1">{new Date(notif.createdAt).toLocaleDateString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
           <Link href="/dashboard/support" className="p-2 rounded-full hover:bg-primary/10 transition-colors">
             <FiLifeBuoy className="w-6 h-6" />
           </Link>

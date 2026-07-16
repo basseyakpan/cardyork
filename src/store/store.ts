@@ -6,6 +6,7 @@ import tradeReducer from './slices/tradeSlice';
 import walletReducer from './slices/walletSlice';
 import adsReducer from './slices/adsSlice';
 import uiReducer from './slices/uiSlice';
+import notificationReducer from './slices/notificationSlice';
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     wallet: walletReducer,
     ads: adsReducer,
     ui: uiReducer,
+    notification: notificationReducer,
   },
 });
 

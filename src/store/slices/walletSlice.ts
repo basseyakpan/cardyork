@@ -28,6 +28,9 @@ interface BankAccount {
   accountNumber: string;
   accountName: string;
   bankCode?: string;
+  data?: {
+    LENCO?: string;
+  };
 }
 
 interface WalletState {
@@ -129,11 +132,6 @@ export const initiateWithdrawal = createAsyncThunk(
   'wallet/withdraw',
   async (payload: WithdrawPayload, { rejectWithValue }) => {
     try {
-      // Inject version as requested if not already provided
-      const finalPayload = {
-        ...payload,
-        version: payload.version || "16032"
-      };
 
       const response = await fetch(`${BASE_URL}/withdraw`, {
         method: 'POST',
@@ -141,7 +139,7 @@ export const initiateWithdrawal = createAsyncThunk(
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(finalPayload),
+        body: JSON.stringify(payload),
       });
       const data = await response.json();
       if (!response.ok) return rejectWithValue(data.message || 'Failed to initiate withdrawal');

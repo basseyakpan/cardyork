@@ -4,6 +4,7 @@ import ReduxProvider from '@/store/ReduxProvider';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { CookieManager } from '@/components/CookieManager';
 import ComingSoonModal from '@/components/ComingSoonModal';
+import Toast from '@/components/Toast';
 
 export const metadata: Metadata = {
   icons: {
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
             <CookieManager />
             <ComingSoonModal />
+            <Toast />
           </ReduxProvider>
         </ThemeProvider>
       </body>

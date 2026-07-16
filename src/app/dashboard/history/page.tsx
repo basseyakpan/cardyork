@@ -7,16 +7,17 @@ import BrandLogo from '@/components/BrandLogo';
 export default function HistoryPage() {
   const { trades, isLoading: tradesLoading } = useAppSelector(s => s.trade);
   const { cryptoTrades, isLoading: cryptoLoading } = useAppSelector(s => s.crypto);
+  const { withdrawals, isLoading: walletLoading } = useAppSelector(s => s.wallet);
   
-  const [activeTab, setActiveTab] = useState<'cards' | 'crypto'>('cards');
+  const [activeTab, setActiveTab] = useState<'cards' | 'crypto' | 'withdrawals'>('cards');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const displayTrades = activeTab === 'cards' ? trades : cryptoTrades;
+  const displayTrades = activeTab === 'cards' ? trades : activeTab === 'crypto' ? cryptoTrades : withdrawals;
   
   const filteredTrades = displayTrades.filter((trade: any) => {
     if (!searchQuery) return true;
     const q = searchQuery.toLowerCase();
-    const nameMatch = trade.cardName?.toLowerCase().includes(q) || trade.assetName?.toLowerCase().includes(q);
+    const nameMatch = trade.cardName?.toLowerCase().includes(q) || trade.assetName?.toLowerCase().includes(q) || trade.bankName?.toLowerCase().includes(q);
     const idMatch = trade._id?.toLowerCase().includes(q) || trade.id?.toLowerCase().includes(q);
     return nameMatch || idMatch;
   });
@@ -42,6 +43,12 @@ export default function HistoryPage() {
           >
             <FiDollarSign className="w-4 h-4" /> Crypto
           </button>
+          <button 
+            onClick={() => setActiveTab('withdrawals')}
+            className={`px-6 py-2 rounded-lg font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'withdrawals' ? 'bg-primary text-white shadow-md' : 'text-on-surface-variant hover:bg-surface-container-high'}`}
+          >
+            <span className="w-4 h-4 text-center">🏦</span> Withdrawals
+          </button>
         </div>
 
         <div className="input-group w-full sm:w-72">
@@ -60,8 +67,8 @@ export default function HistoryPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-outline-variant bg-surface-container-low">
-                <th className="p-4 font-semibold text-on-surface-variant text-sm">Asset</th>
-                <th className="p-4 font-semibold text-on-surface-variant text-sm">Trade ID</th>
+                <th className="p-4 font-semibold text-on-surface-variant text-sm">{activeTab === 'withdrawals' ? 'Bank / Account' : 'Asset'}</th>
+                <th className="p-4 font-semibold text-on-surface-variant text-sm">ID</th>
                 <th className="p-4 font-semibold text-on-surface-variant text-sm">Amount</th>
                 <th className="p-4 font-semibold text-on-surface-variant text-sm">Date</th>
                 <th className="p-4 font-semibold text-on-surface-variant text-sm">Status</th>
@@ -82,7 +89,7 @@ export default function HistoryPage() {
               ) : (
                 filteredTrades.map((trade: any) => {
                   const tradeId = trade.id || trade._id || '';
-                  const name = trade.cardName || trade.assetName || 'Unknown';
+                  const name = activeTab === 'withdrawals' ? trade.bankName : (trade.cardName || trade.assetName || 'Unknown');
                   const amount = trade.nairaValue || trade.actualAmount || trade.amount || 0;
                   const date = trade.createdAt ? new Date(trade.createdAt).toLocaleDateString() : 'N/A';
                   const icon = trade.assetImage?.[0] || trade.images?.[0] || '';
@@ -92,16 +99,30 @@ export default function HistoryPage() {
                       <td className="p-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center overflow-hidden shrink-0">
-                            <BrandLogo id={name} fallback={icon} className="w-6 h-6" />
+                            {activeTab === 'withdrawals' ? (
+                              <span className="text-xl">🏦</span>
+                            ) : (
+                              <BrandLogo id={name} fallback={icon} className="w-6 h-6" />
+                            )}
                           </div>
-                          <span className="font-bold text-on-surface">{name}</span>
+                          <div className="flex flex-col">
+                            <span className="font-bold text-on-surface">{name}</span>
+                            {activeTab === 'withdrawals' && (
+                              <span className="text-xs text-on-surface-variant">{trade.bankAccountNumber}</span>
+                            )}
+                          </div>
                         </div>
                       </td>
                       <td className="p-4 text-on-surface-variant text-sm">
                         {tradeId.substring(0, 8)}...
                       </td>
-                      <td className="p-4 font-bold text-secondary">
-                        ₦{amount.toLocaleString()}
+                      <td className="p-4 flex flex-col">
+                        <span className="font-bold text-secondary">₦{amount.toLocaleString()}</span>
+                        {activeTab === 'crypto' && trade.userAmount && (
+                          <span className="text-xs font-semibold text-on-surface-variant">
+                            {trade.userAmount} {trade.assetName || 'Coins'}
+                          </span>
+                        )}
                       </td>
                       <td className="p-4 text-on-surface-variant text-sm">{date}</td>
                       <td className="p-4">
