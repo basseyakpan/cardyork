@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaApple, FaGooglePlay } from 'react-icons/fa';
@@ -48,20 +49,20 @@ export default function Footer() {
               <div className="mt-4">
                 <h4 className="text-on-surface text-base font-bold mb-4">Trade on the Go</h4>
                 <div className="flex flex-wrap gap-3">
-                  <Link href="/download/ios" className="inline-flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
+                  <button onClick={() => alert('Coming Soon!')} className="inline-flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity text-left cursor-pointer border-none">
                     <FaApple className="text-2xl" />
                     <div className="flex flex-col leading-tight">
                       <span className="text-[8px] uppercase tracking-wider opacity-80">Download on</span>
                       <span className="text-xs font-bold">Apple</span>
                     </div>
-                  </Link>
-                  <Link href="/download/android" className="inline-flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity">
+                  </button>
+                  <a href="https://play.google.com/store/apps/details?id=com.cardyork.app" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-black text-white px-4 py-2.5 rounded-lg hover:opacity-90 transition-opacity no-underline">
                     <FaGooglePlay className="text-2xl" />
                     <div className="flex flex-col leading-tight">
                       <span className="text-[8px] uppercase tracking-wider opacity-80">GET IT ON</span>
                       <span className="text-xs font-bold">Google Play</span>
                     </div>
-                  </Link>
+                  </a>
                 </div>
               </div>
             </div>

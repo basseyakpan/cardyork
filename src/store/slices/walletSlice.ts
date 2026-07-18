@@ -29,7 +29,7 @@ interface BankAccount {
   accountName: string;
   bankCode?: string;
   data?: {
-    LENCO?: string;
+    lenco?: string;
   };
 }
 
@@ -121,10 +121,9 @@ interface WithdrawPayload {
   user_id: string;
   bankAccountName: string;
   name: string;
-  nameEnquiryId: string;
-  senderName: string;
   id: string;
   version?: string;
+  iOSVersion?: string | null;
   pin: string;
 }
 

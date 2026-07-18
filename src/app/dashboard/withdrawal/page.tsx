@@ -67,10 +67,11 @@ export default function WithdrawalPage() {
     
     const account = bankAccounts.find(a => a._id === selectedAccountId);
     if (!account) { setIsSubmitting(false); return; }
+    console.log('account', account);
 
     try {
       await dispatch(initiateWithdrawal({
-        bankCode: account.data?.LENCO || account.bankCode || '',
+        bankCode: account.data?.lenco || account.bankCode || '',
         bankName: account.bankName,
         bankAccountNumber: account.accountNumber,
         amount: Math.floor(numAmount), // mobile sends integer
@@ -78,10 +79,9 @@ export default function WithdrawalPage() {
         user_id: user?.userid || user?.id || '',
         bankAccountName: account.accountName,
         name: `${user?.firstname || ''} ${user?.lastname || ''}`.trim(),
-        nameEnquiryId: user?.userid || user?.id || '',
-        senderName: `${user?.firstname || ''} ${user?.lastname || ''}`.trim(),
         id: user?.userid || user?.id || '',
-        version: '100000', // must match mobile VERSION_CODE
+        version: '5', // must match mobile VERSION_CODE (K.VERSION_CODE = "5")
+        iOSVersion: null, // web is not iOS
         pin: pin
       })).unwrap();
 

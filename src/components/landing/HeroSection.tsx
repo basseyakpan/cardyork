@@ -36,7 +36,7 @@ export default function HeroSection() {
           </p>
 
           <div className="flex flex-col sm:flex-row w-full sm:w-auto items-center gap-3 sm:gap-4 mb-6">
-            <Link href="/download" className="inline-flex items-center justify-center gap-3 bg-[#0d52ff] dark:bg-primary text-white rounded-full px-6 sm:px-8 py-3.5 sm:py-4 text-[13px] sm:text-base font-semibold hover:opacity-90 transition-opacity w-full sm:w-auto">
+            <Link href="#app-download" className="inline-flex items-center justify-center gap-3 bg-[#0d52ff] dark:bg-primary text-white rounded-full px-6 sm:px-8 py-3.5 sm:py-4 text-[13px] sm:text-base font-semibold hover:opacity-90 transition-opacity w-full sm:w-auto">
               <div className="flex items-center gap-2.5">
                 <FaGooglePlay className="text-[20px]" />
                 <div className="w-px h-5 bg-white/40" />

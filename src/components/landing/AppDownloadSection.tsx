@@ -1,10 +1,11 @@
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaApple, FaGooglePlay } from 'react-icons/fa';
 
 export default function AppDownloadSection() {
   return (
-    <section className="bg-background">
+    <section id="app-download" className="bg-background">
       <div className="w-full bg-surface-container-lowest dark:bg-background overflow-hidden flex flex-col md:flex-row items-center border-y border-primary/10 relative min-h-[400px]">
         {/* Left side: Phone placeholder */}
         <div className="w-full md:w-[45%] lg:w-1/2 h-64 md:h-full min-h-[450px] flex items-end justify-center pt-8 md:pt-16 bg-[#e8f0ff] dark:bg-surface-container relative overflow-hidden">
@@ -31,15 +32,15 @@ export default function AppDownloadSection() {
           </p>
 
           <div className="flex flex-col xl:flex-row gap-4">
-            <Link href="/download/ios" className="flex items-center gap-4 bg-black text-white px-8 py-[18px] rounded-full hover:bg-black/80 transition-colors w-full xl:w-auto justify-center min-w-[240px]">
+            <button onClick={() => alert('Coming Soon!')} className="flex items-center gap-4 bg-black text-white px-8 py-[18px] rounded-full hover:bg-black/80 transition-colors w-full xl:w-auto justify-center min-w-[240px] cursor-pointer border-none">
               <FaApple className="text-[26px]" />
               <span className="text-[19px] font-bold">Get on iPhone</span>
-            </Link>
+            </button>
 
-            <Link href="/download/android" className="flex items-center gap-4 bg-primary text-white px-8 py-[18px] rounded-full hover:bg-primary/90 transition-colors w-full xl:w-auto justify-center min-w-[240px]">
+            <a href="https://play.google.com/store/apps/details?id=com.cardyork.app" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-primary text-white px-8 py-[18px] rounded-full hover:bg-primary/90 transition-colors w-full xl:w-auto justify-center min-w-[240px] no-underline">
               <FaGooglePlay className="text-2xl" />
               <span className="text-[19px] font-bold tracking-tight">Get on Android</span>
-            </Link>
+            </a>
           </div>
         </div>
       </div>

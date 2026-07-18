@@ -10,16 +10,16 @@ const faqs = [
     category: "Getting Started",
     questions: [
       {
-        q: "How do I sell my gift card?",
-        a: "Simply create an account, select the gift card brand you want to sell, enter the card details, upload images of your card, and submit. Our team will verify and process your trade within minutes.",
+        q: "How do I get started?",
+        a: "Open a Cardyork account, choose the gift card you want to sell, provide the required information, upload your card images, and submit your trade. Our team will review and process your transaction promptly.",
       },
       {
-        q: "What gift cards do you accept?",
-        a: "We accept over 200+ gift card brands including Amazon, iTunes, Google Play, Steam, PlayStation, Xbox, Walmart, Target, and many more. Check our Gift Cards page for the full list.",
+        q: "Which gift cards are supported?",
+        a: "We support more than 100 gift card brands, including Amazon, Apple, Google Play, Steam, PlayStation, Xbox, Walmart, Target, Sephora, Nike, and many others.",
       },
       {
-        q: "How long does verification take?",
-        a: "Most gift cards are verified within 5-15 minutes during business hours. Complex verifications may take up to 24 hours.",
+        q: "How long does it take to verify my card?",
+        a: "Most trades are verified within 5–15 minutes during business hours. Some cards may require additional checks and can take up to 24 hours.",
       },
     ],
   },
@@ -27,16 +27,20 @@ const faqs = [
     category: "Payments & Rates",
     questions: [
       {
-        q: "How do I receive payment?",
-        a: "Payments are sent directly to your registered bank account. We support all major banks and payment methods.",
+        q: "How will I receive my payment?",
+        a: "Once your trade is approved, your payment will be sent directly to your registered bank account. We support all major Nigerian banks for fast and secure payouts.",
       },
       {
-        q: "What determines the exchange rate?",
-        a: "Rates vary based on the gift card brand, card value, and current market conditions. We always display the current rate before you confirm a trade.",
+        q: "How are exchange rates determined?",
+        a: "Exchange rates are based on the gift card brand, card denomination, market demand, and current trading conditions. The applicable rate is displayed before you submit your trade.",
       },
       {
         q: "Is there a minimum or maximum trade amount?",
-        a: "Minimum trade value is $10. Maximum depends on your account verification level. Fully verified accounts can trade up to $3,000 per transaction.",
+        a: "The minimum trade value is $10. Maximum trade limits depend on your account verification level. Verified users can enjoy higher trading limits.",
+      },
+      {
+        q: "How long does it take to receive payment?",
+        a: "Most payments are processed within minutes after your gift card has been successfully verified. In rare cases, additional verification may cause a slight delay.",
       },
     ],
   },
@@ -45,15 +49,15 @@ const faqs = [
     questions: [
       {
         q: "Is my information safe?",
-        a: "Absolutely. We use bank-level 256-bit encryption to protect your data. All transactions are secured and monitored for fraud.",
+        a: "Yes. Your privacy and security are our top priorities. We use industry-standard security measures, including 256-bit SSL encryption, to protect your personal information and keep every transaction secure.",
       },
       {
         q: "Why do I need to verify my identity?",
-        a: "Identity verification helps us prevent fraud and ensures the safety of all users. It also unlocks higher trading limits for your account.",
+        a: "Identity verification helps protect your account, prevent fraud, and ensure compliance with our security standards. Verified users may also enjoy higher trading limits and a smoother trading experience.",
       },
       {
-        q: "What if my card is declined?",
-        a: "If a card is declined, we'll notify you immediately with the reason. Common issues include invalid codes, already redeemed cards, or regional restrictions.",
+        q: "What happens if my gift card is declined?",
+        a: "If your gift card cannot be accepted, we'll notify you with the reason whenever possible. Common reasons include invalid or incorrect card details, cards that have already been redeemed, unsupported card types, or region restrictions.",
       },
     ],
   },
@@ -61,16 +65,16 @@ const faqs = [
     category: "Account & Support",
     questions: [
       {
-        q: "How do I contact support?",
-        a: "You can reach our support team 24/7 via live chat on our platform, email at support@cardyork.com, or through our support ticket system.",
+        q: "How can I contact Cardyork support?",
+        a: "Our support team is available to assist you through live chat, email, or the support ticket system. We're committed to responding as quickly as possible.",
       },
       {
         q: "Can I cancel a trade?",
-        a: "Trades can be cancelled before verification begins. Once verification starts, cancellation may not be possible. Contact support immediately if needed.",
+        a: "You may be able to cancel a trade if it has not yet entered the verification process. Once verification has started, cancellation may no longer be possible. If you need assistance, please contact our support team immediately.",
       },
       {
-        q: "How do I update my bank details?",
-        a: "Go to your Profile page, navigate to Bank Details, and update your information. Changes may require re-verification for security.",
+        q: "How do I update my bank account details?",
+        a: "Log in to your Cardyork account, go to Profile > Bank Details, and update your banking information. For your security, you may be asked to complete an additional verification step before the changes take effect.",
       },
     ],
   },
