@@ -2,11 +2,11 @@
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useAppSelector } from '@/store/hooks';
-import { mapAssetsToCards } from '@/lib/assetMapper';
+import { useAppSelector } from "@/store/hooks";
+import { mapAssetsToCards } from "@/lib/assetMapper";
 
 export default function SellGiftCardsPage() {
-  const { assets, rates } = useAppSelector(s => s.assets);
+  const { assets, rates } = useAppSelector((s) => s.assets);
   const cards = mapAssetsToCards(assets, rates);
   return (
     <main className="bg-background min-h-screen flex flex-col">
@@ -90,12 +90,12 @@ export default function SellGiftCardsPage() {
             <h2 className="display-sm">
               Accepted <span className="gradient-text">Brands</span>
             </h2>
-            <Link
+            {/* <Link
               href="/gift-cards-brands"
               className="text-primary font-bold hover:underline"
             >
               View All Brands →
-            </Link>
+            </Link> */}
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">

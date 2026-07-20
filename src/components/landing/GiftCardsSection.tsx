@@ -1,11 +1,11 @@
-'use client';
-import Link from 'next/link';
-import { useAppSelector } from '@/store/hooks';
-import { mapAssetsToCards } from '@/lib/assetMapper';
-import BrandLogo from '@/components/BrandLogo';
+"use client";
+import Link from "next/link";
+import { useAppSelector } from "@/store/hooks";
+import { mapAssetsToCards } from "@/lib/assetMapper";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function GiftCardsSection() {
-  const { assets, rates } = useAppSelector(s => s.assets);
+  const { assets, rates } = useAppSelector((s) => s.assets);
   const popularCards = mapAssetsToCards(assets, rates).slice(0, 6);
 
   return (
@@ -14,22 +14,38 @@ export default function GiftCardsSection() {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
           <div className="flex flex-col items-start text-left">
             <span className="chip chip-secondary mb-4">Best Rates</span>
-            <h2 className="display-sm">Trending <span className="gradient-text-green">Gift Cards</span></h2>
-            <p className="text-on-surface-variant text-base mt-2 max-w-[480px]">Check out our current rates for the most traded cards in the vault.</p>
+            <h2 className="display-sm">
+              Trending <span className="gradient-text-green">Gift Cards</span>
+            </h2>
+            <p className="text-on-surface-variant text-base mt-2 max-w-[480px]">
+              Check out our current rates for the most traded cards in the
+              vault.
+            </p>
           </div>
-          <Link href="/sell-gift-cards" className="btn btn-ghost hidden md:inline-flex">View All Brands</Link>
+          {/* <Link href="/sell-gift-cards" className="btn btn-ghost hidden md:inline-flex">View All Brands</Link> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {popularCards.map((card, i) => (
-            <div key={card.id} className={`glass-card p-6 flex flex-col gap-8 animate-fade-in delay-${i * 100}`}>
+            <div
+              key={card.id}
+              className={`glass-card p-6 flex flex-col gap-8 animate-fade-in delay-${i * 100}`}
+            >
               <div className="flex items-center gap-4">
                 <div className="w-14 h-14 rounded-2xl bg-surface-container-high flex items-center justify-center border border-primary/10 shadow-sm transition-transform duration-300 hover:scale-105">
-                  <BrandLogo id={card.id} fallback={card.icon} className="w-7 h-7" />
+                  <BrandLogo
+                    id={card.id}
+                    fallback={card.icon}
+                    className="w-7 h-7"
+                  />
                 </div>
                 <div className="flex flex-col">
-                  <h3 className="text-lg font-bold text-on-surface">{card.name}</h3>
-                  <span className="text-xs uppercase tracking-widest text-on-surface-variant font-medium">{card.category}</span>
+                  <h3 className="text-lg font-bold text-on-surface">
+                    {card.name}
+                  </h3>
+                  <span className="text-xs uppercase tracking-widest text-on-surface-variant font-medium">
+                    {card.category}
+                  </span>
                 </div>
               </div>
 
@@ -44,19 +60,18 @@ export default function GiftCardsSection() {
                 </div>
               </div> */}
 
-              <Link href={`/sell-gift-cards/${card.id}`} className="btn btn-outline-primary w-full group">
+              {/* <Link href={`/sell-gift-cards/${card.id}`} className="btn btn-outline-primary w-full group">
                 Trade {card.brand}
                 <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </Link>
+              </Link> */}
             </div>
           ))}
         </div>
 
-        <div className="md:hidden mt-8 text-center">
+        {/* <div className="md:hidden mt-8 text-center">
           <Link href="/sell-gift-cards" className="btn btn-ghost w-full">View All Brands</Link>
-        </div>
+        </div> */}
       </div>
     </section>
   );
 }
-

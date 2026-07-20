@@ -32,10 +32,10 @@ export default function AppDownloadSection() {
           </p>
 
           <div className="flex flex-col xl:flex-row gap-4">
-            <button onClick={() => alert('Coming Soon!')} className="flex items-center gap-4 bg-black text-white px-8 py-[18px] rounded-full hover:bg-black/80 transition-colors w-full xl:w-auto justify-center min-w-[240px] cursor-pointer border-none">
+            <Link href={'/download'} className="flex items-center gap-4 bg-black text-white px-8 py-[18px] rounded-full hover:bg-black/80 transition-colors w-full xl:w-auto justify-center min-w-[240px] cursor-pointer border-none">
               <FaApple className="text-[26px]" />
               <span className="text-[19px] font-bold">Get on iPhone</span>
-            </button>
+            </Link>
 
             <a href="https://play.google.com/store/apps/details?id=com.cardyork.app" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-primary text-white px-8 py-[18px] rounded-full hover:bg-primary/90 transition-colors w-full xl:w-auto justify-center min-w-[240px] no-underline">
               <FaGooglePlay className="text-2xl" />

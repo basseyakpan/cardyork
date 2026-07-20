@@ -20,7 +20,7 @@ export default function WithdrawalPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  const minimumWithdrawal = 1000;
+  const minimumWithdrawal = 500;
   const transactionFee = 0;
 
   useEffect(() => {
@@ -227,8 +227,8 @@ export default function WithdrawalPage() {
                         ₦ {w.amount.toLocaleString()}
                       </td>
                       <td className="p-4 text-right">
-                        <span className={`chip ${w.status?.toLowerCase() === 'success' || w.status?.toLowerCase() === 'completed' ? 'chip-success' : w.status?.toLowerCase() === 'pending' ? 'chip-pending' : 'bg-error/10 text-error'}`}>
-                          {w.status || 'Pending'}
+                        <span className={`chip chip-success`}>
+                          {w.status || 'Success'}
                         </span>
                       </td>
                     </tr>

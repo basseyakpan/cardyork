@@ -36,10 +36,7 @@ export default async function BlogPage() {
         <div className="max-w-[1200px] mx-auto mt-12">
           <div className="text-center mb-20">
             <span className="chip chip-primary mb-4">Cardyork Blog</span>
-            <h1 className="display-sm mb-6">
-              Insights from the{" "}
-              <span className="gradient-text">Vanguard Archive</span>
-            </h1>
+            <h1 className="display-sm mb-6">Insights from the </h1>
             <p className="text-on-surface-variant text-lg max-w-[600px] mx-auto">
               Stay updated with the latest trends, guides, and tutorials in the
               world of gift card trading.
@@ -59,22 +56,26 @@ export default async function BlogPage() {
                   const firstSlice = post.data.slices?.[0];
                   const primary = firstSlice?.primary as any;
 
-                  const title = 
-                    post.data.meta_title || 
-                    (primary && "title" in primary ? primary.title?.[0]?.text : null) || 
-                    post.slugs[0]?.replace(/-/g, ' ') || 
+                  const title =
+                    post.data.meta_title ||
+                    (primary && "title" in primary
+                      ? primary.title?.[0]?.text
+                      : null) ||
+                    post.slugs[0]?.replace(/-/g, " ") ||
                     post.uid;
-                    
+
                   const excerpt =
                     post.data.meta_description ||
-                    (primary && "description" in primary ? primary.description?.[0]?.text : null) ||
+                    (primary && "description" in primary
+                      ? primary.description?.[0]?.text
+                      : null) ||
                     "Click to read more...";
-                    
+
                   const category = post.tags?.[0] || "Article";
                   const author = "CardYork Team";
-                  
-                  const imageUrl = 
-                    post.data.meta_image?.url || 
+
+                  const imageUrl =
+                    post.data.meta_image?.url ||
                     (primary && "image" in primary ? primary.image?.url : null);
 
                   const date = new Date(
@@ -140,10 +141,12 @@ export default async function BlogPage() {
                   {posts.slice(0, 3).map((post: any) => {
                     const firstSlice = post.data.slices?.[0];
                     const primary = firstSlice?.primary as any;
-                    const title = 
-                      post.data.meta_title || 
-                      (primary && "title" in primary ? primary.title?.[0]?.text : null) || 
-                      post.slugs[0]?.replace(/-/g, ' ') || 
+                    const title =
+                      post.data.meta_title ||
+                      (primary && "title" in primary
+                        ? primary.title?.[0]?.text
+                        : null) ||
+                      post.slugs[0]?.replace(/-/g, " ") ||
                       post.uid;
                     const category = post.tags?.[0] || "Article";
                     return (

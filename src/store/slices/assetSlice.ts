@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 interface Asset {
   _id: string;
@@ -58,91 +58,114 @@ const initialState: AssetState = {
 };
 
 // const BASE_URL = 'http://localhost:7000/api';
-const BASE_URL = 'https://cardyork-server.onrender.com/api';
+const BASE_URL = "https://cardyork-server.onrender.com/api";
 
 export const recordGiftCardClick = createAsyncThunk(
-  'assets/recordClick',
-  async (payload: { id: string; assetId: string; assetName: string; country: string; type: string }, { rejectWithValue }) => {
+  "assets/recordClick",
+  async (
+    payload: {
+      id: string;
+      assetId: string;
+      assetName: string;
+      country: string;
+      type: string;
+    },
+    { rejectWithValue },
+  ) => {
     try {
       const response = await fetch(`${BASE_URL}/analytics/gift-card/click`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(payload),
       });
       const data = await response.json();
-      if (!response.ok) return rejectWithValue(data.message || 'Failed to record click');
+      if (!response.ok)
+        return rejectWithValue(data.message || "Failed to record click");
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const fetchAssets = createAsyncThunk(
-  'assets/fetchAll',
+  "assets/fetchAll",
   async (userId: string | undefined, { rejectWithValue }) => {
     try {
       const response = await fetch(`${BASE_URL}/assets/users/get/all`, {
-        method: 'GET', // Postman documentation showed POST for some users/get/all with ID in body
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        method: "GET", // Postman documentation showed POST for some users/get/all with ID in body
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       const data = await response.json();
-      if (!response.ok) return rejectWithValue(data.message || 'Failed to fetch assets');
+      console.log("assets data", data);
+      if (!response.ok)
+        return rejectWithValue(data.message || "Failed to fetch assets");
       return data.data; // Assuming it returns { data: [...] }
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const fetchRates = createAsyncThunk(
-  'assets/fetchRates',
+  "assets/fetchRates",
   async (userId: string | undefined, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${BASE_URL}/rates/users/get/all?start=0&limit=1000`, {
-        method: 'GET',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      const response = await fetch(
+        `${BASE_URL}/rates/users/get/all?start=0&limit=1000`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         },
-      });
+      );
       const data = await response.json();
-      if (!response.ok) return rejectWithValue(data.message || 'Failed to fetch rates');
-      return data.data; 
+      if (!response.ok)
+        return rejectWithValue(data.message || "Failed to fetch rates");
+      return data.data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const fetchAssetRates = createAsyncThunk(
-  'assets/fetchAssetRates',
-  async ({ userId, assetId }: { userId: string; assetId: string }, { rejectWithValue }) => {
+  "assets/fetchAssetRates",
+  async (
+    { userId, assetId }: { userId: string; assetId: string },
+    { rejectWithValue },
+  ) => {
     try {
-      const response = await fetch(`${BASE_URL}/rates/users/get/asset?id=${userId}&assetId=${assetId}&start=0`, {
-        method: 'GET',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      const response = await fetch(
+        `${BASE_URL}/rates/users/get/asset?id=${userId}&assetId=${assetId}&start=0`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         },
-      });
+      );
       const data = await response.json();
-      if (!response.ok) return rejectWithValue(data.message || 'Failed to fetch asset rates');
-      return data.data; 
+      if (!response.ok)
+        return rejectWithValue(data.message || "Failed to fetch asset rates");
+      return data.data;
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 const assetSlice = createSlice({
-  name: 'assets',
+  name: "assets",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -150,11 +173,14 @@ const assetSlice = createSlice({
       .addCase(fetchAssets.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchAssets.fulfilled, (state, action: PayloadAction<Asset[]>) => {
-        console.log("Assets fetched successfully", action.payload);
-        state.isLoading = false;
-        state.assets = action.payload;
-      })
+      .addCase(
+        fetchAssets.fulfilled,
+        (state, action: PayloadAction<Asset[]>) => {
+          console.log("Assets fetched successfully", action.payload);
+          state.isLoading = false;
+          state.assets = action.payload;
+        },
+      )
       .addCase(fetchAssets.rejected, (state, action) => {
         console.log("Failed to fetch assets", action.payload);
         state.isLoading = false;
@@ -174,10 +200,13 @@ const assetSlice = createSlice({
       .addCase(fetchAssetRates.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchAssetRates.fulfilled, (state, action: PayloadAction<Rate[]>) => {
-        state.isLoading = false;
-        state.rates = action.payload;
-      })
+      .addCase(
+        fetchAssetRates.fulfilled,
+        (state, action: PayloadAction<Rate[]>) => {
+          state.isLoading = false;
+          state.rates = action.payload;
+        },
+      )
       .addCase(fetchAssetRates.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
