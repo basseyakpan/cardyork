@@ -1,9 +1,18 @@
-'use client';
-import Link from 'next/link';
-import Image from 'next/image';
-import { FaApple, FaGooglePlay } from 'react-icons/fa';
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { FaApple, FaGooglePlay } from "react-icons/fa";
+import { useState } from "react";
 
 export default function AppDownloadSection() {
+  const [iphoneDownloadText, setIphoneDownloadText] = useState("Get on iPhone");
+  const handleIphoneDownLoadClick = () => {
+    setIphoneDownloadText("Coming Soon...");
+
+    setTimeout(() => {
+      setIphoneDownloadText("Get on iPhone");
+    }, 5000);
+  };
   return (
     <section id="app-download" className="bg-background">
       <div className="w-full bg-surface-container-lowest dark:bg-background overflow-hidden flex flex-col md:flex-row items-center border-y border-primary/10 relative min-h-[400px]">
@@ -28,19 +37,39 @@ export default function AppDownloadSection() {
             Download The App
           </h2>
           <p className="text-on-surface-variant mb-10 max-w-md text-[17px] leading-relaxed">
-            Experience the best of CardYork on your phone or tablet. Available for iOS and Android operating systems.
+            Experience the best of CardYork on your phone or tablet. Available
+            for iOS and Android operating systems.
           </p>
 
           <div className="flex flex-col xl:flex-row gap-4">
-            <Link href={'/download'} className="flex items-center gap-4 bg-black text-white px-8 py-[18px] rounded-full hover:bg-black/80 transition-colors w-full xl:w-auto justify-center min-w-[240px] cursor-pointer border-none">
-              <FaApple className="text-[26px]" />
-              <span className="text-[19px] font-bold">Get on iPhone</span>
+            <Link
+              href={"#"}
+              onClick={handleIphoneDownLoadClick}
+              className="flex items-center gap-4 bg-black text-white px-8 py-[18px] rounded-full hover:bg-black/80 transition-colors w-full xl:w-auto justify-center min-w-[240px] cursor-pointer border-none"
+            >
+              <FaApple
+                className={`text-[26px] ${iphoneDownloadText === "Coming Soon..." ? "animate-pulse" : ""}`}
+              />
+              <span
+                className={`text-[19px] font-bold ${
+                  iphoneDownloadText === "Coming Soon..." ? "animate-pulse" : ""
+                }`}
+              >
+                {iphoneDownloadText}
+              </span>
             </Link>
 
-            <a href="https://play.google.com/store/apps/details?id=com.cardyork.app" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-primary text-white px-8 py-[18px] rounded-full hover:bg-primary/90 transition-colors w-full xl:w-auto justify-center min-w-[240px] no-underline">
+            <Link
+              href="https://play.google.com/store/apps/details?id=com.cardyork.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 bg-primary text-white px-8 py-[18px] rounded-full hover:bg-primary/90 transition-colors w-full xl:w-auto justify-center min-w-[240px] no-underline"
+            >
               <FaGooglePlay className="text-2xl" />
-              <span className="text-[19px] font-bold tracking-tight">Get on Android</span>
-            </a>
+              <span className="text-[19px] font-bold tracking-tight">
+                Get on Android
+              </span>
+            </Link>
           </div>
         </div>
       </div>
