@@ -1,15 +1,26 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation"; // Import Next.js hooks
 import { FiSmartphone, FiX } from "react-icons/fi";
 
 export default function ComingSoonModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
+    // 1. Listen for Next.js programmatic routing or direct hits
+    if (pathname?.startsWith("/download")) {
+      setIsOpen(true);
+      // Optional: Push them back to the home page or previous page
+      // so the URL doesn't stay stuck on /download while the modal is open
+      router.replace("/");
+    }
+
+    // 2. Keep your <a> tag interceptor just in case there are static links on the page
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const link = target.closest("a");
-      // Some links might be Next.js <Link>s, so we must intercept in the capture phase
       if (link && link.getAttribute("href")?.startsWith("/download")) {
         e.preventDefault();
         e.stopPropagation();
@@ -19,7 +30,7 @@ export default function ComingSoonModal() {
 
     document.addEventListener("click", handleClick, true);
     return () => document.removeEventListener("click", handleClick, true);
-  }, []);
+  }, [pathname, router]);
 
   if (!isOpen) return null;
 

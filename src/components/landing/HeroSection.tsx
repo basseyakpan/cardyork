@@ -36,7 +36,8 @@ export default function HeroSection() {
     } else {
       const os = getMobileOperatingSystem();
       if (os === "iOS") {
-        router.push("/download");
+        window.location.href = "/download";
+        // router.push("/download");
       } else {
         router.push(
           "https://play.google.com/store/apps/details?id=com.cardyork.app",
