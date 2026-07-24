@@ -9,18 +9,10 @@ export type HeroSectionWithImageProps = SliceComponentProps<Content.HeroSectionW
 
 /**
  * Component for "HeroSectionWithImage" Slices.
+ * Note: Hero heading & image are already rendered in the blog post template header.
  */
-const HeroSectionWithImage: FC<HeroSectionWithImageProps> = ({ slice }) => {
-	return (
-		<section
-			data-slice-type={slice.slice_type}
-			data-slice-variation={slice.variation}
-		>
-			Placeholder component for {slice.slice_type} (variation: {slice.variation}) slices.
-			<br />
-			<strong>You can edit this slice directly in your code editor.</strong>
-		</section>
-	)
+const HeroSectionWithImage: FC<HeroSectionWithImageProps> = () => {
+  return null;
 };
 
-export default HeroSectionWithImage
+export default HeroSectionWithImage;

@@ -60,22 +60,45 @@ export default async function BlogPage() {
                     (primary && "title" in primary
                       ? primary.title?.[0]?.text
                       : null) ||
+                    (primary && "post_heading" in primary
+                      ? primary.post_heading?.[0]?.text
+                      : null) ||
                     post.slugs[0]?.replace(/-/g, " ") ||
                     post.uid;
+
+                  // Look through slices for rich_text paragraph content if meta_description isn't set
+                  const richTextSlice = post.data.slices?.find(
+                    (s: any) => s.slice_type === "rich_text",
+                  );
+                  const firstParagraph =
+                    richTextSlice?.primary?.paragraph_text?.find(
+                      (p: any) => p.type === "paragraph",
+                    )?.text;
 
                   const excerpt =
                     post.data.meta_description ||
                     (primary && "description" in primary
                       ? primary.description?.[0]?.text
                       : null) ||
+                    firstParagraph ||
                     "Click to read more...";
 
                   const category = post.tags?.[0] || "Article";
-                  const author = "CardYork Team";
+                  const author =
+                    (primary &&
+                      "author_name" in primary &&
+                      Array.isArray(primary.author_name) &&
+                      primary.author_name[0]?.text) ||
+                    "CardYork Team";
 
                   const imageUrl =
                     post.data.meta_image?.url ||
-                    (primary && "image" in primary ? primary.image?.url : null);
+                    (primary && "image" in primary
+                      ? primary.image?.url
+                      : null) ||
+                    (primary && "post_image" in primary
+                      ? primary.post_image?.url
+                      : null);
 
                   const date = new Date(
                     post.first_publication_date,
@@ -137,13 +160,16 @@ export default async function BlogPage() {
                   Recent Posts
                 </h3>
                 <div className="flex flex-col gap-6">
-                  {posts.slice(0, 3).map((post: any) => {
+                  {posts.slice(0, 6).map((post: any) => {
                     const firstSlice = post.data.slices?.[0];
                     const primary = firstSlice?.primary as any;
                     const title =
                       post.data.meta_title ||
                       (primary && "title" in primary
                         ? primary.title?.[0]?.text
+                        : null) ||
+                      (primary && "post_heading" in primary
+                        ? primary.post_heading?.[0]?.text
                         : null) ||
                       post.slugs[0]?.replace(/-/g, " ") ||
                       post.uid;

@@ -11,13 +11,14 @@ export const revalidate = 0;
 export default async function BlogPost({
   params,
 }: {
-  params: { uid: string };
+  params: Promise<{ uid: string }> | { uid: string };
 }) {
+  const resolvedParams = await params;
   const client = createClient();
-  let page;
+  let page: any;
 
   try {
-    page = await client.getByUID("blog_page", params.uid);
+    page = await client.getByUID("blog_page", resolvedParams.uid);
   } catch (error) {
     return (
       <main className="bg-background min-h-screen flex flex-col">
@@ -26,7 +27,7 @@ export default async function BlogPost({
           <div>
             <h1 className="text-4xl font-bold mb-4">Post Not Found</h1>
             <p className="text-on-surface-variant mb-8">
-              The blog post you are looking for doesn't exist.
+              The blog post you are looking for doesn&apos;t exist.
             </p>
             <Link href="/blog" className="btn btn-primary">
               Back to Blog
@@ -41,14 +42,18 @@ export default async function BlogPost({
   const firstSlice = page.data.slices?.[0];
   const primary = firstSlice?.primary as any;
 
-  const title = 
-    page.data.meta_title || 
-    (primary && "title" in primary ? primary.title?.[0]?.text : null) || 
-    page.slugs[0]?.replace(/-/g, ' ') || 
+  const title =
+    page.data.meta_title ||
+    (primary && "title" in primary ? primary.title?.[0]?.text : null) ||
+    (primary && "post_heading" in primary ? primary.post_heading?.[0]?.text : null) ||
+    page.slugs[0]?.replace(/-/g, " ") ||
     page.uid;
-    
+
   const category = page.tags?.[0] || "Article";
-  const author = "CardYork Team";
+  const author =
+    (primary && "author_name" in primary && Array.isArray(primary.author_name) && primary.author_name[0]?.text) ||
+    "CardYork Team";
+
   const date = new Date(page.first_publication_date).toLocaleDateString(
     "en-US",
     {
@@ -58,7 +63,10 @@ export default async function BlogPost({
     },
   );
 
-  const imageUrl = page.data.meta_image?.url || (primary && "image" in primary ? primary.image?.url : null);
+  const imageUrl =
+    page.data.meta_image?.url ||
+    (primary && "image" in primary ? primary.image?.url : null) ||
+    (primary && "post_image" in primary ? primary.post_image?.url : null);
 
   return (
     <main className="bg-background min-h-screen flex flex-col">
@@ -88,7 +96,7 @@ export default async function BlogPost({
           )}
 
           <div className="glass-card p-8 md:p-12">
-            <div className="prose prose-invert max-w-none text-on-surface-variant leading-loose [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-on-surface [&>h2]:mt-10 [&>h2]:mb-4 [&>p]:mb-6 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-6 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-6 [&>a]:text-primary [&>a]:underline">
+            <div className="prose prose-invert max-w-none text-on-surface-variant leading-loose [&>h2]:text-2xl [&>h2]:font-bold [&>h2]:text-on-surface [&>h2]:mt-10 [&>h2]:mb-4 [&>h3]:text-xl [&>h3]:font-bold [&>h3]:text-on-surface [&>h3]:mt-8 [&>h3]:mb-3 [&>h4]:text-lg [&>h4]:font-bold [&>h4]:text-on-surface [&>h4]:mt-6 [&>h4]:mb-2 [&>p]:mb-6 [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-6 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-6 [&>a]:text-primary [&>a]:underline">
               <SliceZone slices={page.data.slices} components={components} />
             </div>
           </div>

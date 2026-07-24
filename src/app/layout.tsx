@@ -1,42 +1,47 @@
-import type { Metadata } from 'next';
-import './globals.css';
-import ReduxProvider from '@/store/ReduxProvider';
-import { ThemeProvider } from '@/components/ThemeProvider';
-import { CookieManager } from '@/components/CookieManager';
-import ComingSoonModal from '@/components/ComingSoonModal';
-import Toast from '@/components/Toast';
+import type { Metadata } from "next";
+import "./globals.css";
+import ReduxProvider from "@/store/ReduxProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { CookieManager } from "@/components/CookieManager";
+import ComingSoonModal from "@/components/ComingSoonModal";
+import Toast from "@/components/Toast";
 
 export const metadata: Metadata = {
   icons: {
     icon: [
-      { url: '/images/icon.png', sizes: '32x32', type: 'image/png' },
-      { url: '/images/icon.png', sizes: '192x192', type: 'image/png' },
-      { url: '/images/icon.png', sizes: '512x512', type: 'image/png' },
+      { url: "/images/icon.png", sizes: "32x32", type: "image/png" },
+      { url: "/images/icon.png", sizes: "192x192", type: "image/png" },
+      { url: "/images/icon.png", sizes: "512x512", type: "image/png" },
     ],
-    shortcut: '/images/icon.png',
-    apple: [
-      { url: '/images/icon.png', sizes: '180x180', type: 'image/png' },
-    ],
+    shortcut: "/images/icon.png",
+    apple: [{ url: "/images/icon.png", sizes: "180x180", type: "image/png" }],
   },
-  title: 'CardYork — Turn Gift Cards into Instant Cash',
-  description: 'Sell, trade & convert your iTunes, Steam, Amazon, Google, Apple Gift Cards etc to Naira in Nigeria at high rate and get paid instantly. Safe, fast, and secure.',
-  keywords: 'sell gift cards, gift card trading, Nigeria, instant cash, Amazon gift card, iTunes, Steam',
+  title: "Cardyork - Turn Gift Cards into Instant Cash",
+  description:
+    "Sell, trade & convert your iTunes, Steam, Amazon, Google, Apple Gift Cards etc to Naira in Nigeria at high rate and get paid instantly. Safe, fast, and secure.",
+  keywords:
+    "sell gift cards, gift card trading, Nigeria, instant cash, Amazon gift card, iTunes, Steam",
   openGraph: {
-    title: 'CardYork — Best Site To Sell Gift Cards Fast At High Rate In Nigeria',
-    description: 'Get paid within 5 minutes. Secure, fast, and offering the best market rates.',
-    url: 'https://cardyork.com',
-    siteName: 'CardYork',
-    type: 'website',
+    title:
+      "Cardyork - Best Site To Sell Gift Cards Fast At High Rate In Nigeria",
+    description:
+      "Get paid within 5 minutes. Secure, fast, and offering the best market rates.",
+    url: "https://cardyork.com",
+    siteName: "Cardyork",
+    type: "website",
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'CardYork — Turn Gift Cards into Instant Cash',
-    description: 'Trade your gift cards at the best rates in Nigeria.',
+    card: "summary_large_image",
+    title: "Cardyork - Turn Gift Cards into Instant Cash",
+    description: "Trade your gift cards at the best rates in Nigeria.",
   },
-
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
