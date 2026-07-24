@@ -2,15 +2,14 @@
   "id": "alternate_grid",
   "type": "SharedSlice",
   "name": "AlternateGrid",
-  "description": "AlternateGrid",
   "variations": [
     {
       "id": "default",
       "name": "Default",
+      "description": "Default",
+      "imageUrl": "https://images.prismic.io/cardyork-blog/shared-slices/alternate_grid/default/a8fd05ca901d65fbfe91cfb5c2612b8e9c070330.png?auto=compress%2Cformat",
       "docURL": "...",
       "version": "initial",
-      "description": "Default",
-      "imageUrl": "",
       "primary": {
         "eyebrowHeadline": {
           "type": "Text",
@@ -24,8 +23,8 @@
           "config": {
             "label": "title",
             "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading1,heading2,heading3,heading4,heading5,heading6,strong,em"
+            "single": "heading1,heading2,heading3,heading4,heading5,heading6,strong,em",
+            "allowTargetBlank": true
           }
         },
         "description": {
@@ -33,8 +32,8 @@
           "config": {
             "label": "description",
             "placeholder": "",
-            "allowTargetBlank": true,
-            "multi": "paragraph,preformatted,hyperlink,embed,rtl,strong,em,list-item,o-list-item"
+            "multi": "paragraph,preformatted,hyperlink,embed,rtl,strong,em,list-item,o-list-item",
+            "allowTargetBlank": true
           }
         },
         "image": {
@@ -55,8 +54,8 @@
                 "config": {
                   "label": "title",
                   "placeholder": "",
-                  "allowTargetBlank": true,
-                  "single": "heading2,heading3,heading4,heading5,heading6,strong,em"
+                  "single": "heading2,heading3,heading4,heading5,heading6,strong,em",
+                  "allowTargetBlank": true
                 }
               },
               "description": {
@@ -64,8 +63,8 @@
                 "config": {
                   "label": "description",
                   "placeholder": "",
-                  "allowTargetBlank": true,
-                  "multi": "paragraph,preformatted,hyperlink,strong,em,list-item,o-list-item,rtl"
+                  "multi": "paragraph,preformatted,hyperlink,strong,em,list-item,o-list-item,rtl",
+                  "allowTargetBlank": true
                 }
               }
             }
@@ -76,10 +75,10 @@
     {
       "id": "imageRight",
       "name": "Image Right",
+      "description": "Default",
+      "imageUrl": "https://images.prismic.io/cardyork-blog/shared-slices/alternate_grid/imageRight/e79b958f7b04c75a5e962df2f203767dd5e31549.png?auto=compress%2Cformat",
       "docURL": "...",
       "version": "initial",
-      "description": "Default",
-      "imageUrl": "",
       "primary": {
         "eyebrowHeadline": {
           "type": "Text",
@@ -93,8 +92,8 @@
           "config": {
             "label": "title",
             "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading1,heading2,heading3,heading4,heading5,heading6,strong,em"
+            "single": "heading1,heading2,heading3,heading4,heading5,heading6,strong,em",
+            "allowTargetBlank": true
           }
         },
         "description": {
@@ -102,8 +101,8 @@
           "config": {
             "label": "description",
             "placeholder": "",
-            "allowTargetBlank": true,
-            "multi": "paragraph,preformatted,hyperlink,embed,rtl,strong,em,list-item,o-list-item"
+            "multi": "paragraph,preformatted,hyperlink,embed,rtl,strong,em,list-item,o-list-item",
+            "allowTargetBlank": true
           }
         },
         "image": {
@@ -124,8 +123,8 @@
                 "config": {
                   "label": "title",
                   "placeholder": "",
-                  "allowTargetBlank": true,
-                  "single": "heading2,heading3,heading4,heading5,heading6,strong,em"
+                  "single": "heading2,heading3,heading4,heading5,heading6,strong,em",
+                  "allowTargetBlank": true
                 }
               },
               "description": {
@@ -133,8 +132,8 @@
                 "config": {
                   "label": "description",
                   "placeholder": "",
-                  "allowTargetBlank": true,
-                  "multi": "paragraph,preformatted,hyperlink,strong,em,list-item,o-list-item,rtl"
+                  "multi": "paragraph,preformatted,hyperlink,strong,em,list-item,o-list-item,rtl",
+                  "allowTargetBlank": true
                 }
               }
             }
@@ -142,5 +141,6 @@
         }
       }
     }
-  ]
+  ],
+  "description": "AlternateGrid"
 }

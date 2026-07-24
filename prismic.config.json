@@ -1,0 +1,12 @@
+{
+  "repositoryName": "cardyork-blog",
+  "libraries": [
+    "./src/slices"
+  ],
+  "routes": [
+    {
+      "type": "blog_page",
+      "path": "/blog-page/:uid"
+    }
+  ]
+}

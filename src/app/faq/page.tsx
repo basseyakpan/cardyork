@@ -11,7 +11,7 @@ const faqs = [
     questions: [
       {
         q: "How do I sell my gift card?",
-        a: "Open a Cardyork account, choose the gift card you want to sell, provide the required information, upload your card images, and submit your trade. Our team will review and process your transaction promptly.",
+        a: "Sign up for a Cardyork account, choose the gift card you want to sell, provide the required information, upload your card images, and submit your trade. Our team will review and process your transaction promptly.",
       },
       {
         q: "Which gift cards are supported?",

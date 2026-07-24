@@ -198,9 +198,17 @@ export default function Login() {
                   </div>
 
                   <div className="input-group">
-                    <label htmlFor="password" className="input-label">
-                      Password
-                    </label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label htmlFor="password" className="input-label mb-0">
+                        Password
+                      </label>
+                      <Link
+                        href="/forgot-password"
+                        className="text-xs font-semibold text-primary hover:underline transition-colors"
+                      >
+                        Forgot password?
+                      </Link>
+                    </div>
                     <div className="relative">
                       <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant" />
                       <input

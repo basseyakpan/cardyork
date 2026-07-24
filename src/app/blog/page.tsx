@@ -35,8 +35,7 @@ export default async function BlogPage() {
       <div className="flex-1 py-20 px-6">
         <div className="max-w-[1200px] mx-auto mt-12">
           <div className="text-center mb-20">
-            <span className="chip chip-primary mb-4">Cardyork Blog</span>
-            <h1 className="display-sm mb-6">Insights from the </h1>
+            <h1 className="display-md mb-6">Cardyork Blog</h1>
             <p className="text-on-surface-variant text-lg max-w-[600px] mx-auto">
               Stay updated with the latest trends, guides, and tutorials in the
               world of gift card trading.

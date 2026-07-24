@@ -20,10 +20,12 @@ export default function HeroSection() {
   const handleDownloadClick = () => {
     // @ts-ignore
     if (navigator.userAgentData) {
+      // console.log(navigator);
       // @ts-ignore
       navigator.userAgentData
         .getHighEntropyValues(["platform"])
         .then((ua: any) => {
+          console.log(ua);
           if (ua.platform === "Android") {
             router.push(
               "https://play.google.com/store/apps/details?id=com.cardyork.app",
@@ -31,10 +33,16 @@ export default function HeroSection() {
             console.log("User is on Android");
           } else if (ua.platform === "iOS") {
             console.log("User is on iPhone/iPad");
+          } else {
+            router.push(
+              "https://play.google.com/store/apps/details?id=com.cardyork.app",
+            );
           }
         });
     } else {
       const os = getMobileOperatingSystem();
+
+      console.log({ os });
       if (os === "iOS") {
         window.location.href = "/download";
         // router.push("/download");
@@ -44,6 +52,8 @@ export default function HeroSection() {
         );
       }
     }
+
+    // console.log("clicked");
   };
 
   function getMobileOperatingSystem() {
@@ -74,7 +84,7 @@ export default function HeroSection() {
       return "iOS";
     }
 
-    return "unknown";
+    return "Android";
   }
 
   return (

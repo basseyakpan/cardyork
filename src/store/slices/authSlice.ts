@@ -383,6 +383,51 @@ export const updateUserProfile = createAsyncThunk(
   },
 );
 
+export const requestCode = createAsyncThunk(
+  "auth/requestCode",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${BASE_URL}/auth/users/password/sendcode`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      if (!response.ok || data.status === false)
+        return rejectWithValue(data.message || "Failed to send reset code");
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async (
+    payload: { email: string; recoverytoken: string; password: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const response = await fetch(`${BASE_URL}/auth/users/password/reset`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: payload.email,
+          recoverytoken: payload.recoverytoken.toUpperCase(),
+          password: payload.password,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok || data.status === false)
+        return rejectWithValue(data.message || "Failed to reset password");
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
 export const changePassword = createAsyncThunk(
   "auth/changePassword",
   async (
@@ -402,7 +447,7 @@ export const changePassword = createAsyncThunk(
         },
       );
       const data = await response.json();
-      if (!response.ok)
+      if (!response.ok || data.status === false || (data.statusCode && data.statusCode !== "UPDATED"))
         return rejectWithValue(data.message || "Failed to change password");
       return data;
     } catch (error: any) {
@@ -639,6 +684,28 @@ const authSlice = createSlice({
         state.isLoading = false;
       })
       .addCase(changePassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(requestCode.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(requestCode.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(requestCode.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(resetPassword.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       });

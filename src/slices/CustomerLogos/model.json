@@ -2,23 +2,22 @@
   "id": "customer_logos",
   "type": "SharedSlice",
   "name": "CustomerLogos",
-  "description": "CustomerLogos",
   "variations": [
     {
       "id": "default",
       "name": "Default",
+      "description": "Default",
+      "imageUrl": "https://images.prismic.io/cardyork-blog/shared-slices/customer_logos/default/96d383b829f75278aca41e6c70a07ead367a6708.png?auto=compress%2Cformat",
       "docURL": "...",
       "version": "initial",
-      "description": "Default",
-      "imageUrl": "",
       "primary": {
         "eyebrowHeadline": {
           "type": "StructuredText",
           "config": {
             "label": "eyebrowHeadline",
             "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "strong,em,rtl,heading2"
+            "single": "strong,em,rtl,heading2",
+            "allowTargetBlank": true
           }
         },
         "callToActionLink": {
@@ -56,5 +55,6 @@
         }
       }
     }
-  ]
+  ],
+  "description": "CustomerLogos"
 }

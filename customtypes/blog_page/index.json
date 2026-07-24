@@ -2,8 +2,6 @@
   "id": "blog_page",
   "label": "Blog Page",
   "repeatable": true,
-  "status": true,
-  "format": "page",
   "json": {
     "Main": {
       "uid": {
@@ -63,16 +61,11 @@
         "type": "Slices",
         "fieldset": "Slice Zone",
         "config": {
-          "choices": {
-            "hero_section": {
-              "type": "SharedSlice"
-            },
-            "normal_paragraphs": {
-              "type": "SharedSlice"
-            }
-          }
+          "choices": {}
         }
       }
     }
-  }
+  },
+  "status": true,
+  "format": "page"
 }

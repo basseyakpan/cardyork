@@ -2,15 +2,14 @@
   "id": "call_to_action",
   "type": "SharedSlice",
   "name": "CallToAction",
-  "description": "CallToAction",
   "variations": [
     {
       "id": "default",
       "name": "Default",
+      "description": "Default",
+      "imageUrl": "https://images.prismic.io/cardyork-blog/shared-slices/call_to_action/default/4e470a27ca2d29be8fd686449e1f887417e7dbcb.png?auto=compress%2Cformat",
       "docURL": "...",
       "version": "initial",
-      "description": "Default",
-      "imageUrl": "",
       "primary": {
         "image": {
           "type": "Image",
@@ -25,8 +24,8 @@
           "config": {
             "label": "title",
             "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
+            "single": "heading1,heading2,heading3,heading4,heading5,heading6",
+            "allowTargetBlank": true
           }
         },
         "paragraph": {
@@ -34,8 +33,8 @@
           "config": {
             "label": "paragraph",
             "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph,preformatted,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+            "single": "paragraph,preformatted,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
+            "allowTargetBlank": true
           }
         },
         "buttonLink": {
@@ -43,8 +42,8 @@
           "config": {
             "label": "buttonLink",
             "placeholder": "Redirect URL for CTA button",
-            "allowTargetBlank": true,
             "select": null,
+            "allowTargetBlank": true,
             "allowText": true
           }
         }
@@ -54,10 +53,10 @@
     {
       "id": "alignLeft",
       "name": "AlignLeft",
+      "description": "Default",
+      "imageUrl": "https://images.prismic.io/cardyork-blog/shared-slices/call_to_action/alignLeft/2b3619b68048f8127e7b0bfdb42d1a8cf2ef7403.png?auto=compress%2Cformat",
       "docURL": "...",
       "version": "initial",
-      "description": "Default",
-      "imageUrl": "",
       "primary": {
         "image": {
           "type": "Image",
@@ -72,8 +71,8 @@
           "config": {
             "label": "title",
             "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "heading1,heading2,heading3,heading4,heading5,heading6"
+            "single": "heading1,heading2,heading3,heading4,heading5,heading6",
+            "allowTargetBlank": true
           }
         },
         "paragraph": {
@@ -81,8 +80,8 @@
           "config": {
             "label": "paragraph",
             "placeholder": "",
-            "allowTargetBlank": true,
-            "single": "paragraph,preformatted,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+            "single": "paragraph,preformatted,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl",
+            "allowTargetBlank": true
           }
         },
         "buttonLink": {
@@ -90,13 +89,14 @@
           "config": {
             "label": "buttonLink",
             "placeholder": "Redirect URL for CTA button",
-            "allowTargetBlank": true,
             "select": null,
+            "allowTargetBlank": true,
             "allowText": true
           }
         }
       },
       "items": {}
     }
-  ]
+  ],
+  "description": "CallToAction"
 }
