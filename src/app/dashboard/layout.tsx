@@ -11,6 +11,7 @@ import { fetchNotifications } from '@/store/slices/notificationSlice';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiHome, FiCreditCard, FiDollarSign, FiClock, FiUser, FiLogOut, FiMenu, FiX } from 'react-icons/fi';
+import NotificationBell from '@/components/NotificationBell';
 
 const NAV_LINKS = [
   { label: 'Home', href: '/dashboard', icon: FiHome },
@@ -100,6 +101,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Wallet Balance</span>
               <span className="text-lg font-black text-secondary">₦{(wallet?.balance || user.balance || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
+
+            <NotificationBell />
 
             {/* Profile Dropdown */}
             <div className="relative">
