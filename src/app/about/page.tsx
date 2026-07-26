@@ -171,11 +171,14 @@ export default function AboutPage() {
                 width={400}
                 height={800}
                 className="w-full h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] object-contain"
+                style={{ maskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 75%, transparent 100%)' }}
                 priority
               />
             </div>
           </div>
         </div>
+        {/* Section transition blend */}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white dark:from-surface-container-low to-transparent pointer-events-none z-20" />
       </section>
 
       {/* ── Who We Are ── */}
@@ -191,13 +194,17 @@ export default function AboutPage() {
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
+              {/* Blend overlay */}
+              <div className="absolute inset-x-0 -bottom-1 h-1/2 bg-gradient-to-t from-white dark:from-surface-container-low to-transparent pointer-events-none z-[5]" />
               {/* Trust badge overlay */}
-              <div className="absolute bottom-4 left-4 flex items-center gap-3 bg-primary text-white px-4 py-2.5 rounded-xl shadow-lg z-10">
-                <FiShield className="w-6 h-6" />
+              <div className="absolute bottom-4 left-4 flex items-center gap-3 bg-white dark:bg-surface-container-high text-on-surface px-4 py-2.5 rounded-xl shadow-lg z-10 border border-black/5 dark:border-white/5">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <FiShield className="w-4 h-4 text-primary" />
+                </div>
                 <span className="text-xs font-semibold leading-tight">
                   Trusted by thousands
                   <br />
-                  of users across Nigeria
+                  <span className="text-on-surface-variant font-medium">of users across Nigeria</span>
                 </span>
               </div>
             </div>

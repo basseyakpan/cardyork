@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { FiMail, FiPhone, FiGlobe, FiMessageSquare } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -40,6 +41,10 @@ export default function ContactPage() {
                 <a href="tel:+2348026846656" className="flex items-center justify-center gap-3 p-4 bg-surface-container rounded-xl hover:bg-surface-container-high transition-colors">
                   <FiPhone className="text-primary w-5 h-5" />
                   <span className="font-semibold text-on-surface">+234-802-684-6656</span>
+                </a>
+                <a href="https://wa.me/2348026846656" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-3 p-4 bg-[#25D366]/10 text-[#25D366] rounded-xl hover:bg-[#25D366]/20 transition-colors">
+                  <FaWhatsapp className="w-5 h-5" />
+                  <span className="font-semibold">WhatsApp Us</span>
                 </a>
               </div>
             </div>

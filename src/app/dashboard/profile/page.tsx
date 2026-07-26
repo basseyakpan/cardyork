@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import AddBankAccountModal from "@/components/AddBankAccountModal";
 import ChangePasswordModal from "@/components/ChangePasswordModal";
 import UpdatePinModal from "@/components/UpdatePinModal";
+import DirectContactModal from "@/components/DirectContactModal";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -20,6 +21,7 @@ export default function ProfilePage() {
   const [isAddBankModalOpen, setIsAddBankModalOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [isUpdatePinOpen, setIsUpdatePinOpen] = useState(false);
+  const [isDirectContactOpen, setIsDirectContactOpen] = useState(false);
 
   const [is2FAEnabled, setIs2FAEnabled] = useState(false); // Default local state
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
@@ -346,7 +348,10 @@ export default function ProfilePage() {
             </svg>
           </button>
 
-          <button className="flex items-center gap-4 p-5 hover:bg-surface-container transition-colors text-left">
+          <button 
+            onClick={() => setIsDirectContactOpen(true)}
+            className="flex items-center gap-4 p-5 hover:bg-surface-container transition-colors text-left"
+          >
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
               <svg
                 className="w-5 h-5"
@@ -402,6 +407,10 @@ export default function ProfilePage() {
       <UpdatePinModal
         isOpen={isUpdatePinOpen}
         onClose={() => setIsUpdatePinOpen(false)}
+      />
+      <DirectContactModal
+        isOpen={isDirectContactOpen}
+        onClose={() => setIsDirectContactOpen(false)}
       />
     </div>
   );
