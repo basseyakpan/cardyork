@@ -1,9 +1,20 @@
+"use client";
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaApple, FaGooglePlay } from 'react-icons/fa';
 import { FiSmartphone } from 'react-icons/fi';
+import { useState } from 'react';
 
 export default function BlogAppDownload() {
+  const [iphoneDownloadText, setIphoneDownloadText] = useState<string | null>(null);
+  const handleIphoneDownLoadClick = () => {
+    setIphoneDownloadText("Coming Soon...");
+
+    setTimeout(() => {
+      setIphoneDownloadText(null);
+    }, 5000);
+  };
+
   return (
     <section className="py-20 bg-background relative overflow-hidden">
       <div className="max-w-[1200px] mx-auto px-6">
@@ -32,18 +43,25 @@ export default function BlogAppDownload() {
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
                 <Link
-                  href="/download/ios"
-                  className="flex items-center justify-center gap-3 bg-black text-white px-6 py-3.5 rounded-xl hover:opacity-90 transition-opacity shadow-lg"
+                  href={"#"}
+                  onClick={handleIphoneDownLoadClick}
+                  className={`flex items-center justify-center gap-3 bg-black text-white px-6 py-3.5 rounded-xl hover:opacity-90 transition-opacity shadow-lg cursor-pointer ${iphoneDownloadText ? "animate-pulse" : ""}`}
                 >
                   <FaApple className="text-2xl" />
-                  <div className="flex flex-col leading-tight text-left">
-                    <span className="text-[9px] font-medium uppercase tracking-widest opacity-70">Download on the</span>
-                    <span className="font-bold text-sm">App Store</span>
-                  </div>
+                  {iphoneDownloadText ? (
+                    <span className="font-bold text-sm px-2">{iphoneDownloadText}</span>
+                  ) : (
+                    <div className="flex flex-col leading-tight text-left">
+                      <span className="text-[9px] font-medium uppercase tracking-widest opacity-70">Download on the</span>
+                      <span className="font-bold text-sm">App Store</span>
+                    </div>
+                  )}
                 </Link>
                 <Link
-                  href="/download/android"
-                  className="flex items-center justify-center gap-3 bg-black text-white px-6 py-3.5 rounded-xl hover:opacity-90 transition-opacity shadow-lg"
+                  href="https://play.google.com/store/apps/details?id=com.cardyork.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 bg-black text-white px-6 py-3.5 rounded-xl hover:opacity-90 transition-opacity shadow-lg no-underline"
                 >
                   <FaGooglePlay className="text-2xl" />
                   <div className="flex flex-col leading-tight text-left">

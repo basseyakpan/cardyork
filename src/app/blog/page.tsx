@@ -6,10 +6,17 @@ import { createClient } from "@/prismicio";
 
 export const revalidate = 0;
 
-export default async function BlogPage() {
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; tag?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+  const query = resolvedSearchParams?.q?.toLowerCase() || "";
+  const tagFilter = resolvedSearchParams?.tag?.toLowerCase() || "";
+
   const client = createClient();
   let prismicPosts: any = [];
-  console.log({ prismicPosts });
 
   try {
     prismicPosts = await client.getAllByType("blog_page", {
@@ -24,9 +31,55 @@ export default async function BlogPage() {
     );
   }
 
-  // Fallback if no posts are found
-  const posts = prismicPosts.length > 0 ? prismicPosts : [];
-  console.log({ posts });
+  // Get all unique tags before filtering
+  const allTags = Array.from(
+    new Set(prismicPosts.flatMap((post: any) => post.tags || [])),
+  ) as string[];
+
+  let posts = prismicPosts.length > 0 ? prismicPosts : [];
+
+  if (query) {
+    posts = posts.filter((post: any) => {
+      const firstSlice = post.data.slices?.[0];
+      const primary = firstSlice?.primary as any;
+      const title = (post.data.meta_title ||
+        (primary && "title" in primary ? primary.title?.[0]?.text : null) ||
+        (primary && "post_heading" in primary
+          ? primary.post_heading?.[0]?.text
+          : null) ||
+        post.slugs[0]?.replace(/-/g, " ") ||
+        post.uid) as string;
+
+      // Look through slices for rich_text paragraph content if meta_description isn't set
+      const richTextSlice = post.data.slices?.find(
+        (s: any) => s.slice_type === "rich_text",
+      );
+      const firstParagraph = richTextSlice?.primary?.paragraph_text?.find(
+        (p: any) => p.type === "paragraph",
+      )?.text as string | undefined;
+
+      const excerpt = (post.data.meta_description ||
+        (primary && "description" in primary
+          ? primary.description?.[0]?.text
+          : null) ||
+        firstParagraph ||
+        "") as string;
+
+      return (
+        title?.toLowerCase().includes(query) ||
+        excerpt?.toLowerCase().includes(query)
+      );
+    });
+  }
+
+  if (tagFilter) {
+    posts = posts.filter((post: any) => {
+      const tags = post.tags?.map((t: string) => t.toLowerCase()) || [];
+      return tags.includes(tagFilter);
+    });
+  }
+
+  console.log(posts.slice(0, 2));
 
   return (
     <main className="bg-background min-h-screen flex flex-col">
@@ -47,7 +100,14 @@ export default async function BlogPage() {
             <div className="lg:col-span-8 flex flex-col gap-10">
               {posts.length === 0 ? (
                 <div className="glass-card p-12 text-center text-on-surface-variant">
-                  No blog posts found. Publish some in Prismic!
+                  No blog posts found matching your criteria.
+                  {(query || tagFilter) && (
+                    <div className="mt-4">
+                      <Link href="/blog" className="btn btn-primary">
+                        Clear Filters
+                      </Link>
+                    </div>
+                  )}
                 </div>
               ) : (
                 posts.map((post: any) => {
@@ -116,11 +176,11 @@ export default async function BlogPage() {
                     >
                       <article className="glass-card overflow-hidden flex flex-col md:flex-row group cursor-pointer hover:border-primary/20">
                         {imageUrl ? (
-                          <div className="md:w-64 h-48 flex-shrink-0 relative overflow-hidden bg-surface-container-high">
+                          <div className="md:w-72 md:h-auto h-56 flex-shrink-0 relative overflow-hidden bg-surface-container flex items-center justify-center p-2">
                             <img
                               src={imageUrl}
                               alt={title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 rounded-md"
                             />
                           </div>
                         ) : (
@@ -156,11 +216,88 @@ export default async function BlogPage() {
             {/* Sidebar */}
             <aside className="lg:col-span-4 flex flex-col gap-8">
               <div className="glass-card p-6">
+                <h3 className="text-lg font-bold mb-4 text-on-surface">
+                  Search
+                </h3>
+                <form
+                  action="/blog"
+                  method="GET"
+                  className="flex flex-col gap-3"
+                >
+                  {tagFilter && (
+                    <input type="hidden" name="tag" value={tagFilter} />
+                  )}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      name="q"
+                      defaultValue={query}
+                      placeholder="Search posts..."
+                      className="input-field py-2.5 pl-10 w-full"
+                    />
+                    <svg
+                      className="w-4 h-4 absolute left-3 top-3.5 text-on-surface-variant"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-sm w-full"
+                  >
+                    Search
+                  </button>
+                </form>
+              </div>
+
+              {allTags.length > 0 && (
+                <div className="glass-card p-6">
+                  <h3 className="text-lg font-bold mb-4 text-on-surface">
+                    Categories
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      href={`/blog${query ? `?q=${query}` : ""}`}
+                      className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
+                        !tagFilter
+                          ? "bg-primary text-on-primary"
+                          : "bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest"
+                      }`}
+                    >
+                      All
+                    </Link>
+                    {allTags.map((tag: string) => (
+                      <Link
+                        key={tag}
+                        href={`/blog?tag=${tag}${query ? `&q=${query}` : ""}`}
+                        className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${
+                          tagFilter === tag.toLowerCase()
+                            ? "bg-primary text-on-primary"
+                            : "bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest"
+                        }`}
+                      >
+                        {tag}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="glass-card p-6">
                 <h3 className="text-lg font-bold mb-6 text-on-surface">
                   Recent Posts
                 </h3>
                 <div className="flex flex-col gap-6">
-                  {posts.slice(0, 6).map((post: any) => {
+                  {prismicPosts.slice(0, 6).map((post: any) => {
                     const firstSlice = post.data.slices?.[0];
                     const primary = firstSlice?.primary as any;
                     const title =
@@ -189,7 +326,7 @@ export default async function BlogPage() {
                       </Link>
                     );
                   })}
-                  {posts.length === 0 && (
+                  {prismicPosts.length === 0 && (
                     <span className="text-sm text-on-surface-variant">
                       No recent posts.
                     </span>

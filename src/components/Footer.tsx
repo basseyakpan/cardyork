@@ -23,11 +23,12 @@ const FOOTER_LINKS = {
     { label: "49 Sylvanus Okon, Uyo, Akwa Ibom, 520103", href: "#" },
   ],
   giftCards: [
-    { label: "Steam", href: "/sell-gift-cards/steam" },
-    { label: "Apple", href: "/sell-gift-cards/apple" },
-    { label: "Razer gold", href: "/sell-gift-cards/razer-gold" },
-    { label: "Xbox", href: "/sell-gift-cards/xbox" },
-    { label: "Playstation", href: "/sell-gift-cards/playstation" },
+    { label: "Steam", href: "/blog/how-to-sell-steam-gift-cards-for-naira-in-nigeria" },
+    { label: "Apple", href: "/blog/how-to-sell-apple-gift-cards-for-naira-in-nigeria" },
+    { label: "Sephora", href: "/blog/how-to-sell-sephora-gift-cards-in-nigeria" },
+    { label: "Razer Gold", href: "/blog/how-to-sell-razer-gold-gift-cards-in-nigeria-compl" },
+    { label: "Xbox", href: "/blog/how-to-sell-xbox-gift-cards-for-naira-in-nigeria" },
+    { label: "Playstation", href: "/blog/how-to-sell-playstation-gift-cards-for-naira-in-ni" },
   ],
 };
 

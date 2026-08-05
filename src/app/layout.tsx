@@ -16,6 +16,8 @@ export const metadata: Metadata = {
     shortcut: "/images/icon.png",
     apple: [{ url: "/images/icon.png", sizes: "180x180", type: "image/png" }],
   },
+  verification: { google: "9oRG5Ir5nE-02RQXNYKWVym4LLymWL-Hwfbkw05nZkQ" },
+
   title: "Cardyork - Turn Gift Cards into Instant Cash",
   description:
     "Sell, trade & convert your iTunes, Steam, Amazon, Google, Apple Gift Cards etc to Naira in Nigeria at high rate and get paid instantly. Safe, fast, and secure.",

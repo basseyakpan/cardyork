@@ -15,7 +15,7 @@ const faqs = [
       },
       {
         q: "Which gift cards are supported?",
-        a: "We support more than 100 gift card brands, including Amazon, Apple, Google Play, Steam, PlayStation, Xbox, Walmart, Target, Sephora, Nike, and many others.",
+        a: "We support more than 100 gift card brands, including Apple, Razer gold , Footlocker, Sephora, Steam, Xbox, Macy, Nordstrom, PlayStation, Nike  and many others.",
       },
       {
         q: "How long does it take to verify my card?",
