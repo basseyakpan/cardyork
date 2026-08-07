@@ -1,14 +1,32 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**',
+        protocol: "https",
+        hostname: "**",
       },
     ],
+  },
+  async redirects() {
+    return [
+      {
+        source: "/sell-gift-cards",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/gift-card-brands",
+        destination: "/blog",
+        permanent: true,
+      },
+      {
+        source: "/gift-cards-brands",
+        destination: "/blog",
+        permanent: true,
+      },
+    ];
   },
 };
 

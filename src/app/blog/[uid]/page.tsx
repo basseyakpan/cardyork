@@ -152,7 +152,7 @@ export default async function BlogPost({
 
               {/* Hero Image */}
               {imageUrl && (
-                <div className="w-full aspect-[16/8] rounded-xl overflow-hidden mb-12 bg-surface-container flex items-center justify-center">
+                <div className="w-full aspect-[16/9] rounded-xl overflow-hidden mb-12 bg-surface-container flex items-center justify-center">
                   <img
                     src={imageUrl}
                     alt={title}

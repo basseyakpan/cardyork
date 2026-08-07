@@ -9,7 +9,7 @@ export const revalidate = 0;
 export default async function BlogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; tag?: string }>;
+  searchParams: Promise<{ q?: string; tag?: string; page?: string }>;
 }) {
   const resolvedSearchParams = await searchParams;
   const query = resolvedSearchParams?.q?.toLowerCase() || "";
@@ -75,8 +75,32 @@ export default async function BlogPage({
     });
   }
 
-  const featuredPost = posts[0];
-  const listPosts = posts.slice(1);
+  const ITEMS_PER_PAGE = 5;
+  const totalPosts = posts.length;
+  const totalPages = Math.ceil(totalPosts / ITEMS_PER_PAGE);
+  const currentPage = Math.max(
+    1,
+    Math.min(totalPages || 1, parseInt(resolvedSearchParams?.page || "1", 10)),
+  );
+
+  const isFirstPageWithoutFilter = currentPage === 1 && !query && !tagFilter;
+  const featuredPost = isFirstPageWithoutFilter ? posts[0] : null;
+
+  const displayPosts = isFirstPageWithoutFilter
+    ? posts.slice(1, ITEMS_PER_PAGE)
+    : posts.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE,
+      );
+
+  function getPageUrl(pageNum: number) {
+    const params = new URLSearchParams();
+    if (query) params.set("q", query);
+    if (tagFilter) params.set("tag", tagFilter);
+    if (pageNum > 1) params.set("page", pageNum.toString());
+    const queryString = params.toString();
+    return `/blog${queryString ? `?${queryString}` : ""}`;
+  }
 
   function extractPostData(post: any) {
     const firstSlice = post.data.slices?.[0];
@@ -144,14 +168,20 @@ export default async function BlogPage({
 
           {/* Search + Tags Bar */}
           <div className="mt-10 flex flex-col sm:flex-row gap-4 items-center justify-center">
-            <form action="/blog" method="GET" className="relative w-full max-w-xs">
-              {tagFilter && <input type="hidden" name="tag" value={tagFilter} />}
+            <form
+              action="/blog"
+              method="GET"
+              className="relative w-full max-w-xs"
+            >
+              {tagFilter && (
+                <input type="hidden" name="tag" value={tagFilter} />
+              )}
               <input
                 type="text"
                 name="q"
                 defaultValue={query}
                 placeholder="Search articles..."
-                className="input-field py-2.5 pl-10 pr-4 text-sm"
+                className="input-field py-2.5 pl-10 pr-4 text-sm border-2"
               />
               <svg
                 className="w-4 h-4 absolute left-3 top-3.5 text-on-surface-variant"
@@ -205,7 +235,9 @@ export default async function BlogPage({
             <div className="py-24 text-center text-on-surface-variant">
               <p className="text-5xl mb-6">📰</p>
               <p className="text-xl font-semibold mb-2">No articles found</p>
-              <p className="text-sm mb-6">Try adjusting your search or filter.</p>
+              <p className="text-sm mb-6">
+                Try adjusting your search or filter.
+              </p>
               {(query || tagFilter) && (
                 <Link href="/blog" className="btn btn-primary">
                   Clear Filters
@@ -216,103 +248,153 @@ export default async function BlogPage({
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-16 gap-y-12">
               {/* Main Feed */}
               <div className="lg:col-span-8">
-
                 {/* Featured Post */}
-                {featuredPost && !query && !tagFilter && (() => {
-                  const { title, excerpt, category, author, imageUrl, date } =
-                    extractPostData(featuredPost);
-                  return (
-                    <Link
-                      href={`/blog/${featuredPost.uid}`}
-                      className="no-underline block group mb-14 pb-14 border-b border-outline-variant"
-                    >
-                      {imageUrl && (
-                        <div className="w-full aspect-[16/7] rounded-xl overflow-hidden mb-8 bg-surface-container flex items-center justify-center">
-                          <img
-                            src={imageUrl}
-                            alt={title}
-                            className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-700"
-                          />
-                        </div>
-                      )}
-                      <div className="flex items-center gap-3 mb-4 text-[11px] font-bold uppercase tracking-[0.2em]">
-                        <span className="text-primary">{category}</span>
-                        <span className="w-1 h-1 rounded-full bg-on-surface-variant/40" />
-                        <span className="text-on-surface-variant">{date}</span>
-                        <span className="ml-auto px-2 py-0.5 text-[10px] bg-primary/10 text-primary rounded-full border border-primary/20">
-                          Featured
-                        </span>
-                      </div>
-                      <h2
-                        className="text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-on-surface group-hover:text-primary transition-colors mb-4"
-                        style={{ fontFamily: "'Poppins', sans-serif" }}
+                {featuredPost &&
+                  (() => {
+                    const { title, excerpt, category, author, imageUrl, date } =
+                      extractPostData(featuredPost);
+                    return (
+                      <Link
+                        href={`/blog/${featuredPost.uid}`}
+                        className="no-underline block group mb-14 pb-14 border-b border-outline-variant"
                       >
-                        {title}
-                      </h2>
-                      <p className="text-on-surface-variant leading-relaxed line-clamp-2 mb-5 text-base">
-                        {excerpt}
-                      </p>
-                      <span className="text-sm font-semibold text-primary group-hover:underline">
-                        Read article →
-                      </span>
-                    </Link>
-                  );
-                })()}
+                        {imageUrl && (
+                          <div className="w-full aspect-[16/9] rounded-xl overflow-hidden mb-8 bg-surface-container flex items-center justify-center">
+                            <img
+                              src={imageUrl}
+                              alt={title}
+                              className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-700"
+                            />
+                          </div>
+                        )}
+                        <div className="flex items-center gap-3 mb-4 text-[11px] font-bold uppercase tracking-[0.2em]">
+                          <span className="text-primary">{category}</span>
+                          <span className="w-1 h-1 rounded-full bg-on-surface-variant/40" />
+                          <span className="text-on-surface-variant">
+                            {date}
+                          </span>
+                          <span className="ml-auto px-2 py-0.5 text-[10px] bg-primary/10 text-primary rounded-full border border-primary/20">
+                            Featured
+                          </span>
+                        </div>
+                        <h2
+                          className="text-[clamp(1.75rem,4vw,2.75rem)] font-bold leading-tight text-on-surface group-hover:text-primary transition-colors mb-4"
+                          style={{ fontFamily: "'Poppins', sans-serif" }}
+                        >
+                          {title}
+                        </h2>
+                        <p className="text-on-surface-variant leading-relaxed line-clamp-2 mb-5 text-base">
+                          {excerpt}
+                        </p>
+                        <span className="text-sm font-semibold text-primary group-hover:underline">
+                          Read article →
+                        </span>
+                      </Link>
+                    );
+                  })()}
 
                 {/* Post List */}
                 <div className="flex flex-col divide-y divide-outline-variant">
-                  {(featuredPost && !query && !tagFilter ? listPosts : posts).map(
-                    (post: any) => {
-                      const { title, excerpt, category, author, imageUrl, date } =
-                        extractPostData(post);
-                      return (
-                        <Link
-                          href={`/blog/${post.uid}`}
-                          key={post.id}
-                          className="no-underline group py-10 flex gap-6 md:gap-10 items-start"
-                        >
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-3 mb-3 text-[10px] font-bold uppercase tracking-[0.2em]">
-                              <span className="text-primary">{category}</span>
-                              <span className="w-1 h-1 rounded-full bg-on-surface-variant/40" />
-                              <span className="text-on-surface-variant">{date}</span>
-                            </div>
-                            <h3
-                              className="text-xl md:text-2xl font-bold leading-tight text-on-surface group-hover:text-primary transition-colors mb-3"
-                              style={{ fontFamily: "'Poppins', sans-serif" }}
-                            >
-                              {title}
-                            </h3>
-                            <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2 mb-3">
-                              {excerpt}
-                            </p>
-                            <span className="text-xs font-semibold text-on-surface-variant">
-                              By {author}
+                  {displayPosts.map((post: any) => {
+                    const { title, excerpt, category, author, imageUrl, date } =
+                      extractPostData(post);
+                    return (
+                      <Link
+                        href={`/blog/${post.uid}`}
+                        key={post.id}
+                        className="no-underline group py-10 flex gap-6 md:gap-10 items-start"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-3 mb-3 text-[10px] font-bold uppercase tracking-[0.2em]">
+                            <span className="text-primary">{category}</span>
+                            <span className="w-1 h-1 rounded-full bg-on-surface-variant/40" />
+                            <span className="text-on-surface-variant">
+                              {date}
                             </span>
                           </div>
-                          {imageUrl && (
-                            <div className="flex-shrink-0 w-28 h-20 md:w-40 md:h-28 rounded-lg overflow-hidden bg-surface-container flex items-center justify-center">
-                              <img
-                                src={imageUrl}
-                                alt={title}
-                                className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-                              />
-                            </div>
-                          )}
-                        </Link>
-                      );
-                    },
-                  )}
+                          <h3
+                            className="text-xl md:text-2xl font-bold leading-tight text-on-surface group-hover:text-primary transition-colors mb-3"
+                            style={{ fontFamily: "'Poppins', sans-serif" }}
+                          >
+                            {title}
+                          </h3>
+                          <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2 mb-3">
+                            {excerpt}
+                          </p>
+                          <span className="text-xs font-semibold text-on-surface-variant">
+                            By {author}
+                          </span>
+                        </div>
+                        {imageUrl && (
+                          <div className="flex-shrink-0 w-28 md:w-40 aspect-[16/9] rounded-sm overflow-hidden bg-surface-container flex items-center justify-center">
+                            <img
+                              src={imageUrl}
+                              alt={title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                          </div>
+                        )}
+                      </Link>
+                    );
+                  })}
                 </div>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                  <div className="mt-12 pt-8 border-t border-outline-variant flex items-center justify-between gap-4">
+                    <Link
+                      href={getPageUrl(currentPage - 1)}
+                      className={`px-4 py-2 rounded-lg text-sm font-semibold border transition-colors ${
+                        currentPage > 1
+                          ? "border-outline-variant text-on-surface hover:border-primary hover:text-primary"
+                          : "border-outline-variant/40 text-on-surface-variant/40 pointer-events-none opacity-40"
+                      }`}
+                      aria-disabled={currentPage <= 1}
+                    >
+                      ← Previous
+                    </Link>
+
+                    <div className="flex items-center gap-1.5 flex-wrap justify-center">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                        (pageNum) => (
+                          <Link
+                            key={pageNum}
+                            href={getPageUrl(pageNum)}
+                            className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-semibold transition-colors ${
+                              pageNum === currentPage
+                                ? "bg-primary text-on-primary font-bold"
+                                : "border border-outline-variant/60 text-on-surface-variant hover:border-primary hover:text-primary"
+                            }`}
+                          >
+                            {pageNum}
+                          </Link>
+                        ),
+                      )}
+                    </div>
+
+                    <Link
+                      href={getPageUrl(currentPage + 1)}
+                      className={`px-4 py-2 rounded-lg text-sm font-semibold border transition-colors ${
+                        currentPage < totalPages
+                          ? "border-outline-variant text-on-surface hover:border-primary hover:text-primary"
+                          : "border-outline-variant/40 text-on-surface-variant/40 pointer-events-none opacity-40"
+                      }`}
+                      aria-disabled={currentPage >= totalPages}
+                    >
+                      Next →
+                    </Link>
+                  </div>
+                )}
               </div>
 
               {/* Sidebar */}
               <aside className="lg:col-span-4">
                 <div className="sticky top-24 flex flex-col gap-10">
-
                   {/* Recent Posts */}
                   <div className="rounded-xl border border-outline-variant bg-surface-container-low p-6">
-                    <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-on-surface-variant mb-6 pb-4 border-b border-outline-variant">Recent Posts</h3>
+                    <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-on-surface-variant mb-6 pb-4 border-b border-outline-variant">
+                      Recent Posts
+                    </h3>
                     <div className="flex flex-col gap-6">
                       {prismicPosts.slice(0, 6).map((post: any) => {
                         const firstSlice = post.data.slices?.[0];
