@@ -73,7 +73,7 @@ export default function BlogStickyBanner() {
               Download Cardyork App
             </p>
             <p className="text-xs text-on-surface-variant mt-0.5 leading-relaxed">
-              Sell your gift cards at the best rates and get paid in seconds.
+              Sell Your Gift Cards instantly - Fast, Secure & Reliable.
             </p>
           </div>
 
