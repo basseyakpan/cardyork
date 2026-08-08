@@ -70,7 +70,7 @@ export default function BlogStickyBanner() {
           {/* Copy */}
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-on-surface leading-tight">
-              Download Cardyork App
+              Download Cardyork
             </p>
             <p className="text-xs text-on-surface-variant mt-0.5 leading-relaxed">
               Sell Your Gift Cards instantly - Fast, Secure & Reliable.
