@@ -49,9 +49,12 @@ export default async function BlogPage({
         post.uid) as string;
 
       const richTextSlice = post.data.slices?.find(
-        (s: any) => s.slice_type === "rich_text" || s.slice_type === "text_blog",
+        (s: any) =>
+          s.slice_type === "rich_text" || s.slice_type === "text_blog",
       );
-      const textArray = richTextSlice?.primary?.paragraph_text || richTextSlice?.primary?.rich_text_editor;
+      const textArray =
+        richTextSlice?.primary?.paragraph_text ||
+        richTextSlice?.primary?.rich_text_editor;
       const firstParagraph = textArray?.find(
         (p: any) => p.type === "paragraph" && p.text?.trim(),
       )?.text as string | undefined;
@@ -118,7 +121,9 @@ export default async function BlogPage({
     const richTextSlice = post.data.slices?.find(
       (s: any) => s.slice_type === "rich_text" || s.slice_type === "text_blog",
     );
-    const textArray = richTextSlice?.primary?.paragraph_text || richTextSlice?.primary?.rich_text_editor;
+    const textArray =
+      richTextSlice?.primary?.paragraph_text ||
+      richTextSlice?.primary?.rich_text_editor;
     const firstParagraph = textArray?.find(
       (p: any) => p.type === "paragraph" && p.text?.trim(),
     )?.text;
@@ -186,7 +191,7 @@ export default async function BlogPage({
                 name="q"
                 defaultValue={query}
                 placeholder="Search articles..."
-                className="input-field py-2.5 pl-10 pr-4 text-sm border-2"
+                className="input-field py-2.5 pl-10 pr-4 text-sm border-2 border-blue-200"
               />
               <svg
                 className="w-4 h-4 absolute left-3 top-3.5 text-on-surface-variant"
