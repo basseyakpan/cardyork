@@ -2,6 +2,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogAppDownload from "@/components/blog/BlogAppDownload";
+import BlogStickyBanner from "@/components/blog/BlogStickyBanner";
 import { createClient } from "@/prismicio";
 
 export const revalidate = 0;
@@ -48,10 +49,11 @@ export default async function BlogPage({
         post.uid) as string;
 
       const richTextSlice = post.data.slices?.find(
-        (s: any) => s.slice_type === "rich_text",
+        (s: any) => s.slice_type === "rich_text" || s.slice_type === "text_blog",
       );
-      const firstParagraph = richTextSlice?.primary?.paragraph_text?.find(
-        (p: any) => p.type === "paragraph",
+      const textArray = richTextSlice?.primary?.paragraph_text || richTextSlice?.primary?.rich_text_editor;
+      const firstParagraph = textArray?.find(
+        (p: any) => p.type === "paragraph" && p.text?.trim(),
       )?.text as string | undefined;
 
       const excerpt = (post.data.meta_description ||
@@ -114,10 +116,11 @@ export default async function BlogPage({
       post.slugs[0]?.replace(/-/g, " ") ||
       post.uid;
     const richTextSlice = post.data.slices?.find(
-      (s: any) => s.slice_type === "rich_text",
+      (s: any) => s.slice_type === "rich_text" || s.slice_type === "text_blog",
     );
-    const firstParagraph = richTextSlice?.primary?.paragraph_text?.find(
-      (p: any) => p.type === "paragraph",
+    const textArray = richTextSlice?.primary?.paragraph_text || richTextSlice?.primary?.rich_text_editor;
+    const firstParagraph = textArray?.find(
+      (p: any) => p.type === "paragraph" && p.text?.trim(),
     )?.text;
     const excerpt =
       post.data.meta_description ||
@@ -143,6 +146,8 @@ export default async function BlogPage({
     );
     return { title, excerpt, category, author, imageUrl, date };
   }
+
+  console.log("blog post log", posts.slice(0, 2));
 
   return (
     <main className="bg-background min-h-screen flex flex-col">
@@ -516,6 +521,7 @@ export default async function BlogPage({
 
       <BlogAppDownload />
       <Footer />
+      <BlogStickyBanner />
     </main>
   );
 }

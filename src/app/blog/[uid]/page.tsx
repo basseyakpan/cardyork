@@ -1,10 +1,11 @@
 import { createClient } from "@/prismicio";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { SliceZone } from "@prismicio/react";
+import { SliceZone, PrismicRichText } from "@prismicio/react";
 import { components } from "@/slices";
 import Link from "next/link";
 import BlogAppDownload from "@/components/blog/BlogAppDownload";
+import BlogStickyBanner from "@/components/blog/BlogStickyBanner";
 
 export const revalidate = 0;
 
@@ -165,9 +166,12 @@ export default async function BlogPost({
               <div
                 className="
                   text-on-surface-variant leading-[1.9] text-[1.0625rem]
+                  [&_h1]:font-bold [&_h1]:text-on-surface [&_h1]:text-3xl [&_h1]:mt-14 [&_h1]:mb-6 [&_h1]:leading-tight
                   [&_h2]:font-bold [&_h2]:text-on-surface [&_h2]:text-2xl [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:leading-tight
                   [&_h3]:font-bold [&_h3]:text-on-surface [&_h3]:text-xl [&_h3]:mt-10 [&_h3]:mb-3 [&_h3]:leading-tight
                   [&_h4]:font-bold [&_h4]:text-on-surface [&_h4]:text-lg [&_h4]:mt-8 [&_h4]:mb-2
+                  [&_h5]:font-bold [&_h5]:text-on-surface [&_h5]:text-base [&_h5]:mt-6 [&_h5]:mb-2
+                  [&_h6]:font-bold [&_h6]:text-on-surface [&_h6]:text-sm [&_h6]:mt-6 [&_h6]:mb-2
                   [&_p]:mb-7
                   [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-6 [&_ul]:space-y-2
                   [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-6 [&_ol]:space-y-2
@@ -180,7 +184,15 @@ export default async function BlogPost({
                   [&_img]:rounded-lg [&_img]:my-6 [&_img]:max-w-full
                 "
               >
-                <SliceZone slices={page.data.slices} components={components} />
+                {page.data.slices?.map((slice: any, index: number) => {
+                  if (slice.slice_type === "text_blog" || slice.slice_type === "rich_text") {
+                    const textArray = slice.primary?.rich_text_editor || slice.primary?.paragraph_text;
+                    if (textArray) {
+                      return <PrismicRichText key={index} field={textArray} />;
+                    }
+                  }
+                  return <SliceZone key={index} slices={[slice]} components={components} />;
+                })}
               </div>
 
               {/* Footer Actions */}
@@ -300,6 +312,7 @@ export default async function BlogPost({
 
       <BlogAppDownload />
       <Footer />
+      <BlogStickyBanner />
     </main>
   );
 }
