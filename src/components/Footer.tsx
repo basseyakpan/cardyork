@@ -20,7 +20,6 @@ const FOOTER_LINKS = {
     { label: "+234-802-684-6656", href: "tel:+2348026846656" },
     { label: "support@cardyork.com", href: "mailto:support@cardyork.com" },
     { label: "partners@Cardyork.com", href: "mailto:Partners@Cardyork.com" },
-    { label: "49 Sylvanus Okon, Uyo, Akwa Ibom, 520103", href: "#" },
   ],
   giftCards: [
     { label: "Steam", href: "/blog/how-to-sell-steam-gift-cards-for-naira-in-nigeria" },

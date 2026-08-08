@@ -5,10 +5,34 @@ import Link from 'next/link';
 export default function BrandsBar() {
   const brandList = [
     {
-      id: 'xbox',
+      id: 'apple',
       el: (
-        <span className="text-3xl font-black tracking-tighter uppercase" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>
-          XBOX
+        <span className="text-3xl font-medium tracking-tight" style={{ fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif' }}>
+          Apple
+        </span>
+      ),
+    },
+    {
+      id: 'razer',
+      el: (
+        <span className="text-2xl font-bold tracking-widest uppercase border-2 border-current px-3 py-1 rounded-sm" style={{ fontFamily: 'Courier New, monospace' }}>
+          RAZER GOLD
+        </span>
+      ),
+    },
+    {
+      id: 'footlocker',
+      el: (
+        <span className="text-3xl font-black uppercase tracking-tighter" style={{ fontFamily: 'Impact, sans-serif' }}>
+          FOOTLOCKER
+        </span>
+      ),
+    },
+    {
+      id: 'sephora',
+      el: (
+        <span className="text-3xl font-normal tracking-[0.3em] uppercase" style={{ fontFamily: 'Optima, "Times New Roman", serif' }}>
+          SEPHORA
         </span>
       ),
     },
@@ -21,6 +45,30 @@ export default function BrandsBar() {
       ),
     },
     {
+      id: 'xbox',
+      el: (
+        <span className="text-3xl font-black tracking-tighter uppercase" style={{ fontFamily: 'Impact, Arial Black, sans-serif' }}>
+          XBOX
+        </span>
+      ),
+    },
+    {
+      id: 'macys',
+      el: (
+        <span className="text-3xl font-bold uppercase tracking-wider" style={{ fontFamily: 'Georgia, serif' }}>
+          MACY'S
+        </span>
+      ),
+    },
+    {
+      id: 'nordstrom',
+      el: (
+        <span className="text-3xl font-semibold tracking-widest uppercase" style={{ fontFamily: 'Futura, "Trebuchet MS", sans-serif' }}>
+          NORDSTROM
+        </span>
+      ),
+    },
+    {
       id: 'playstation',
       el: (
         <span className="text-3xl font-black italic tracking-tight" style={{ fontFamily: 'Verdana, sans-serif' }}>
@@ -29,10 +77,10 @@ export default function BrandsBar() {
       ),
     },
     {
-      id: 'razer',
+      id: 'nike',
       el: (
-        <span className="text-2xl font-bold tracking-widest uppercase border-2 border-current px-3 py-1 rounded-sm" style={{ fontFamily: 'Courier New, monospace' }}>
-          RAZER GOLD
+        <span className="text-3xl font-black italic uppercase tracking-tighter" style={{ fontFamily: '"Arial Black", sans-serif' }}>
+          NIKE
         </span>
       ),
     },

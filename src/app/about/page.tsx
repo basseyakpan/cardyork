@@ -212,9 +212,9 @@ export default function AboutPage() {
 
           {/* Right: Text */}
           <div className="flex flex-col items-start">
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-primary mb-3">
+            <h3 className="text-sm uppercase tracking-[0.2em] font-extrabold text-primary mb-3">
               WHO WE ARE
-            </span>
+            </h3>
             <h2 className="display-sm mb-5">
               Your Trusted Partner in
               <br />
@@ -302,9 +302,9 @@ export default function AboutPage() {
       {/* ── Core Values ── */}
       <section className="py-16 px-6 bg-surface-container-low">
         <div className="max-w-[1200px] mx-auto">
-          <p className="text-center text-[10px] uppercase tracking-[0.25em] font-bold text-primary mb-10">
+          <h2 className="text-center text-sm uppercase tracking-[0.25em] font-extrabold text-primary mb-10">
             OUR CORE VALUES
-          </p>
+          </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
             {CORE_VALUES.map((val) => (
               <div

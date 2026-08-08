@@ -6,8 +6,16 @@ export default function BlogStickyBanner() {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [buttonText, setButtonText] = useState("Download");
+  const [isAndroid, setIsAndroid] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+      if (/android/i.test(userAgent)) {
+        setIsAndroid(true);
+      }
+    }
+
     const onScroll = () => {
       if (window.scrollY > 300) setVisible(true);
     };
@@ -42,7 +50,7 @@ export default function BlogStickyBanner() {
     }
   };
 
-  if (dismissed) return null;
+  if (!isAndroid || dismissed) return null;
 
   return (
     <div

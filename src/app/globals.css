@@ -56,48 +56,48 @@
   }
 
   :root.dark, .dark {
-    /* Dark Theme (Cardyork Brand Palette) */
-    --background: #000822;
-    --surface: #000822;
-    --surface-container-lowest: #00003A;
-    --surface-container-low: #00084F;
-    --surface-container: #001C57;
-    --surface-container-high: #021D8F;
-    --surface-container-highest: #1F4DFF;
-    --surface-bright: #1A4BFF;
-    --surface-variant: #001C57;
-    --primary: #1E5BFF;
-    --primary-container: #0099FF;
-    --primary-dim: #7FA6FF;
-    --on-primary: #FFFFFF;
-    --on-primary-fixed: #FFFFFF;
-    --secondary: #00E5FF;
-    --secondary-container: #26D2FF;
-    --secondary-dim: #7FA6FF;
-    --on-secondary: #000822;
-    --tertiary: #ffa3e9;
-    --error: #ff6e84;
-    --on-surface: #FFFFFF;
-    --on-surface-variant: #7FA6FF;
-    --on-background: #FFFFFF;
-    --outline: #1A4BFF;
-    --outline-variant: #001C57;
-    --gradient-primary: linear-gradient(135deg, #0099FF 0%, #1E5BFF 100%);
-    --gradient-secondary: linear-gradient(135deg, #00E5FF 0%, #26D2FF 100%);
+    /* Dark Theme (Professional Premium Palette) */
+    --background: #09090b;
+    --surface: #09090b;
+    --surface-container-lowest: #000000;
+    --surface-container-low: #18181b;
+    --surface-container: #27272a;
+    --surface-container-high: #3f3f46;
+    --surface-container-highest: #52525b;
+    --surface-bright: #27272a;
+    --surface-variant: #18181b;
+    --primary: #3b82f6;
+    --primary-container: #1d4ed8;
+    --primary-dim: #2563eb;
+    --on-primary: #ffffff;
+    --on-primary-fixed: #ffffff;
+    --secondary: #10b981;
+    --secondary-container: #047857;
+    --secondary-dim: #059669;
+    --on-secondary: #ffffff;
+    --tertiary: #d946ef;
+    --error: #f87171;
+    --on-surface: #fafafa;
+    --on-surface-variant: #a1a1aa;
+    --on-background: #fafafa;
+    --outline: #3f3f46;
+    --outline-variant: #27272a;
+    --gradient-primary: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    --gradient-secondary: linear-gradient(135deg, #34d399 0%, #10b981 100%);
     --gradient-hero:
       radial-gradient(
         ellipse at 60% 40%,
-        rgba(0, 153, 255, 0.15) 0%,
+        rgba(59, 130, 246, 0.1) 0%,
         transparent 60%
       ),
       radial-gradient(
         ellipse at 20% 80%,
-        rgba(0, 229, 255, 0.1) 0%,
+        rgba(16, 185, 129, 0.05) 0%,
         transparent 50%
       ),
-      #000822;
-    --glow-primary: 0 0 40px rgba(0, 153, 255, 0.25);
-    --ambient-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+      #09090b;
+    --glow-primary: 0 0 40px rgba(59, 130, 246, 0.15);
+    --ambient-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
   }
 
   body {

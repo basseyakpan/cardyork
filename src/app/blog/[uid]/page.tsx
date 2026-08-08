@@ -153,11 +153,11 @@ export default async function BlogPost({
 
               {/* Hero Image */}
               {imageUrl && (
-                <div className="w-full aspect-[16/9] rounded-xl overflow-hidden mb-12 bg-surface-container flex items-center justify-center">
+                <div className="w-full aspect-[16/9] md:aspect-[21/9] rounded-xl overflow-hidden mb-12 bg-surface-container flex items-center justify-center">
                   <img
                     src={imageUrl}
                     alt={title}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               )}
@@ -165,23 +165,23 @@ export default async function BlogPost({
               {/* Article Body — no border, clean reading column */}
               <div
                 className="
-                  text-on-surface-variant leading-[1.9] text-[1.0625rem]
-                  [&_h1]:font-bold [&_h1]:text-on-surface [&_h1]:text-3xl [&_h1]:mt-14 [&_h1]:mb-6 [&_h1]:leading-tight
-                  [&_h2]:font-bold [&_h2]:text-on-surface [&_h2]:text-2xl [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:leading-tight
-                  [&_h3]:font-bold [&_h3]:text-on-surface [&_h3]:text-xl [&_h3]:mt-10 [&_h3]:mb-3 [&_h3]:leading-tight
-                  [&_h4]:font-bold [&_h4]:text-on-surface [&_h4]:text-lg [&_h4]:mt-8 [&_h4]:mb-2
-                  [&_h5]:font-bold [&_h5]:text-on-surface [&_h5]:text-base [&_h5]:mt-6 [&_h5]:mb-2
-                  [&_h6]:font-bold [&_h6]:text-on-surface [&_h6]:text-sm [&_h6]:mt-6 [&_h6]:mb-2
-                  [&_p]:mb-7
-                  [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-6 [&_ul]:space-y-2
-                  [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-6 [&_ol]:space-y-2
+                  text-on-surface-variant leading-[1.9] text-lg
+                  [&_h1]:font-extrabold [&_h1]:text-on-surface [&_h1]:text-4xl [&_h1]:mt-16 [&_h1]:mb-6 [&_h1]:leading-tight [&_h1]:tracking-tight
+                  [&_h2]:font-bold [&_h2]:text-on-surface [&_h2]:text-3xl [&_h2]:mt-14 [&_h2]:mb-6 [&_h2]:leading-tight [&_h2]:tracking-tight
+                  [&_h3]:font-bold [&_h3]:text-on-surface [&_h3]:text-2xl [&_h3]:mt-10 [&_h3]:mb-4 [&_h3]:leading-snug [&_h3]:tracking-tight
+                  [&_h4]:font-semibold [&_h4]:text-on-surface [&_h4]:text-xl [&_h4]:mt-8 [&_h4]:mb-3
+                  [&_h5]:font-semibold [&_h5]:text-on-surface [&_h5]:text-lg [&_h5]:mt-6 [&_h5]:mb-2
+                  [&_h6]:font-semibold [&_h6]:text-on-surface [&_h6]:text-base [&_h6]:mt-6 [&_h6]:mb-2
+                  [&_p]:mb-8
+                  [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-8 [&_ul]:space-y-3
+                  [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-8 [&_ol]:space-y-3
                   [&_li]:leading-relaxed
-                  [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:opacity-80
+                  [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:opacity-80
                   [&_strong]:text-on-surface [&_strong]:font-semibold
-                  [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-6 [&_blockquote]:my-8 [&_blockquote]:text-on-surface-variant [&_blockquote]:italic [&_blockquote]:text-lg
-                  [&_code]:bg-surface-container [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono [&_code]:text-primary
-                  [&_pre]:bg-surface-container [&_pre]:rounded-xl [&_pre]:p-6 [&_pre]:my-6 [&_pre]:overflow-x-auto
-                  [&_img]:rounded-lg [&_img]:my-6 [&_img]:max-w-full
+                  [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-6 [&_blockquote]:my-10 [&_blockquote]:text-on-surface-variant [&_blockquote]:italic [&_blockquote]:text-xl
+                  [&_code]:bg-surface-container [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:text-sm [&_code]:font-mono [&_code]:text-primary
+                  [&_pre]:bg-surface-container [&_pre]:rounded-xl [&_pre]:p-6 [&_pre]:my-8 [&_pre]:overflow-x-auto
+                  [&_img]:rounded-xl [&_img]:my-10 [&_img]:max-w-full [&_img]:shadow-md
                 "
               >
                 {page.data.slices?.map((slice: any, index: number) => {
