@@ -10,7 +10,8 @@ export default function BlogStickyBanner() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+      const userAgent =
+        navigator.userAgent || navigator.vendor || (window as any).opera;
       if (/android/i.test(userAgent)) {
         setIsAndroid(true);
       }
@@ -62,7 +63,7 @@ export default function BlogStickyBanner() {
       <div className="relative bg-surface-container/95 border border-outline-variant rounded-2xl backdrop-blur-md shadow-[0_-8px_40px_rgba(0,0,0,0.12)] px-4 py-3 md:px-6 md:py-4">
         <div className="max-w-[1200px] mx-auto flex items-center gap-4 md:gap-8">
           {/* Icon */}
-          <div className="hidden sm:flex w-10 h-10 flex-shrink-0 rounded-xl bg-primary/10 items-center justify-center text-primary text-xl">
+          <div className="flex w-10 h-10 flex-shrink-0 rounded-xl bg-primary/10 items-center justify-center text-primary text-xl">
             <Image src="/icon.png" alt="Cardyork Logo" width={40} height={40} />
           </div>
 
