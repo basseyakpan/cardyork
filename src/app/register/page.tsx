@@ -17,6 +17,7 @@ import {
   FiShield,
   FiKey,
   FiAlertCircle,
+  FiRefreshCw,
 } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { showToast } from "@/store/slices/uiSlice";
@@ -299,7 +300,103 @@ function SignupForm({ onSuccess }: any) {
       >
         {isLoading ? "Creating account…" : "Sign Up"}
       </button>
+
+      <ResumePendingDialog />
     </form>
+  );
+}
+
+// ─────────────────────────────────────────────
+// Resume Pending Registration Dialog
+// ─────────────────────────────────────────────
+function ResumePendingDialog() {
+  const [open, setOpen] = useState(false);
+  const [resumeEmail, setResumeEmail] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const handleResume = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resumeEmail.trim()) return;
+    setSubmitting(true);
+    try {
+      await dispatch(resendCode(resumeEmail.trim())).unwrap();
+      dispatch(showToast({
+        message: 'Code sent! 📧 A verification code has been sent to your email.',
+        type: 'success'
+      }));
+      setOpen(false);
+    } catch (err: any) {
+      const errMsg = typeof err === 'string' ? err : err?.message || 'Failed to send code';
+      dispatch(showToast({ message: errMsg, type: 'error' }));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <>
+      <p className="text-center text-xs text-on-surface-variant mt-2 font-medium">
+        Started registering before?{' '}
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="text-amber-500 font-bold hover:underline inline-flex items-center gap-1"
+        >
+          <FiRefreshCw className="w-3 h-3" /> Resume verification
+        </button>
+      </p>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="glass-card w-full max-w-sm p-6 flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
+            <h3 className="text-xl font-bold text-on-surface flex items-center gap-2 mb-2">
+              <FiRefreshCw className="w-5 h-5 text-amber-500" /> Resume Registration
+            </h3>
+            <p className="text-sm text-on-surface-variant text-center mb-6">
+              Enter the email you used when you started registering. We'll resend your verification code.
+            </p>
+            
+            <form onSubmit={handleResume} className="w-full space-y-4">
+              <div className="input-group">
+                <label htmlFor="resume-email" className="input-label">Email Address</label>
+                <div className="relative">
+                  <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
+                  <input
+                    id="resume-email"
+                    type="email"
+                    value={resumeEmail}
+                    onChange={(e) => setResumeEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="input-field pl-9"
+                    required
+                    autoFocus
+                  />
+                </div>
+              </div>
+              
+              <div className="flex gap-3 w-full pt-2">
+                <button 
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="flex-1 btn bg-surface-container text-on-surface-variant hover:bg-surface-container-high py-3"
+                  disabled={submitting}
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 btn btn-primary py-3"
+                >
+                  {submitting ? 'Sending…' : 'Resend'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -532,7 +629,7 @@ export default function RegisterPage() {
   );
 
   const [localData, setLocalData] = useState({
-    email: "",
+    email: tempEmail || "",
     phone: "",
     password: "",
     fullName: "",
@@ -540,6 +637,13 @@ export default function RegisterPage() {
   });
   const [showPinSetup, setShowPinSetup] = useState(false);
   const router = useRouter();
+
+  // When resuming from a persisted pending state, ensure localData.email is set
+  useEffect(() => {
+    if (tempEmail && !localData.email) {
+      setLocalData((d) => ({ ...d, email: tempEmail }));
+    }
+  }, [tempEmail]);
 
   useEffect(() => {
     const handleAutoLogin = async () => {
@@ -629,7 +733,18 @@ export default function RegisterPage() {
         (typeof err === "string"
           ? err
           : "Verification or profile update failed");
-      dispatch(showToast({ message: errMsg, type: "error" }));
+      
+      // If activation succeeds but updateProfile fails (e.g. user resumed without password)
+      if (errMsg.toLowerCase().includes('profile') || errMsg.toLowerCase().includes('update') || errMsg.toLowerCase().includes('password')) {
+        dispatch(showToast({
+          message: 'Email verified. Profile setup issue — you can complete it later.',
+          type: 'success'
+        }));
+        // Force advance to PIN step anyway
+        dispatch(setRegistrationStep('pin'));
+      } else {
+        dispatch(showToast({ message: errMsg, type: "error" }));
+      }
     }
   };
 
@@ -754,6 +869,19 @@ export default function RegisterPage() {
         {/* Form area */}
         <div className="flex-1 flex items-start justify-center relative z-10 pt-4">
           <div className="w-full max-w-md glass-card p-6 sm:p-8">
+            {/* Resume-verification notice */}
+            {registrationStep === 'activation' && tempEmail && (
+              <div className="mb-5 flex items-start gap-3 bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-3 animate-fade-in">
+                <FiAlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-bold text-on-surface">Verification pending</p>
+                  <p className="text-xs text-on-surface-variant font-medium mt-0.5">
+                    A code was sent to <span className="font-bold text-on-surface">{tempEmail}</span>. Enter it below to activate your account.
+                  </p>
+                </div>
+              </div>
+            )}
+            
             {renderStep()}
 
             {registrationStep === "signup" && (

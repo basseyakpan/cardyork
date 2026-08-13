@@ -37,6 +37,35 @@ interface AuthState {
   tempPhone: string | null;
 }
 
+// Helper: persist pending registration state so it survives page refresh.
+// SECURITY: passwords are never written to localStorage.
+const savePendingRegistration = (data: {
+  step: string;
+  email: string;
+  password?: string | null; // accepted in signature but intentionally NOT persisted
+  fullName?: string | null;
+  phone?: string | null;
+  userId?: string | null;
+}) => {
+  localStorage.setItem("pendingStep", data.step);
+  localStorage.setItem("pendingEmail", data.email);
+  // password is deliberately omitted — kept in Redux memory only
+  if (data.fullName) localStorage.setItem("pendingFullName", data.fullName);
+  if (data.phone) localStorage.setItem("pendingPhone", data.phone);
+  if (data.userId) localStorage.setItem("pendingUserId", data.userId);
+};
+
+// Helper: clear pending registration after completion or login
+const clearPendingRegistration = () => {
+  [
+    "pendingStep",
+    "pendingEmail",
+    "pendingFullName",
+    "pendingPhone",
+    "pendingUserId",
+  ].forEach((k) => localStorage.removeItem(k));
+};
+
 // SSR-safe initialState — localStorage is not available on the server
 const initialState: AuthState = {
   user:
@@ -48,12 +77,26 @@ const initialState: AuthState = {
     typeof window !== "undefined" ? !!localStorage.getItem("token") : false,
   isLoading: false,
   error: null,
-  registrationStep: "signup",
-  tempUserId: null,
-  tempEmail: null,
+  // Restore any pending registration so users can resume after a page refresh
+  registrationStep:
+    typeof window !== "undefined"
+      ? (localStorage.getItem("pendingStep") as AuthState["registrationStep"]) || "signup"
+      : "signup",
+  tempUserId:
+    typeof window !== "undefined"
+      ? localStorage.getItem("pendingUserId")
+      : null,
+  tempEmail:
+    typeof window !== "undefined" ? localStorage.getItem("pendingEmail") : null,
+  // NOTE: passwords are never persisted to localStorage for security reasons.
+  // tempPassword is held in Redux memory only and is cleared on page close.
   tempPassword: null,
-  tempFullName: null,
-  tempPhone: null,
+  tempFullName:
+    typeof window !== "undefined"
+      ? localStorage.getItem("pendingFullName")
+      : null,
+  tempPhone:
+    typeof window !== "undefined" ? localStorage.getItem("pendingPhone") : null,
 };
 
 const BASE_URL = "https://cardyork-server.onrender.com/api";
@@ -156,7 +199,7 @@ export const signup = createAsyncThunk(
         body: JSON.stringify(body),
       });
       const data = await response.json();
-      if (!response.ok) return rejectWithValue(data.message || "Signup failed");
+      if (!response.ok) return rejectWithValue(data);
       return { ...data, email: userData.email, normalizedPhone };
     } catch (error: any) {
       return rejectWithValue(error.message);
@@ -491,6 +534,17 @@ export const login = createAsyncThunk(
         });
       }
 
+      // Unverified account: registered but never verified — API tells us to re-register / resend OTP
+      if (data.statusCode === "UNVERIFIED_ACCOUNT") {
+        return rejectWithValue({
+          type: "UNVERIFIED_ACCOUNT",
+          email: credentials.email,
+          message:
+            data.message ||
+            "Account not verified. Please complete your registration.",
+        });
+      }
+
       if (!response.ok) return rejectWithValue(data.message || "Login failed");
 
       const firstItem = Array.isArray(data.data)
@@ -521,13 +575,15 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       state.registrationStep = "signup";
+      state.tempUserId = null;
+      state.tempEmail = null;
       state.tempPassword = null;
       state.tempFullName = null;
       state.tempPhone = null;
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      // Clear cookie for Next.js middleware
       clearAuthCookie();
+      clearPendingRegistration();
     },
     clearError: (state) => {
       state.error = null;
@@ -552,17 +608,45 @@ const authSlice = createSlice({
           state.isAuthenticated = true;
           state.user = action.payload.user;
           state.token = action.payload.token;
+          // Successful login — clear any pending registration remnants
+          state.registrationStep = "signup";
+          state.tempEmail = null;
+          state.tempPassword = null;
+          state.tempFullName = null;
+          state.tempPhone = null;
+          state.tempUserId = null;
+          clearPendingRegistration();
         },
       )
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         const payload = action.payload as any;
         if (payload?.type === "NO_PROFILE_DATA_FOUND") {
+          // Account exists but profile not set up — push back to activation
           state.tempUserId = payload.userid;
           state.tempEmail = payload.email;
-          state.tempPassword = payload.password; // now we have it!
+          state.tempPassword = payload.password;
           state.registrationStep = "activation";
           state.error = payload.message;
+          savePendingRegistration({
+            step: "activation",
+            email: payload.email,
+            password: payload.password,
+            userId: payload.userid,
+          });
+        } else if (payload?.type === "LOGIN_CODE_SENT") {
+          // Unverified account — OTP was sent by the API, handle inline in login page
+          state.tempEmail = payload.email;
+          state.error = payload.message;
+        } else if (payload?.type === "UNVERIFIED_ACCOUNT") {
+          // Registered but never verified — auto-resend OTP and redirect to activation step
+          state.tempEmail = payload.email;
+          state.registrationStep = "activation";
+          state.error = null;
+          savePendingRegistration({
+            step: "activation",
+            email: payload.email,
+          });
         } else {
           state.error = (payload as string) || "Login failed";
         }
@@ -577,9 +661,68 @@ const authSlice = createSlice({
         state.tempEmail = action.payload.email;
         state.tempPassword = action.meta.arg.password || null;
         state.tempFullName = action.meta.arg.fullName || null;
-        state.tempPhone = action.payload.normalizedPhone || action.meta.arg.phoneNumber || null;
+        state.tempPhone =
+          action.payload.normalizedPhone || action.meta.arg.phoneNumber || null;
+        // Persist so the user can come back and complete verification
+        savePendingRegistration({
+          step: "activation",
+          email: action.payload.email,
+          password: action.meta.arg.password,
+          fullName: action.meta.arg.fullName,
+          phone: action.payload.normalizedPhone || action.meta.arg.phoneNumber,
+        });
       })
       .addCase(signup.rejected, (state, action) => {
+        state.isLoading = false;
+        const payload = action.payload as any;
+        const msg =
+          typeof payload === "string" ? payload : payload?.message || "";
+        const code = typeof payload === "object" ? payload?.statusCode : "";
+
+        // The API returns EMAIL_EXISTS: RESEND_OTP when the email is already registered
+        // but not yet verified. It also auto-resends the OTP. Mirror the mobile app:
+        // navigate to the OTP screen instead of showing a dead-end error.
+        const isResendCase =
+          code === "EMAIL_EXISTS: RESEND_OTP" ||
+          msg.includes("EMAIL_EXISTS") ||
+          msg.toLowerCase().includes("resend") ||
+          msg.toLowerCase().includes("already started") ||
+          msg.toLowerCase().includes("already registered") ||
+          msg.toLowerCase().includes("already exists");
+
+        if (isResendCase) {
+          state.registrationStep = "activation";
+          state.tempEmail = action.meta.arg.email;
+          state.tempPassword = action.meta.arg.password || null;
+          state.tempFullName = action.meta.arg.fullName || null;
+          state.tempPhone = action.meta.arg.phoneNumber || null;
+          state.error = null; // not an error — user should proceed to OTP
+          savePendingRegistration({
+            step: "activation",
+            email: action.meta.arg.email,
+            password: action.meta.arg.password,
+            fullName: action.meta.arg.fullName,
+            phone: action.meta.arg.phoneNumber,
+          });
+        } else {
+          state.error = msg || "Signup failed";
+        }
+      })
+      .addCase(resendCode.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(resendCode.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.registrationStep = "activation";
+        state.tempEmail = action.meta.arg;
+        state.error = null;
+        savePendingRegistration({
+          step: "activation",
+          email: action.meta.arg,
+        });
+      })
+      .addCase(resendCode.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })
@@ -590,7 +733,11 @@ const authSlice = createSlice({
       .addCase(activateAccount.fulfilled, (state, action) => {
         state.isLoading = false;
         state.registrationStep = "profile";
-        state.tempUserId = action.payload.data[0].userid;
+        const userId =
+          action.payload.data?.[0]?.userid || action.payload.data?.[0]?.id;
+        state.tempUserId = userId;
+        // Update persisted userId now that we have it
+        if (userId) localStorage.setItem("pendingUserId", userId);
       })
       .addCase(activateAccount.rejected, (state, action) => {
         state.isLoading = false;
@@ -629,6 +776,11 @@ const authSlice = createSlice({
         state.tempPassword = null;
         state.tempFullName = null;
         state.tempPhone = null;
+        // Update step in localStorage — user can resume at PIN setup if they leave
+        localStorage.setItem("pendingStep", "pin");
+        localStorage.removeItem("pendingPassword");
+        localStorage.removeItem("pendingFullName");
+        localStorage.removeItem("pendingPhone");
       })
       .addCase(updateProfile.rejected, (state, action) => {
         state.isLoading = false;
@@ -641,6 +793,8 @@ const authSlice = createSlice({
       .addCase(setPin.fulfilled, (state) => {
         state.isLoading = false;
         state.registrationStep = "completed";
+        // Registration fully done — wipe all pending state
+        clearPendingRegistration();
       })
       .addCase(setPin.rejected, (state, action) => {
         state.isLoading = false;

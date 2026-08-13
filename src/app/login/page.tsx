@@ -12,7 +12,7 @@ import {
   FiArrowLeft,
   FiShield,
 } from "react-icons/fi";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { showToast } from "@/store/slices/uiSlice";
 import { login, loginWith2Fa, resendCode } from "@/store/slices/authSlice";
 
@@ -31,6 +31,16 @@ export default function Login() {
 
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { registrationStep } = useAppSelector((state) => state.auth);
+
+  // Auto-redirect to /register whenever redux sets registrationStep = 'activation'
+  // This covers all paths where savePendingRegistration is called:
+  // UNVERIFIED_ACCOUNT, NO_PROFILE_DATA_FOUND, EMAIL_EXISTS:RESEND_OTP, etc.
+  useEffect(() => {
+    if (registrationStep === "activation") {
+      router.push("/register");
+    }
+  }, [registrationStep, router]);
 
   // Countdown timer for OTP resend
   useEffect(() => {
@@ -59,20 +69,22 @@ export default function Login() {
             type: "success",
           }),
         );
-      } else if (error?.type === "NO_PROFILE_DATA_FOUND") {
+      } else if (error?.type === "NO_PROFILE_DATA_FOUND" || error?.type === "UNVERIFIED_ACCOUNT") {
         dispatch(
           showToast({
             message:
-              "A verification code has been sent to your email. Please complete your activation.",
+              "A verification code has been sent to your email. Please complete your account activation.",
             type: "success",
           }),
         );
         try {
           await dispatch(resendCode(email)).unwrap();
+          // registrationStep is now "activation" via redux, useEffect above will redirect
         } catch (e) {
           console.error("Failed to auto-resend OTP:", e);
+          // Redirect anyway since redux already set registrationStep = "activation"
+          router.push("/register");
         }
-        router.push("/register");
       } else {
         dispatch(
           showToast({
