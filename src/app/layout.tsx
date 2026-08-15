@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { CookieManager } from "@/components/CookieManager";
 import ComingSoonModal from "@/components/ComingSoonModal";
 import Toast from "@/components/Toast";
+import { AuthRevalidator } from "@/components/AuthRevalidator";
 
 export const metadata: Metadata = {
   icons: {
@@ -49,7 +50,9 @@ export default function RootLayout({
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ReduxProvider>
-            {children}
+            <AuthRevalidator>
+              {children}
+            </AuthRevalidator>
             <CookieManager />
             <ComingSoonModal />
             <Toast />

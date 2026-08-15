@@ -18,6 +18,7 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -26,6 +27,7 @@ export default function Navbar() {
   const { mobileMenuOpen } = useAppSelector(s => s.ui);
 
   useEffect(() => {
+    setMounted(true);
     const handler = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handler);
     return () => window.removeEventListener('scroll', handler);
@@ -68,7 +70,12 @@ export default function Navbar() {
         {/* Auth buttons & Theme */}
         <div className="hidden md:flex items-center gap-2.5">
           <ThemeToggle />
-          {isAuthenticated && user ? (
+          {!mounted ? (
+            <div className="flex gap-2.5 opacity-0">
+              <span className="btn btn-ghost btn-sm">Log In</span>
+              <span className="btn btn-primary btn-sm">Sign Up</span>
+            </div>
+          ) : isAuthenticated && user ? (
             <>
               <Link href="/dashboard" className="btn btn-ghost btn-sm">Dashboard</Link>
               <div className="flex items-center gap-2 bg-surface-container rounded-full p-1 pl-3 pr-2 border border-primary/15 ml-4">
@@ -119,7 +126,12 @@ export default function Navbar() {
             <div className="flex justify-center mb-4">
               <ThemeToggle />
             </div>
-            {isAuthenticated ? (
+            {!mounted ? (
+              <div className="opacity-0">
+                <Link href="/login" className="btn btn-ghost w-full mb-2.5">Log In</Link>
+                <Link href="/register" className="btn btn-primary w-full">Sign Up</Link>
+              </div>
+            ) : isAuthenticated ? (
               <>
                 <Link href="/dashboard" className="btn btn-primary w-full">Dashboard</Link>
                 <button onClick={handleLogout} className="btn btn-ghost w-full">Sign Out</button>
