@@ -317,6 +317,30 @@ export const updateProfile = createAsyncThunk(
       const data = await response.json();
       if (!response.ok)
         return rejectWithValue(data.message || "Profile update failed");
+
+      // Auto-login silently so PIN setup has the required token in localStorage
+      try {
+        const deviceInfo = getDeviceInfo();
+        const loginRes = await fetch(`${BASE_URL}/auth/users/signin`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: state.auth.tempEmail, password, ...deviceInfo })
+        });
+        if (loginRes.ok) {
+          const loginData = await loginRes.json();
+          const firstItem = Array.isArray(loginData.data) ? loginData.data[0] : (loginData.data || loginData);
+          const token = firstItem?.token || loginData.token;
+          const user = firstItem?.userInfo || firstItem?.user || firstItem;
+          if (token) {
+            localStorage.setItem("token", token);
+            document.cookie = `token=${token}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Strict`;
+            if (user) localStorage.setItem("user", JSON.stringify(user));
+          }
+        }
+      } catch (e) {
+        console.error("Silent login failed:", e);
+      }
+
       return data;
     } catch (error: any) {
       return rejectWithValue(error.message);

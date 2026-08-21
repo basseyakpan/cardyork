@@ -4,6 +4,7 @@ import Image from "next/image";
 import { FiShield, FiZap, FiHeadphones } from "react-icons/fi";
 import { FaGooglePlay, FaApple } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const TRUST_BADGES = [
   { Icon: FiShield, label: "100% Secure", sub: "Your safety is our priority" },
@@ -17,6 +18,7 @@ const TRUST_BADGES = [
 
 export default function HeroSection() {
   const router = useRouter();
+  const [downloadText, setDownloadText] = useState<string | null>(null);
   const handleDownloadClick = () => {
     // @ts-ignore
     if (navigator.userAgentData) {
@@ -32,7 +34,8 @@ export default function HeroSection() {
             );
             console.log("User is on Android");
           } else if (ua.platform === "iOS") {
-            console.log("User is on iPhone/iPad");
+            setDownloadText("Coming Soon...");
+            setTimeout(() => setDownloadText(null), 5000);
           } else {
             router.push(
               "https://play.google.com/store/apps/details?id=com.cardyork.app",
@@ -44,8 +47,8 @@ export default function HeroSection() {
 
       console.log({ os });
       if (os === "iOS") {
-        window.location.href = "/download";
-        // router.push("/download");
+        setDownloadText("Coming Soon...");
+        setTimeout(() => setDownloadText(null), 5000);
       } else {
         router.push(
           "https://play.google.com/store/apps/details?id=com.cardyork.app",
@@ -125,7 +128,7 @@ export default function HeroSection() {
                 <div className="w-px h-5 bg-white/40" />
                 <FaApple className="text-[22px] mb-0.5" />
               </div>
-              <span className="ml-1">Download App</span>
+              <span className="ml-1">{downloadText || "Download App"}</span>
             </Link>
             <Link
               href="/register"

@@ -513,7 +513,12 @@ function PinChoiceStep({
       );
       onSendPinOtp();
     } catch (err: any) {
-      dispatch(showToast({ message: err.message, type: "error" }));
+      dispatch(
+        showToast({
+          message: `${err.message}. You can set up your PIN later in your Profile page.`,
+          type: "error",
+        })
+      );
     }
   };
 
@@ -565,7 +570,12 @@ function PinSetupStep({ tempUserId }: any) {
       ).unwrap();
       // the slice sets registrationStep = 'completed'
     } catch (err: any) {
-      dispatch(showToast({ message: err.message, type: "error" }));
+      dispatch(
+        showToast({
+          message: `${err.message}. You can set up your PIN later in your Profile page.`,
+          type: "error",
+        })
+      );
     }
   };
 

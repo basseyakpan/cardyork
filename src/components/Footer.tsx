@@ -16,11 +16,6 @@ const FOOTER_LINKS = {
     { label: "Terms of Service", href: "/terms-and-conditions" },
     { label: "Account Deletion", href: "/account-deletion" },
   ],
-  contact: [
-    { label: "+234-802-684-6656", href: "tel:+2348026846656" },
-    { label: "support@cardyork.com", href: "mailto:support@cardyork.com" },
-    { label: "partners@Cardyork.com", href: "mailto:Partners@Cardyork.com" },
-  ],
   giftCards: [
     {
       label: "Steam",
@@ -43,6 +38,11 @@ const FOOTER_LINKS = {
       label: "Playstation",
       href: "/blog/how-to-sell-playstation-gift-cards-for-naira-in-ni",
     },
+  ],
+  contact: [
+    { label: "+234-802-684-6656", href: "tel:+2348026846656" },
+    { label: "support@cardyork.com", href: "mailto:support@cardyork.com" },
+    { label: "partners@Cardyork.com", href: "mailto:Partners@Cardyork.com" },
   ],
 };
 
@@ -160,10 +160,10 @@ export default function Footer() {
 
             <div className="flex flex-col gap-6">
               <h4 className="text-on-surface text-base font-bold uppercase tracking-wider">
-                Contact
+                Gift cards
               </h4>
               <ul className="flex flex-col gap-3 list-none">
-                {FOOTER_LINKS.contact.map((l) => (
+                {FOOTER_LINKS.giftCards.map((l) => (
                   <li key={l.href}>
                     <Link
                       href={l.href}
@@ -175,13 +175,12 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
-
             <div className="flex flex-col gap-6">
               <h4 className="text-on-surface text-base font-bold uppercase tracking-wider">
-                Gift cards
+                Contact
               </h4>
               <ul className="flex flex-col gap-3 list-none">
-                {FOOTER_LINKS.giftCards.map((l) => (
+                {FOOTER_LINKS.contact.map((l) => (
                   <li key={l.href}>
                     <Link
                       href={l.href}
