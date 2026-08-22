@@ -30,14 +30,14 @@ const FOOTER_LINKS = {
       label: "Razer Gold",
       href: "/blog/how-to-sell-razer-gold-gift-cards-in-nigeria-compl",
     },
-    {
-      label: "Xbox",
-      href: "/blog/how-to-sell-xbox-gift-cards-for-naira-in-nigeria",
-    },
-    {
-      label: "Playstation",
-      href: "/blog/how-to-sell-playstation-gift-cards-for-naira-in-ni",
-    },
+    // {
+    //   label: "Xbox",
+    //   href: "/blog/how-to-sell-xbox-gift-cards-for-naira-in-nigeria",
+    // },
+    // {
+    //   label: "Playstation",
+    //   href: "/blog/how-to-sell-playstation-gift-cards-for-naira-in-ni",
+    // },
   ],
   contact: [
     { label: "+234-802-684-6656", href: "tel:+2348026846656" },

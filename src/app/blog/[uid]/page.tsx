@@ -90,12 +90,14 @@ export default async function BlogPost({
       <div className="flex-1 pt-28 pb-20 px-6">
         <div className="max-w-[1200px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-16">
-
             {/* Blog Post Content */}
             <article className="lg:col-span-8">
               {/* Breadcrumb */}
               <nav className="flex items-center gap-2 text-xs text-on-surface-variant mb-10">
-                <Link href="/blog" className="hover:text-primary transition-colors">
+                <Link
+                  href="/blog"
+                  className="hover:text-primary transition-colors"
+                >
                   Blog
                 </Link>
                 <span>/</span>
@@ -153,11 +155,11 @@ export default async function BlogPost({
 
               {/* Hero Image */}
               {imageUrl && (
-                <div className="w-full aspect-[16/9] md:aspect-[21/9] rounded-xl overflow-hidden mb-12 bg-surface-container flex items-center justify-center">
+                <div className="w-full aspect-[16/9] rounded-xl overflow-hidden mb-12 bg-surface-container flex items-center justify-center">
                   <img
                     src={imageUrl}
                     alt={title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-fit"
                   />
                 </div>
               )}
@@ -185,13 +187,24 @@ export default async function BlogPost({
                 "
               >
                 {page.data.slices?.map((slice: any, index: number) => {
-                  if (slice.slice_type === "text_blog" || slice.slice_type === "rich_text") {
-                    const textArray = slice.primary?.rich_text_editor || slice.primary?.paragraph_text;
+                  if (
+                    slice.slice_type === "text_blog" ||
+                    slice.slice_type === "rich_text"
+                  ) {
+                    const textArray =
+                      slice.primary?.rich_text_editor ||
+                      slice.primary?.paragraph_text;
                     if (textArray) {
                       return <PrismicRichText key={index} field={textArray} />;
                     }
                   }
-                  return <SliceZone key={index} slices={[slice]} components={components} />;
+                  return (
+                    <SliceZone
+                      key={index}
+                      slices={[slice]}
+                      components={components}
+                    />
+                  );
                 })}
               </div>
 
@@ -212,7 +225,10 @@ export default async function BlogPost({
                     </div>
                   )}
                 </div>
-                <Link href="/blog" className="btn btn-ghost btn-sm flex-shrink-0">
+                <Link
+                  href="/blog"
+                  className="btn btn-ghost btn-sm flex-shrink-0"
+                >
                   ← All Articles
                 </Link>
               </div>
@@ -221,7 +237,6 @@ export default async function BlogPost({
             {/* Sidebar */}
             <aside className="lg:col-span-4 mt-12 lg:mt-0">
               <div className="sticky top-24 flex flex-col gap-10">
-
                 {/* Recent Posts */}
                 <div className="rounded-xl border border-outline-variant bg-surface-container-low p-6">
                   <h3 className="text-xs font-bold uppercase tracking-[0.25em] text-on-surface-variant mb-6 pb-4 border-b border-outline-variant">
@@ -302,10 +317,8 @@ export default async function BlogPost({
                     Start Trading
                   </Link>
                 </div>
-
               </div>
             </aside>
-
           </div>
         </div>
       </div>
